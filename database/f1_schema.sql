@@ -1,0 +1,362 @@
+
+-- Drivers Table
+CREATE TABLE drivers (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  number INTEGER UNIQUE NOT NULL,
+  team VARCHAR(100) NOT NULL,
+  nationality VARCHAR(50) NOT NULL,
+  points INTEGER DEFAULT 0,
+  wins INTEGER DEFAULT 0,
+  podiums INTEGER DEFAULT 0,
+  championships INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Teams/Constructors Table
+CREATE TABLE teams (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL,
+  color VARCHAR(7) NOT NULL,
+  points INTEGER DEFAULT 0,
+  wins INTEGER DEFAULT 0,
+  podiums INTEGER DEFAULT 0,
+  championships INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Races Table
+CREATE TABLE races (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  date DATE NOT NULL,
+  circuit VARCHAR(150) NOT NULL,
+  winner_id INTEGER REFERENCES drivers(id),
+  fastest_lap_driver_id INTEGER REFERENCES drivers(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Lap Times Table
+CREATE TABLE lap_times (
+  id SERIAL PRIMARY KEY,
+  race_id INTEGER REFERENCES races(id),
+  driver_id INTEGER REFERENCES drivers(id),
+  lap_number INTEGER NOT NULL,
+  lap_time DECIMAL(6,3) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Team Performance History Table
+CREATE TABLE team_performance (
+  id SERIAL PRIMARY KEY,
+  team_id INTEGER REFERENCES teams(id),
+  season VARCHAR(4) NOT NULL,
+  total_points INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Driver Consistency Metrics Table
+CREATE TABLE driver_consistency (
+  id SERIAL PRIMARY KEY,
+  driver_id INTEGER REFERENCES drivers(id),
+  season VARCHAR(4) NOT NULL,
+  consistency_score INTEGER NOT NULL,
+  avg_position DECIMAL(3,1) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- INSERT STATEMENTS (DML - Data Manipulation Language)
+-- ============================================
+
+-- Insert Drivers
+INSERT INTO drivers (id, name, number, team, nationality, points, wins, podiums, championships) VALUES
+  (1, 'Max Verstappen', 1, 'Red Bull Racing', 'Netherlands', 198, 2, 8, 3),
+  (2, 'Sergio Perez', 11, 'Red Bull Racing', 'Mexico', 142, 0, 4, 0),
+  (3, 'Lewis Hamilton', 44, 'Ferrari', 'Great Britain', 276, 4, 10, 7),
+  (4, 'George Russell', 63, 'Mercedes', 'Great Britain', 187, 1, 7, 0),
+  (5, 'Charles Leclerc', 16, 'Ferrari', 'Monaco', 312, 5, 12, 0),
+  (6, 'Carlos Sainz', 55, 'Williams', 'Spain', 156, 1, 5, 0),
+  (7, 'Lando Norris', 4, 'McLaren', 'Great Britain', 224, 3, 9, 0),
+  (8, 'Oscar Piastri', 81, 'McLaren', 'Australia', 178, 2, 6, 0);
+
+-- Insert Teams
+INSERT INTO teams (id, name, color, points, wins, podiums, championships) VALUES
+  (1, 'Ferrari', '#DC2626', 588, 9, 22, 16),
+  (2, 'McLaren', '#F97316', 402, 5, 15, 8),
+  (3, 'Red Bull Racing', '#1E40AF', 340, 2, 12, 6),
+  (4, 'Mercedes', '#06B6D4', 187, 1, 7, 8),
+  (5, 'Aston Martin', '#1aa84e', 120, 0, 3, 0),
+  (6, 'Alpine', '#8B5CF6', 90, 0, 2, 0),
+  (7, 'Williams', '#3B82F6', 156, 1, 5, 0),
+  (8, 'Sauber', '#02f406', 60, 0, 1, 0),
+  (9, 'Racing Bulls', '#7594c2', 30, 0, 0, 0),
+  (10, 'Haas', '#f7f5f5', 15, 0, 0, 0);
+
+-- Insert Races
+INSERT INTO races (id, name, country, date, circuit, winner_id, fastest_lap_driver_id) VALUES
+  (1, 'Bahrain Grand Prix', 'Bahrain', '2026-03-01', 'Bahrain International Circuit', 5, 7),
+  (2, 'Saudi Arabian Grand Prix', 'Saudi Arabia', '2026-03-08', 'Jeddah Corniche Circuit', 3, 5),
+  (3, 'Australian Grand Prix', 'Australia', '2026-03-15', 'Albert Park Circuit', 7, 8),
+  (4, 'Japanese Grand Prix', 'Japan', '2026-04-05', 'Suzuka Circuit', 5, 3),
+  (5, 'Chinese Grand Prix', 'China', '2026-04-19', 'Shanghai International Circuit', 3, 5);
+
+-- ============================================
+-- SELECT QUERIES - Basic to Advanced
+-- ============================================
+
+-- 1. SELECT ALL - Get all drivers
+SELECT * FROM drivers;
+
+-- 2. SELECT SPECIFIC COLUMNS - Get driver names and points
+SELECT name, points, team FROM drivers;
+
+-- 3. WHERE CLAUSE - Filter drivers by team
+SELECT * FROM drivers WHERE team = 'Ferrari';
+
+-- 4. ORDER BY - Sort drivers by points (descending)
+SELECT name, points FROM drivers ORDER BY points DESC;
+
+-- 5. LIMIT - Get top 3 drivers
+SELECT name, points FROM drivers ORDER BY points DESC LIMIT 3;
+
+-- 6. WHERE with comparison operators
+SELECT name, wins FROM drivers WHERE wins > 2;
+
+-- 7. WHERE with LIKE - Search drivers by name
+SELECT * FROM drivers WHERE name LIKE '%Hamilton%';
+
+-- 8. WHERE with multiple conditions (AND)
+SELECT name, team, points 
+FROM drivers 
+WHERE team = 'Red Bull Racing' AND points > 150;
+
+-- 9. WHERE with OR condition
+SELECT name, nationality 
+FROM drivers 
+WHERE nationality = 'Great Britain' OR nationality = 'Netherlands';
+
+-- 10. WHERE with IN clause
+SELECT name, team 
+FROM drivers 
+WHERE team IN ('Ferrari', 'McLaren', 'Mercedes');
+
+-- ============================================
+-- AGGREGATE FUNCTIONS
+-- ============================================
+
+-- 11. COUNT - Total number of drivers
+SELECT COUNT(*) AS total_drivers FROM drivers;
+
+-- 12. SUM - Total championship points across all drivers
+SELECT SUM(points) AS total_points FROM drivers;
+
+-- 13. AVG - Average points per driver
+SELECT AVG(points) AS average_points FROM drivers;
+
+-- 14. MAX - Highest points scored
+SELECT MAX(points) AS max_points FROM drivers;
+
+-- 15. MIN - Lowest points scored
+SELECT MIN(points) AS min_points FROM drivers;
+
+-- ============================================
+-- GROUP BY and HAVING
+-- ============================================
+
+-- 16. GROUP BY - Count drivers per team
+SELECT team, COUNT(*) AS driver_count 
+FROM drivers 
+GROUP BY team;
+
+-- 17. GROUP BY with aggregate - Total points per team
+SELECT team, SUM(points) AS team_total_points 
+FROM drivers 
+GROUP BY team 
+ORDER BY team_total_points DESC;
+
+-- 18. HAVING - Teams with more than 1 driver
+SELECT team, COUNT(*) AS driver_count 
+FROM drivers 
+GROUP BY team 
+HAVING COUNT(*) > 1;
+
+-- ============================================
+-- JOIN QUERIES
+-- ============================================
+
+-- 19. INNER JOIN - Get race winners with full driver details
+SELECT 
+  r.name AS race_name,
+  r.date,
+  d.name AS winner_name,
+  d.team
+FROM races r
+INNER JOIN drivers d ON r.winner_id = d.id;
+
+-- 20. LEFT JOIN - All races with winner details (if exists)
+SELECT 
+  r.name AS race_name,
+  r.country,
+  d.name AS winner_name
+FROM races r
+LEFT JOIN drivers d ON r.winner_id = d.id;
+
+-- 21. Multiple JOINs - Race with winner and fastest lap driver
+SELECT 
+  r.name AS race_name,
+  r.date,
+  d1.name AS winner,
+  d2.name AS fastest_lap
+FROM races r
+LEFT JOIN drivers d1 ON r.winner_id = d1.id
+LEFT JOIN drivers d2 ON r.fastest_lap_driver_id = d2.id;
+
+-- ============================================
+-- SUBQUERIES
+-- ============================================
+
+-- 22. Subquery in WHERE - Find drivers with points above average
+SELECT name, points 
+FROM drivers 
+WHERE points > (SELECT AVG(points) FROM drivers);
+
+-- 23. Subquery - Find the driver with maximum points
+SELECT name, points 
+FROM drivers 
+WHERE points = (SELECT MAX(points) FROM drivers);
+
+-- 24. Subquery with IN - Find drivers who have won races
+SELECT name, team 
+FROM drivers 
+WHERE id IN (SELECT DISTINCT winner_id FROM races WHERE winner_id IS NOT NULL);
+
+-- ============================================
+-- UPDATE STATEMENTS
+-- ============================================
+
+-- 25. UPDATE single record - Update driver points
+UPDATE drivers 
+SET points = 320 
+WHERE id = 5;
+
+-- 26. UPDATE with calculation - Add bonus points
+UPDATE drivers 
+SET points = points + 10 
+WHERE wins > 3;
+
+-- 27. UPDATE multiple columns
+UPDATE drivers 
+SET wins = 6, podiums = 13 
+WHERE id = 5;
+
+-- ============================================
+-- DELETE STATEMENTS
+-- ============================================
+
+-- 28. DELETE specific record
+DELETE FROM drivers WHERE id = 99;
+
+-- 29. DELETE with condition
+DELETE FROM drivers WHERE points = 0 AND wins = 0;
+
+-- ============================================
+-- ADVANCED QUERIES
+-- ============================================
+
+-- 30. Calculate win rate percentage
+SELECT 
+  name,
+  wins,
+  (wins * 100.0 / 5) AS win_rate_percentage
+FROM drivers
+WHERE wins > 0
+ORDER BY win_rate_percentage DESC;
+
+-- 31. Rank drivers by points
+SELECT 
+  name,
+  points,
+  RANK() OVER (ORDER BY points DESC) AS ranking
+FROM drivers;
+
+-- 32. Get drivers and their position in standings
+SELECT 
+  name,
+  team,
+  points,
+  ROW_NUMBER() OVER (ORDER BY points DESC) AS position
+FROM drivers;
+
+-- 33. Team standings with total points
+SELECT 
+  team,
+  COUNT(*) AS total_drivers,
+  SUM(points) AS total_points,
+  SUM(wins) AS total_wins
+FROM drivers
+GROUP BY team
+ORDER BY total_points DESC;
+
+-- 34. Drivers with above-average wins
+SELECT 
+  name,
+  wins,
+  (SELECT AVG(wins) FROM drivers) AS avg_wins
+FROM drivers
+WHERE wins > (SELECT AVG(wins) FROM drivers);
+
+-- 35. Race participation analysis
+SELECT 
+  d.name,
+  COUNT(lt.id) AS laps_completed
+FROM drivers d
+LEFT JOIN lap_times lt ON d.id = lt.driver_id
+GROUP BY d.id, d.name
+ORDER BY laps_completed DESC;
+
+-- ============================================
+-- INDEXES for Performance Optimization
+-- ============================================
+
+CREATE INDEX idx_drivers_team ON drivers(team);
+CREATE INDEX idx_drivers_points ON drivers(points DESC);
+CREATE INDEX idx_races_date ON races(date);
+CREATE INDEX idx_lap_times_driver ON lap_times(driver_id);
+
+-- ============================================
+-- VIEWS for Simplified Queries
+-- ============================================
+
+-- Driver Standings View
+CREATE VIEW driver_standings AS
+SELECT 
+  ROW_NUMBER() OVER (ORDER BY points DESC) AS position,
+  name,
+  team,
+  points,
+  wins,
+  podiums
+FROM drivers
+ORDER BY points DESC;
+
+-- Team Standings View
+CREATE VIEW team_standings AS
+SELECT 
+  ROW_NUMBER() OVER (ORDER BY points DESC) AS position,
+  name,
+  points,
+  wins,
+  podiums,
+  championships
+FROM teams
+ORDER BY points DESC;
+
+-- Use the views
+SELECT * FROM driver_standings;
+SELECT * FROM team_standings;
+
+-- ============================================
+-- END OF SQL DOCUMENTATION
+-- ============================================
