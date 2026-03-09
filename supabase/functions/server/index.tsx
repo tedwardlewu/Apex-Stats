@@ -5,10 +5,8 @@ import { createClient } from "jsr:@supabase/supabase-js@2.49.8";
 
 const app = new Hono();
 
-// Enable logger
 app.use('*', logger(console.log));
 
-// Enable CORS for all routes and methods
 app.use(
   "/*",
   cors({
@@ -20,32 +18,29 @@ app.use(
   }),
 );
 
-// Create Supabase client for SQL queries
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL")!,
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 );
 
-// Initialize database with F1 data using basic SQL INSERT
 async function initializeDatabase() {
   try {
     console.log("Initializing F1 database with SQL...");
 
-    // Basic SQL: DELETE old data to force refresh
     const { data: existing } = await supabase
       .from("kv_store_93f7169e")
-      .select("key")
+      .select("value")
       .eq("key", "db_version")
       .single();
 
-    // Only reinitialize if version doesn't match
     const currentVersion = "v3";
-    if (existing && existing.key === "db_version") {
-      console.log("Database already initialized");
+    if (existing && existing.value === currentVersion) {
+      console.log("Database already initialized with version:", currentVersion);
       return;
     }
 
-    // Seed drivers
+    console.log("Reinitializing database to version:", currentVersion);
+
     const drivers = [
       { id: 1, name: "Max Verstappen", number: 1, team: "Red Bull Racing", nationality: "Netherlands", points: 198, wins: 2, podiums: 8, championships: 3 },
       { id: 2, name: "Sergio Perez", number: 11, team: "Red Bull Racing", nationality: "Mexico", points: 142, wins: 0, podiums: 4, championships: 0 },
@@ -110,7 +105,6 @@ async function initializeDatabase() {
       { id: 8, driver: "Perez", score: 71, avgPosition: 6.8 },
     ];
 
-    // Basic SQL: INSERT data using upsert
     await supabase.from("kv_store_93f7169e").upsert([
       { key: "drivers", value: drivers },
       { key: "teams", value: teams },
@@ -127,43 +121,34 @@ async function initializeDatabase() {
   }
 }
 
-// Initialize on server start
 initializeDatabase();
 
-// Health check endpoint
 app.get("/make-server-93f7169e/health", (c) => {
   return c.json({ status: "ok" });
 });
 
-// Basic SQL: SELECT * FROM drivers WHERE team = ? ORDER BY points DESC
 app.get("/make-server-93f7169e/drivers", async (c) => {
   try {
-    // SQL: SELECT value FROM kv_store_93f7169e WHERE key = 'drivers'
     const { data: result } = await supabase
       .from("kv_store_93f7169e")
       .select("value")
       .eq("key", "drivers")
       .single();
 
-    // Ensure we always have an array
     let drivers = Array.isArray(result?.value) ? result.value : [];
 
-    // Basic filtering with WHERE clause
     const team = c.req.query("team");
     if (team && team !== "all") {
-      // SQL equivalent: WHERE team = 'Ferrari'
       drivers = drivers.filter((d: any) => d.team === team);
     }
 
     const search = c.req.query("search");
     if (search) {
-      // SQL equivalent: WHERE name LIKE '%search%'
       drivers = drivers.filter((d: any) =>
         d.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    // SQL: ORDER BY points DESC
     drivers.sort((a: any, b: any) => b.points - a.points);
 
     return c.json({ success: true, data: drivers });
@@ -173,12 +158,10 @@ app.get("/make-server-93f7169e/drivers", async (c) => {
   }
 });
 
-// Basic SQL: SELECT * FROM drivers WHERE id = ?
 app.get("/make-server-93f7169e/drivers/:id", async (c) => {
   try {
     const id = parseInt(c.req.param("id"));
 
-    // SQL: SELECT value FROM kv_store_93f7169e WHERE key = 'drivers'
     const { data: result } = await supabase
       .from("kv_store_93f7169e")
       .select("value")
@@ -187,7 +170,6 @@ app.get("/make-server-93f7169e/drivers/:id", async (c) => {
 
     const drivers = Array.isArray(result?.value) ? result.value : [];
 
-    // SQL equivalent: WHERE id = 5
     const driver = drivers.find((d: any) => d.id === id);
 
     if (!driver) {
@@ -201,20 +183,16 @@ app.get("/make-server-93f7169e/drivers/:id", async (c) => {
   }
 });
 
-// Basic SQL: SELECT * FROM teams ORDER BY points DESC
 app.get("/make-server-93f7169e/teams", async (c) => {
   try {
-    // SQL: SELECT value FROM kv_store_93f7169e WHERE key = 'teams'
     const { data: result } = await supabase
       .from("kv_store_93f7169e")
       .select("value")
       .eq("key", "teams")
       .single();
 
-    // Ensure we always have an array
     let teams = Array.isArray(result?.value) ? result.value : [];
 
-    // SQL: ORDER BY points DESC
     teams.sort((a: any, b: any) => b.points - a.points);
 
     return c.json({ success: true, data: teams });
@@ -224,10 +202,8 @@ app.get("/make-server-93f7169e/teams", async (c) => {
   }
 });
 
-// Basic SQL: SELECT * FROM races
 app.get("/make-server-93f7169e/races", async (c) => {
   try {
-    // SQL: SELECT value FROM kv_store_93f7169e WHERE key = 'races'
     const { data: result } = await supabase
       .from("kv_store_93f7169e")
       .select("value")
@@ -243,10 +219,8 @@ app.get("/make-server-93f7169e/races", async (c) => {
   }
 });
 
-// Basic SQL: SELECT * FROM lap_times
 app.get("/make-server-93f7169e/lap-times", async (c) => {
   try {
-    // SQL: SELECT value FROM kv_store_93f7169e WHERE key = 'lap_times'
     const { data: result } = await supabase
       .from("kv_store_93f7169e")
       .select("value")
@@ -262,10 +236,8 @@ app.get("/make-server-93f7169e/lap-times", async (c) => {
   }
 });
 
-// Basic SQL: SELECT * FROM team_performance
 app.get("/make-server-93f7169e/team-performance", async (c) => {
   try {
-    // SQL: SELECT value FROM kv_store_93f7169e WHERE key = 'team_performance'
     const { data: result } = await supabase
       .from("kv_store_93f7169e")
       .select("value")
@@ -281,10 +253,8 @@ app.get("/make-server-93f7169e/team-performance", async (c) => {
   }
 });
 
-// Basic SQL: SELECT * FROM consistency
 app.get("/make-server-93f7169e/consistency", async (c) => {
   try {
-    // SQL: SELECT value FROM kv_store_93f7169e WHERE key = 'consistency'
     const { data: result } = await supabase
       .from("kv_store_93f7169e")
       .select("value")
@@ -300,10 +270,8 @@ app.get("/make-server-93f7169e/consistency", async (c) => {
   }
 });
 
-// Basic SQL: SELECT MAX(points), SUM(points), COUNT(*) - Aggregation functions
 app.get("/make-server-93f7169e/stats", async (c) => {
   try {
-    // SQL: SELECT value FROM kv_store_93f7169e WHERE key IN ('drivers', 'teams', 'races')
     const { data: driversResult } = await supabase
       .from("kv_store_93f7169e")
       .select("value")
@@ -326,7 +294,6 @@ app.get("/make-server-93f7169e/stats", async (c) => {
     const teams = Array.isArray(teamsResult?.value) ? teamsResult.value : [];
     const races = Array.isArray(racesResult?.value) ? racesResult.value : [];
 
-    // SQL: SELECT name FROM drivers WHERE points = (SELECT MAX(points) FROM drivers)
     let topDriver = drivers[0] || {};
     for (const d of drivers) {
       if (d.points > topDriver.points) {
@@ -334,7 +301,6 @@ app.get("/make-server-93f7169e/stats", async (c) => {
       }
     }
 
-    // SQL: SELECT name FROM teams WHERE points = (SELECT MAX(points) FROM teams)
     let topTeam = teams[0] || {};
     for (const t of teams) {
       if (t.points > topTeam.points) {
@@ -342,13 +308,11 @@ app.get("/make-server-93f7169e/stats", async (c) => {
       }
     }
 
-    // SQL: SELECT SUM(points) FROM drivers
     let totalPoints = 0;
     for (const d of drivers) {
       totalPoints = totalPoints + d.points;
     }
 
-    // SQL: SELECT COUNT(*) FROM races
     const totalRaces = races.length;
 
     return c.json({

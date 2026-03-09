@@ -25,7 +25,6 @@ export default function App() {
   });
   const [loading, setLoading] = useState(true);
 
-  // Fetch stats from backend SQL database
   useEffect(() => {
     async function fetchStats() {
       try {
@@ -49,7 +48,6 @@ export default function App() {
       <Header />
       
       <main className="container mx-auto px-6 py-8">
-        {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <AnimatedStatsCard
             title="Total Races"
@@ -81,7 +79,6 @@ export default function App() {
           />
         </div>
 
-        {/* Filter Bar */}
         <FilterBar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -91,12 +88,10 @@ export default function App() {
           onSeasonChange={setSelectedSeason}
         />
 
-        {/* Tab Navigation */}
         <TabNavigation>
           {{
             overview: (
               <>
-                {/* Main Content Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                   <div className="lg:col-span-2">
                     <DriverStandings />
@@ -106,7 +101,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Charts Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <RecentRaces />
                   <TeamPerformanceChart />
@@ -138,7 +132,6 @@ export default function App() {
         </TabNavigation>
       </main>
 
-      {/* Footer */}
       <footer className="border-t bg-white mt-12">
         <div className="container mx-auto px-6 py-6">
           <p className="text-center text-sm text-gray-600">
