@@ -34,14 +34,14 @@ export function ConsistencyTable() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg border shadow-sm p-6">
-        <p className="text-center text-gray-600">Loading consistency data from database...</p>
+      <div className="bg-gray-900 rounded-lg border border-gray-800 shadow-sm p-6">
+        <p className="text-center text-gray-300">Loading consistency data from database...</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg border shadow-sm">
+    <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-sm text-gray-200">
       <div className="border-b p-6">
         <div className="flex items-center gap-2">
           <Target className="size-5 text-indigo-600" />

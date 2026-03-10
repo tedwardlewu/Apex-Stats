@@ -48,7 +48,7 @@ export function AnimatedStatsCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       whileHover={{ scale: 1.05, y: -5 }}
-      className="bg-white rounded-lg border p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-gray-800 rounded-lg border border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer text-gray-200"
     >
       <div className="flex items-start justify-between">
         <div className="flex-1">

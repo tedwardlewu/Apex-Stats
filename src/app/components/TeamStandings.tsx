@@ -17,7 +17,7 @@ export function TeamStandings() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch teams from SQL backend
+  // ...existing code...
   useEffect(() => {
     async function fetchTeams() {
       try {
@@ -47,47 +47,49 @@ export function TeamStandings() {
   const sortedTeams = [...teams].sort((a, b) => b.points - a.points);
 
   return (
-    <div className="bg-white rounded-lg border shadow-sm">
-      <div className="border-b p-6">
-        <div className="flex items-center gap-2">
-          <Users className="size-5 text-blue-600" />
-          <h2 className="text-xl font-bold">Constructor Standings</h2>
+    <div className="bg-card text-card-foreground border border-border shadow-lg rounded-lg">
+      <div className="border-b p-6 bg-gray-800 rounded-t-lg">
+        <div className="flex items-center gap-3">
+          <Users className="size-6 text-green-600 drop-shadow-md" />
+          <h2 className="text-2xl font-extrabold text-green-900 tracking-tight">Constructor Standings</h2>
         </div>
       </div>
-      <div className="p-6">
-        <div className="space-y-4">
+      <div className="p-8">
+        <div className="space-y-6">
           {sortedTeams.map((team, index) => (
-            <div
-              key={team.id}
-              className="flex items-center gap-4 p-4 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 font-bold text-gray-700">
+            <div key={team.id} className="flex items-center gap-4 p-2 rounded-md bg-gray-800 shadow border border-gray-700">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 font-bold text-gray-200 text-base">
                 {index + 1}
               </div>
               <div
-                className="w-1 h-12 rounded"
+                className="w-1 h-16 rounded"
                 style={{ backgroundColor: team.color }}
               />
-              <img
-                src={team.image}
-                alt={team.name}
-                className="w-8 h-8 rounded-full object-cover object-top border-2 border-gray-200"
-              />
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-700"
+                style={{ backgroundColor: team.name === 'Ferrari' ? '#7a1a1a' : team.color || '#222' }}
+              >
+                <img
+                  src={team.image}
+                  alt={team.name}
+                  className="w-8 h-8 rounded-full object-cover object-top"
+                />
+              </div>
               <div className="flex-1">
-                <p className="font-semibold">{team.name}</p>
-                <p className="text-sm text-gray-600">{team.championships} Championships</p>
+                <p className="font-semibold text-base text-gray-200">{team.name}</p>
+                <p className="text-xs text-gray-400">{team.championships} Championships</p>
               </div>
               <div className="text-right">
-                <p className="font-bold text-lg">{team.points}</p>
-                <p className="text-xs text-gray-600">points</p>
+                <p className="font-bold text-base text-gray-200">{team.points}</p>
+                <p className="text-xs text-gray-400">pts</p>
               </div>
-              <div className="flex gap-4 text-sm text-gray-600">
+              <div className="flex gap-2 text-xs text-gray-400">
                 <div className="text-center">
-                  <p className="font-semibold text-gray-900">{team.wins}</p>
+                  <p className="font-semibold text-gray-200">{team.wins}</p>
                   <p className="text-xs">Wins</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-gray-900">{team.podiums}</p>
+                  <p className="font-semibold text-gray-200">{team.podiums}</p>
                   <p className="text-xs">Podiums</p>
                 </div>
               </div>

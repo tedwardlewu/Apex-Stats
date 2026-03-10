@@ -2,3 +2,5 @@
 
 export const projectId = "xzsggifsczgizfdrusti"
 export const publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6c2dnaWZzY3pnaXpmZHJ1c3RpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwMzI1MTcsImV4cCI6MjA4ODYwODUxN30.cgVdn7fClLkDGdEatIIbFTbS8MPrW1R-72L6oCfV23c"
+
+export default { projectId, publicAnonKey };

@@ -1,6 +1,20 @@
-import { Flag, TrendingUp } from "lucide-react";
-
+import { Flag, TrendingUp, Moon, Sun } from "lucide-react";
+import { useState } from "react";
 export function Header() {
+  const [darkMode, setDarkMode] = useState(true);
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      const html = document.documentElement;
+      if (!prev) {
+        html.classList.add("dark");
+      } else {
+        html.classList.remove("dark");
+      }
+      return !prev;
+    });
+  };
+
   return (
     <header className="border-b bg-gradient-to-r from-red-600 to-red-700 text-white">
       <div className="container mx-auto px-6 py-4">
@@ -14,7 +28,14 @@ export function Header() {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-4 text-sm">
+            <button
+              onClick={toggleDarkMode}
+              className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-700 bg-gray-900 text-yellow-400 hover:bg-gray-700 transition"
+              title="Toggle dark mode"
+            >
+              {darkMode ? <Sun className="size-5" /> : <Moon className="size-5" />}
+            </button>
             <TrendingUp className="size-4" />
             <span>2026 Season</span>
           </div>

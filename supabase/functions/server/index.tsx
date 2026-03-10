@@ -33,7 +33,7 @@ async function initializeDatabase() {
       .eq("key", "db_version")
       .single();
 
-    const currentVersion = "v8";
+    const currentVersion = "v6";
     if (existing && existing.value === currentVersion) {
       console.log("Database already initialized with version:", currentVersion);
       return;
@@ -65,7 +65,6 @@ async function initializeDatabase() {
       { id: 10, name: "Cadillac", color: "#444749", points: 0, wins: 0, podiums: 0, championships: 0 },
       { id: 11, name: "Aston Martin", color: "#10853b", points: 0, wins: 0, podiums: 0, championships: 0 },
     ];
-
 
     const races = [
       { id: 1, name: "Bahrain Grand Prix", country: "Bahrain", date: "2026-03-01", circuit: "Bahrain International Circuit", winner: "Charles Leclerc", fastestLap: "Lando Norris" },
