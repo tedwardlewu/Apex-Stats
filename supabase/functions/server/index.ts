@@ -33,7 +33,7 @@ async function initializeDatabase() {
       .eq("key", "db_version")
       .single();
 
-    const currentVersion = "v3";
+    const currentVersion = "v8";
     if (existing && existing.value === currentVersion) {
       console.log("Database already initialized with version:", currentVersion);
       return;
@@ -53,17 +53,19 @@ async function initializeDatabase() {
     ];
 
     const teams = [
-      { id: 1, name: "Ferrari", color: "#DC2626", points: 588, wins: 9, podiums: 22, championships: 16 },
-      { id: 2, name: "McLaren", color: "#F97316", points: 402, wins: 5, podiums: 15, championships: 8 },
-      { id: 3, name: "Red Bull Racing", color: "#1E40AF", points: 340, wins: 2, podiums: 12, championships: 6 },
-      { id: 4, name: "Mercedes", color: "#06B6D4", points: 187, wins: 1, podiums: 7, championships: 8 },
-      { id: 5, name: "Aston Martin", color: "#1aa84e", points: 120, wins: 0, podiums: 3, championships: 0 },
-      { id: 6, name: "Alpine", color: "#8B5CF6", points: 90, wins: 0, podiums: 2, championships: 0 },
-      { id: 7, name: "Williams", color: "#3B82F6", points: 156, wins: 1, podiums: 5, championships: 0 },
-      { id: 8, name: "Sauber", color: "#02f406", points: 60, wins: 0, podiums: 1, championships: 0 },
-      { id: 9, name: "Racing Bulls", color: "#7594c2", points: 30, wins: 0, podiums: 0, championships: 0 },
-      { id: 10, name: "Haas", color: "#f7f5f5", points: 15, wins: 0, podiums: 0, championships: 0 },
+      { id: 1, name: "Mercedes", color: "#06B6D4", points: 50, wins: 1, podiums: 2, championships: 8 },
+      { id: 2, name: "Ferrari", color: "#DC2626", points: 27, wins: 0, podiums: 1, championships: 16 },
+      { id: 3, name: "McLaren", color: "#F97316", points: 10, wins: 5, podiums: 0, championships: 8 },
+      { id: 4, name: "Red Bull Racing", color: "#1c46ce", points: 8, wins: 0, podiums: 0, championships: 6 },
+      { id: 5, name: "Haas F1 Team", color: "#f7f5f5", points: 6, wins: 0, podiums: 0, championships: 0 },
+      { id: 6, name: "Racing Bulls", color: "#7594c2", points: 4, wins: 0, podiums: 0, championships: 0 },
+      { id: 7, name: "Audi", color: "#771716", points: 2, wins: 0, podiums: 0, championships: 0 },
+      { id: 8, name: "Alpine", color: "#2871cb", points: 0, wins: 0, podiums: 0, championships: 0 },
+      { id: 9, name: "Williams", color: "#104fb4", points: 0, wins: 0, podiums: 0, championships: 0 },
+      { id: 10, name: "Cadillac", color: "#444749", points: 0, wins: 0, podiums: 0, championships: 0 },
+      { id: 11, name: "Aston Martin", color: "#10853b", points: 0, wins: 0, podiums: 0, championships: 0 },
     ];
+
 
     const races = [
       { id: 1, name: "Bahrain Grand Prix", country: "Bahrain", date: "2026-03-01", circuit: "Bahrain International Circuit", winner: "Charles Leclerc", fastestLap: "Lando Norris" },

@@ -70,16 +70,17 @@ INSERT INTO drivers (id, name, number, team, nationality, points, wins, podiums,
   (8, 'Oscar Piastri', 81, 'McLaren', 'Australia', 178, 2, 6, 0);
 
 INSERT INTO teams (id, name, color, points, wins, podiums, championships) VALUES
-  (1, 'Ferrari', '#DC2626', 588, 9, 22, 16),
+  (1, 'Mercedes','#06B6D4' 588, 9, 22, 16),
   (2, 'McLaren', '#F97316', 402, 5, 15, 8),
   (3, 'Red Bull Racing', '#1E40AF', 340, 2, 12, 6),
-  (4, 'Mercedes', '#06B6D4', 187, 1, 7, 8),
+  (4, 'Ferrari', '#DC2626', 187, 1, 7, 8),
   (5, 'Aston Martin', '#1aa84e', 120, 0, 3, 0),
   (6, 'Alpine', '#8B5CF6', 90, 0, 2, 0),
   (7, 'Williams', '#3B82F6', 156, 1, 5, 0),
-  (8, 'Sauber', '#02f406', 60, 0, 1, 0),
+  (8, 'Audi', '#02f406', 60, 0, 1, 0),
   (9, 'Racing Bulls', '#7594c2', 30, 0, 0, 0),
-  (10, 'Haas', '#f7f5f5', 15, 0, 0, 0);
+  (10, 'Haas', '#f7f5f5', 15, 0, 0, 0),
+  (11, 'Cadillac', '#444749', 0, 0, 0, 0);
 
 
 INSERT INTO races (id, name, country, date, circuit, winner_id, fastest_lap_driver_id) VALUES

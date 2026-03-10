@@ -12,6 +12,7 @@ interface Driver {
   wins: number;
   podiums: number;
   championships: number;
+  image: string;
 }
 
 export function DriverStandings() {
@@ -58,13 +59,15 @@ export function DriverStandings() {
       <div className="p-6">
         <div className="space-y-4">
           {sortedDrivers.map((driver, index) => (
-            <div
-              key={driver.id}
-              className="flex items-center gap-4 p-4 rounded-lg hover:bg-gray-50 transition-colors"
-            >
+              <div className="flex items-center gap-4 p-4 rounded-lg hover:bg-gray-50 transition-colors">
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 font-bold text-gray-700">
                 {index + 1}
               </div>
+              <img
+                src={driver.image}
+                alt={driver.name}
+                className="w-12 h-12 rounded-full object-cover object-[center_-10%] border-2 border-gray-200 scale-150"
+              />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold">{driver.name}</span>

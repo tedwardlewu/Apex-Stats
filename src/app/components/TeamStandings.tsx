@@ -10,6 +10,7 @@ interface Team {
   wins: number;
   podiums: number;
   championships: number;
+  image: string;
 }
 
 export function TeamStandings() {
@@ -66,6 +67,11 @@ export function TeamStandings() {
               <div
                 className="w-1 h-12 rounded"
                 style={{ backgroundColor: team.color }}
+              />
+              <img
+                src={team.image}
+                alt={team.name}
+                className="w-8 h-8 rounded-full object-cover object-top border-2 border-gray-200"
               />
               <div className="flex-1">
                 <p className="font-semibold">{team.name}</p>

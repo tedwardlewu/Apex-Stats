@@ -1,29 +1,38 @@
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { useFilters } from "../contexts/FilterContext";
 
-interface FilterBarProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  selectedTeam: string;
-  onTeamChange: (value: string) => void;
-  selectedSeason: string;
-  onSeasonChange: (value: string) => void;
-}
+export function FilterBar() {
+  const { searchQuery, setSearchQuery, selectedTeam, setSelectedTeam, selectedSeason, setSelectedSeason } = useFilters();
 
-export function FilterBar({
-  searchQuery,
-  onSearchChange,
-  selectedTeam,
-  onTeamChange,
-  selectedSeason,
-  onSeasonChange
-}: FilterBarProps) {
+  const hasActiveFilters = searchQuery !== "" || selectedTeam !== "all" || selectedSeason !== "2026";
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedTeam("all");
+    setSelectedSeason("2026");
+  };
+
   return (
     <div className="bg-white rounded-lg border shadow-sm p-6 mb-8">
-      <div className="flex items-center gap-2 mb-4">
-        <Filter className="size-5 text-gray-600" />
-        <h2 className="font-semibold">Filters</h2>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Filter className="size-5 text-gray-600" />
+          <h2 className="font-semibold">Filters</h2>
+        </div>
+        {hasActiveFilters && (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={clearFilters}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <X className="size-4 mr-1" />
+            Clear Filters
+          </Button>
+        )}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -33,12 +42,12 @@ export function FilterBar({
             type="text"
             placeholder="Search drivers..."
             value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
           />
         </div>
 
-        <Select value={selectedTeam} onValueChange={onTeamChange}>
+        <Select value={selectedTeam} onValueChange={setSelectedTeam}>
           <SelectTrigger>
             <SelectValue placeholder="All Teams" />
           </SelectTrigger>
@@ -49,10 +58,15 @@ export function FilterBar({
             <SelectItem value="Red Bull Racing">Red Bull Racing</SelectItem>
             <SelectItem value="Mercedes">Mercedes</SelectItem>
             <SelectItem value="Williams">Williams</SelectItem>
+            <SelectItem value="Aston Martin">Aston Martin</SelectItem>
+            <SelectItem value="RB">RB</SelectItem>
+            <SelectItem value="Haas">Haas</SelectItem>
+            <SelectItem value="Alpine">Alpine</SelectItem>
+            <SelectItem value="Kick Sauber">Kick Sauber</SelectItem>
           </SelectContent>
         </Select>
 
-        <Select value={selectedSeason} onValueChange={onSeasonChange}>
+        <Select value={selectedSeason} onValueChange={setSelectedSeason}>
           <SelectTrigger>
             <SelectValue placeholder="2026 Season" />
           </SelectTrigger>

@@ -28,9 +28,11 @@ export function DriverCard({ driver, rank, isSelected, onSelect }: DriverCardPro
       
       <div className="flex items-start gap-4">
         <div className="relative">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center text-2xl font-bold text-gray-700">
-            {driver.number}
-          </div>
+          <img
+            src={driver.image}
+            alt={driver.name}
+            className="w-16 h-16 rounded-full object-cover object-[center_-10%] border-2 border-gray-200 scale-150"
+          />
           <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-yellow-500 border-2 border-white flex items-center justify-center text-xs font-bold">
             {rank}
           </div>
