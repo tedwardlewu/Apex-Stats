@@ -11,6 +11,8 @@ import { RecentRaces } from "./components/RecentRaces";
 import { FilterBar } from "./components/FilterBar";
 import { TabNavigation } from "./components/TabNavigation";
 import { CompareSection } from "./components/CompareSection";
+import { TeamsSection } from "./components/TeamsSection";
+import { TeamsShowcase } from "./components/TeamsShowcase";
 import * as api from "./services/api";
 
 export default function App() {
@@ -103,7 +105,18 @@ export default function App() {
               <>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                   <DriverStandings />
-                  <TeamStandings />
+                  <div className="flex items-start gap-4">
+                    <TeamStandings />
+                    <button
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow-lg transition-colors"
+                      onClick={() => {
+                        const el = document.getElementById('teams-showcase-section');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      View Cars
+                    </button>
+                  </div>
                 </div>
                 <ConsistencyTable />
               </>
@@ -118,11 +131,15 @@ export default function App() {
               </>
             ),
             compare: (
-              <CompareSection />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <CompareSection />
+                <TeamsSection />
+              </div>
             )
           }}
         </TabNavigation>
       </main>
+      <TeamsShowcase />
 
       <footer className="border-t bg-white mt-12">
         <div className="container mx-auto px-6 py-6">
