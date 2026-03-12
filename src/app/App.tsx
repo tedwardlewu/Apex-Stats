@@ -130,6 +130,19 @@ export default function App() {
                 <ConsistencyTable />
               </>
             ),
+             graphs: (
+               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                 {}
+                 <div className="bg-white rounded shadow p-6">
+                   <h2 className="text-xl font-bold mb-4">Driver Points Graph</h2>
+                   {}
+                 </div>
+                 <div className="bg-white rounded shadow p-6">
+                   <h2 className="text-xl font-bold mb-4">Team Points Graph</h2>
+                   {}
+                 </div>
+               </div>
+             ),
             compare: (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <CompareSection />

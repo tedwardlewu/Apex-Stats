@@ -7,13 +7,21 @@ interface TabNavigationProps {
     analytics: React.ReactNode;
     standings: React.ReactNode;
     compare: React.ReactNode;
+    graphs: React.ReactNode;
   };
 }
 
 export function TabNavigation({ children }: TabNavigationProps) {
   return (
     <Tabs defaultValue="overview" className="w-full">
-      <TabsList className="grid w-full grid-cols-4 mb-8">
+      <TabsList className="grid w-full grid-cols-5 mb-8">
+                <TabsTrigger value="graphs" className="flex items-center gap-2">
+                  <BarChart3 className="size-4" />
+                  <span className="hidden sm:inline">Graphs</span>
+                </TabsTrigger>
+              <TabsContent value="graphs">
+                {children.graphs}
+              </TabsContent>
         <TabsTrigger value="overview" className="flex items-center gap-2">
           <LayoutGrid className="size-4" />
           <span className="hidden sm:inline">Overview</span>

@@ -1,4 +1,3 @@
-// No comments found in this file. No changes needed.
 import { projectId, publicAnonKey } from '../../../utils/supabase/info.tsx';
 
 const API_BASE_URL = `https://${projectId}.supabase.co/functions/v1/make-server-93f7169e`;

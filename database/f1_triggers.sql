@@ -1,4 +1,3 @@
--- Example triggers to showcase SQL skills
 CREATE OR REPLACE FUNCTION update_team_points()
 RETURNS TRIGGER AS $$
 BEGIN

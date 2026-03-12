@@ -60,26 +60,40 @@ CREATE TABLE driver_consistency (
 );
 
 INSERT INTO drivers (id, name, number, team, nationality, points, wins, podiums, championships) VALUES
-  (1, 'Max Verstappen', 1, 'Red Bull Racing', 'Netherlands', 198, 2, 8, 3),
-  (2, 'Sergio Perez', 11, 'Red Bull Racing', 'Mexico', 142, 0, 4, 0),
-  (3, 'Lewis Hamilton', 44, 'Ferrari', 'Great Britain', 276, 4, 10, 7),
-  (4, 'George Russell', 63, 'Mercedes', 'Great Britain', 187, 1, 7, 0),
-  (5, 'Charles Leclerc', 16, 'Ferrari', 'Monaco', 312, 5, 12, 0),
-  (6, 'Carlos Sainz', 55, 'Williams', 'Spain', 156, 1, 5, 0),
-  (7, 'Lando Norris', 4, 'McLaren', 'Great Britain', 224, 3, 9, 0),
-  (8, 'Oscar Piastri', 81, 'McLaren', 'Australia', 178, 2, 6, 0);
+  (1,  'Max Verstappen', 3, 'Red Bull Racing', 'Netherlands', 8, 0, 0, 3),
+  (2,  'Sergio Perez', 11, 'Red Bull Racing', 'Mexico', 0, 0, 0, 0),
+  (3,  'Lewis Hamilton', 44, 'Ferrari', 'Great Britain', 12, 0, 0, 7),
+  (4,  'George Russell', 63, 'Mercedes', 'Great Britain', 25, 1, 0, 0),
+  (5,  'Charles Leclerc', 16, 'Ferrari', 'Monaco', 15, 0, 1, 0),
+  (6,  'Carlos Sainz', 55, 'Williams', 'Spain', 0, 0, 0, 0),
+  (7,  'Lando Norris', 1, 'McLaren', 'Great Britain', 10, 0, 0, 0),
+  (8,  'Oscar Piastri', 81, 'McLaren', 'Australia', 0, 0, 0, 0),
+  (9,  'Valtteri Bottas', 77, 'Cadillac', 'Finland', 0, 0, 0, 0),
+  (10, 'Fernando Alonso', 14, 'Alpine', 'Spain', 0, 0, 0, 2),
+  (11, 'Lance Stroll', 18, 'Aston Martin', 'Canada', 0, 0, 0, 0),
+  (12, 'Oliver Bearman', 50, 'Haas', 'Great Britain', 4, 0, 0, 0),
+  (13, 'Pierre Gasly', 10, 'Aline', 'France', 1, 0, 0, 0),
+  (14, 'Franco Colapinto', 16, 'Alpine', 'Argentina', 0, 0, 0, 0),
+  (15, 'Alex Albon', 23, 'Williams', 'Thailand', 0, 0, 0, 0),
+  (16, 'Isack Hadjar', 20, 'Red Bull Racing', 'France', 0, 0, 0, 0),
+  (17, 'Liam Lawson', 40, 'Racing Bulls', 'New Zealand', 0, 0, 0, 0),
+  (18, 'Nico Hulkenberg', 27, 'Audi', 'Germany', 0, 0, 0, 0),
+  (19, 'Arvid Lindblad', 46, 'Racing Bulls', 'Great Britain', 4, 0, 0, 0),
+  (20, 'Esteban Ocon', 31, 'Haas', 'France', 0, 0, 0, 0),
+  (21, 'Gabriel Bortoleto', 21, 'Audi', 'Brazil', 2, 0, 0, 0),
+  (22, 'Kimi Antonelli', 7, 'Mercedes', 'Italy', 18, 0, 1, 0);
 
 INSERT INTO teams (id, name, color, points, wins, podiums, championships) VALUES
-  (1, 'Mercedes','#06B6D4' 588, 9, 22, 16),
-  (2, 'McLaren', '#F97316', 402, 5, 15, 8),
-  (3, 'Red Bull Racing', '#1E40AF', 340, 2, 12, 6),
-  (4, 'Ferrari', '#DC2626', 187, 1, 7, 8),
-  (5, 'Aston Martin', '#1aa84e', 120, 0, 3, 0),
-  (6, 'Alpine', '#8B5CF6', 90, 0, 2, 0),
-  (7, 'Williams', '#3B82F6', 156, 1, 5, 0),
-  (8, 'Audi', '#02f406', 60, 0, 1, 0),
-  (9, 'Racing Bulls', '#7594c2', 30, 0, 0, 0),
-  (10, 'Haas', '#f7f5f5', 15, 0, 0, 0),
+  (1, 'Mercedes','#06B6D4', 43, 1, 2, 16),
+  (2, 'McLaren', '#F97316', 10, 0, 0, 8),
+  (3, 'Red Bull Racing', '#1E40AF', 8, 0, 0, 6),
+  (4, 'Ferrari', '#DC2626', 27, 0, 2, 8),
+  (5, 'Aston Martin', '#1aa84e', 0, 0, 0, 0),
+  (6, 'Alpine', '#8B5CF6', 1, 0, 0, 0),
+  (7, 'Williams', '#3B82F6', 0, 0, 0, 0),
+  (8, 'Audi', '#02f406', 2, 0, 0, 0),
+  (9, 'Racing Bulls', '#7594c2', 4, 0, 0, 0),
+  (10, 'Haas', '#f7f5f5', 6, 0, 0, 0),
   (11, 'Cadillac', '#444749', 0, 0, 0, 0);
 
 
