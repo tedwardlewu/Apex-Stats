@@ -22,12 +22,12 @@ The database contains:
 - **10 Constructor Teams** with historical data
 - **5+ Race Results** from 2025 season
 - **11 Lap Time Entries** per driver
-- **4 Years** of historical team performance
-- **20 Driver Consistency Scores**
+- **5 Years** of historical team performance
+- **22 Driver Consistency Scores**
 
 ***Still in early development***
 
 ## Acknowledgments
 
 - **Frontend UI:** Generated using Figma Make (automated Tailwind CSS)
-- **Data:** Sample F1 2025 season data for demonstration purposes
+- **Data:** Sample F1 2026 season data for demonstration purposes
