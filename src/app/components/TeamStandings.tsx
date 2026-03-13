@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Users } from "lucide-react";
 import * as api from "../services/api";
+import { useFilters } from "../contexts/FilterContext";
 
 interface Team {
   id: number;
@@ -16,13 +17,13 @@ interface Team {
 export function TeamStandings() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
+  const { selectedSeason } = useFilters();
 
-  // ...existing code...
   useEffect(() => {
     async function fetchTeams() {
       try {
         setLoading(true);
-        const response = await api.getTeams();
+        const response = await api.getTeams({ season: selectedSeason });
         if (response.success) {
           setTeams(response.data);
         }
@@ -34,7 +35,7 @@ export function TeamStandings() {
     }
 
     fetchTeams();
-  }, []);
+  }, [selectedSeason]);
 
   if (loading) {
     return (

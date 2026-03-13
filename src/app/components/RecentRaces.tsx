@@ -16,7 +16,6 @@ export function RecentRaces() {
   const [races, setRaces] = useState<Race[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch races from SQL backend
   useEffect(() => {
     async function fetchRaces() {
       try {

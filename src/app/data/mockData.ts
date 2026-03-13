@@ -1,5 +1,3 @@
-// Mock F1 data for Apex Stats
-
 export interface Driver {
   id: number;
   name: string;
@@ -227,19 +225,19 @@ export const races: Race[] = [
 ];
 
 export const driverSeasonHistory: Record<number, DriverSeasonStats[]> = {
-  1: [ // Max Verstappen
+  1: [
     { season: 2023, points: 575, wins: 19, podiums: 21 },
     { season: 2024, points: 437, wins: 11, podiums: 17 },
     { season: 2025, points: 454, wins: 13, podiums: 18 },
     { season: 2026, points: 198, wins: 2, podiums: 8 }
   ],
-  3: [ // Lewis Hamilton
+  3: [
     { season: 2023, points: 234, wins: 1, podiums: 6 },
     { season: 2024, points: 289, wins: 2, podiums: 9 },
     { season: 2025, points: 312, wins: 3, podiums: 11 },
     { season: 2026, points: 276, wins: 4, podiums: 10 }
   ],
-  5: [ // Charles Leclerc
+  5: [
     { season: 2023, points: 307, wins: 5, podiums: 11 },
     { season: 2024, points: 356, wins: 6, podiums: 13 },
     { season: 2025, points: 289, wins: 4, podiums: 10 },

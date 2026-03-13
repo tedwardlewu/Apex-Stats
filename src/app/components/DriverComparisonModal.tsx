@@ -32,7 +32,6 @@ export function DriverComparisonModal({
         </DialogHeader>
         
         <div className="grid grid-cols-2 gap-8 mt-6">
-          {/* Driver 1 */}
           <div className="text-center">
             <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-3xl font-bold mb-4">
               {driver1.number}
@@ -42,7 +41,6 @@ export function DriverComparisonModal({
             <p className="text-xs text-gray-500 mt-1">{driver1.nationality}</p>
           </div>
 
-          {/* Driver 2 */}
           <div className="text-center">
             <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white text-3xl font-bold mb-4">
               {driver2.number}
@@ -53,7 +51,6 @@ export function DriverComparisonModal({
           </div>
         </div>
 
-        {/* Stats Comparison */}
         <div className="space-y-6 mt-8">
           {stats.map((stat) => {
             const value1 = driver1[stat.key];

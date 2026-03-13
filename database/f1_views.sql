@@ -1,4 +1,3 @@
--- Example views to showcase SQL skills
 CREATE VIEW driver_stats AS
 SELECT d.id, d.name, d.team, d.points, d.wins, d.podiums, dc.consistency_score, dc.avg_position
 FROM drivers d

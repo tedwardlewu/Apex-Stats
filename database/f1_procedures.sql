@@ -1,4 +1,3 @@
--- Example stored procedures to showcase SQL skills
 CREATE OR REPLACE PROCEDURE add_driver(
   p_name VARCHAR,
   p_number INTEGER,

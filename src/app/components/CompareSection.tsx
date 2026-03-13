@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { DriverComparisonModal } from "./DriverComparisonModal";
 import { GitCompare, X } from "lucide-react";
 import * as api from "../services/api";
+import { useFilters } from "../contexts/FilterContext";
 
 interface Driver {
   id: number;
@@ -22,13 +23,17 @@ export function CompareSection() {
   const [selectedDrivers, setSelectedDrivers] = useState<Driver[]>([]);
   const [showComparison, setShowComparison] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { searchQuery, selectedTeam, selectedSeason } = useFilters();
 
-  // Fetch drivers from SQL backend
   useEffect(() => {
     async function fetchDrivers() {
       try {
         setLoading(true);
-        const response = await api.getDrivers();
+        const response = await api.getDrivers({
+          search: searchQuery,
+          team: selectedTeam,
+          season: selectedSeason,
+        });
         if (response.success) {
           setDrivers(response.data);
         }
@@ -40,7 +45,11 @@ export function CompareSection() {
     }
 
     fetchDrivers();
-  }, []);
+  }, [searchQuery, selectedTeam, selectedSeason]);
+
+  useEffect(() => {
+    setSelectedDrivers((current) => current.filter((driver) => drivers.some((candidate) => candidate.id === driver.id)));
+  }, [drivers]);
 
   const handleDriverSelect = (driver: Driver) => {
     if (selectedDrivers.find(d => d.id === driver.id)) {

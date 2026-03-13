@@ -50,7 +50,6 @@ export function TeamsShowcase() {
 
   return (
     <section id="teams-showcase-section" className="relative bg-gradient-to-br from-gray-900 via-gray-700 to-blue-900 rounded-lg p-6 mt-12 overflow-hidden shadow-xl">
-      {/* Decorative SVG background */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="carBgGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">

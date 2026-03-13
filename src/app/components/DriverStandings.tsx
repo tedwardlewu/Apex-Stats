@@ -1,4 +1,3 @@
-// ...existing code...
 const teamLogoImages: Record<string, string> = {
   "Mercedes": "/Team Images/Mercedes.avif",
   "Ferrari": "/Team Images/Ferrari.avif",
@@ -8,6 +7,8 @@ const teamLogoImages: Record<string, string> = {
   "Cadillac": "/Team Images/Cadillac.avif",
   "Aston Martin": "/Team Images/Aston.avif",
   "Audi": "/Team Images/Audi.avif",
+  "Kick Sauber": "/Team Images/Sauber.avif",
+  "Sauber": "/Team Images/Sauber.avif",
   "Alpine": "/Team Images/Alpine.avif",
   "Haas F1 Team": "/Team Images/Haas.avif",
   "Racing Bulls": "/Team Images/Racingbulls.avif",
@@ -19,6 +20,7 @@ function getTeamLogo(team: string) {
 import { useState, useEffect } from "react";
 import { Trophy } from "lucide-react";
 import * as api from "../services/api";
+import { useFilters } from "../contexts/FilterContext";
 
 interface Driver {
   id: number;
@@ -34,7 +36,6 @@ interface Driver {
   image: string;
 }
 
-// ...existing code...
 const flagImages: Record<string, string> = {
   "Netherlands": "/Countries/Dutch.webp",
   "France": "/Countries/France.webp",
@@ -51,6 +52,7 @@ const flagImages: Record<string, string> = {
   "Mexico": "/Countries/Mexico.svg",
   "Finland": "/Countries/Finland.png",
   "Canada": "/Countries/Canada.svg",
+  "Japan": "/Countries/Japan.png",
   "Thailand": "/Countries/Thailand.png",
 };
 
@@ -61,13 +63,17 @@ function getFlagImg(nationality: string) {
 export function DriverStandings() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
+  const { searchQuery, selectedTeam, selectedSeason } = useFilters();
 
-  // ...existing code...
   useEffect(() => {
     async function fetchDrivers() {
       try {
         setLoading(true);
-        const response = await api.getDrivers();
+        const response = await api.getDrivers({
+          search: searchQuery,
+          team: selectedTeam,
+          season: selectedSeason,
+        });
         if (response.success) {
           setDrivers(response.data);
         }
@@ -79,7 +85,7 @@ export function DriverStandings() {
     }
 
     fetchDrivers();
-  }, []);
+  }, [searchQuery, selectedTeam, selectedSeason]);
 
   if (loading) {
     return (
@@ -91,7 +97,6 @@ export function DriverStandings() {
 
   const sortedDrivers = [...drivers].sort((a, b) => b.points - a.points);
 
-  // ...existing code...
   const teamColors: { [team: string]: string } = {
     "Mercedes": "#06B6D4",
     "Ferrari": "#c92c2c",
@@ -101,6 +106,8 @@ export function DriverStandings() {
     "Cadillac": "#444749",
     "Aston Martin": "#10853b",
     "Audi": "#771716",
+    "Kick Sauber": "#39FF14",
+    "Sauber": "#39FF14",
     "Alpine": "#2871cb",
     "Haas F1 Team": "#d1d1d1",
     "Racing Bulls": "#7594c2",

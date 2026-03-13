@@ -7,7 +7,6 @@ export function LapTimeChart() {
   const [lapTimeData, setLapTimeData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch lap times from SQL backend
   useEffect(() => {
     async function fetchLapTimes() {
       try {

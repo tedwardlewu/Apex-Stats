@@ -7,7 +7,6 @@ export function TeamPerformanceChart() {
   const [teamPerformanceData, setTeamPerformanceData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch team performance from SQL backend
   useEffect(() => {
     async function fetchTeamPerformance() {
       try {
