@@ -1,6 +1,20 @@
 import { useState, useEffect } from "react";
 import * as api from "../services/api";
 
+const teamCarImage: Record<string, string> = {
+  Mercedes: "Mercedes.avif",
+  Ferrari: "Ferrari.avif",
+  McLaren: "McLaren.avif",
+  "Red Bull Racing": "Redbull.avif",
+  "Haas F1 Team": "Haas.avif",
+  "Racing Bulls": "Racingbulls.avif",
+  Audi: "Audi.avif",
+  Alpine: "Alpine.avif",
+  Williams: "Williams.avif",
+  Cadillac: "Cadillac.avif",
+  "Aston Martin": "Aston.avif",
+};
+
 interface Team {
   id: number;
   name: string;
@@ -16,22 +30,8 @@ interface Driver {
 }
 
 export function TeamsShowcase() {
-    const teamCarImage = {
-      'Mercedes': 'Mercedes.avif',
-      'Ferrari': 'Ferrari.avif',
-      'McLaren': 'McLaren.avif',
-      'Red Bull Racing': 'Redbull.avif',
-      'Haas F1 Team': 'Haas.avif',
-      'Racing Bulls': 'Racingbulls.avif',
-      'Audi': 'Audi.avif',
-      'Alpine': 'Alpine.avif',
-      'Williams': 'Williams.avif',
-      'Cadillac': 'Cadillac.avif',
-      'Aston Martin': 'Aston.avif',
-    };
   const [teams, setTeams] = useState<Team[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
-  const [hoveredTeam, setHoveredTeam] = useState<string | null>(null);
   const [showDrivers, setShowDrivers] = useState<string | null>(null);
   const [carHidden, setCarHidden] = useState<string | null>(null);
 
@@ -67,7 +67,6 @@ export function TeamsShowcase() {
             key={team.id}
             className="flex items-center gap-8 p-6 rounded-lg relative bg-gradient-to-r from-black/60 via-blue-900/40 to-transparent shadow-lg backdrop-blur-md"
             onMouseEnter={() => {
-              setHoveredTeam(team.name);
               setCarHidden(null);
               setShowDrivers(null);
               setTimeout(() => {
@@ -78,7 +77,6 @@ export function TeamsShowcase() {
               }, 10);
             }}
             onMouseLeave={() => {
-              setHoveredTeam(null);
               setShowDrivers(null);
               setCarHidden(null);
             }}
@@ -99,11 +97,6 @@ export function TeamsShowcase() {
                   alt={team.name + " car"}
                   className="absolute left-0 top-0 w-[500px] h-48 object-contain rounded-xl shadow-2xl bg-white/10 backdrop-blur-sm transition-opacity duration-500"
                   style={{ opacity: carHidden === team.name ? 0 : 1, zIndex: carHidden === team.name ? 1 : 2 }}
-                  onError={e => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = "/Cars/default.avif";
-                    console.warn("Car image not found:", "/Cars/" + teamCarImage[team.name]);
-                  }}
                 />
                 {showDrivers === team.name && carHidden === team.name && (
                   <div className="flex items-center justify-center w-full h-full">

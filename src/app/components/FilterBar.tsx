@@ -4,22 +4,24 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useFilters } from "../contexts/FilterContext";
 
+const DEFAULT_SEASON = "2026";
+
 export function FilterBar() {
   const { searchQuery, setSearchQuery, selectedTeam, setSelectedTeam, selectedSeason, setSelectedSeason } = useFilters();
 
-  const hasActiveFilters = searchQuery !== "" || selectedTeam !== "all" || selectedSeason !== "2026";
+  const hasActiveFilters = searchQuery !== "" || selectedTeam !== "all" || selectedSeason !== DEFAULT_SEASON;
 
   const clearFilters = () => {
     setSearchQuery("");
     setSelectedTeam("all");
-    setSelectedSeason("2026");
+    setSelectedSeason(DEFAULT_SEASON);
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-sm p-6 mb-8 text-gray-200">
+    <div className="mb-8 rounded-[28px] border border-slate-200/70 bg-white/85 p-6 text-slate-900 shadow-sm backdrop-blur">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Filter className="size-5 text-gray-600" />
+          <Filter className="size-5 text-red-500" />
           <h2 className="font-semibold">Filters</h2>
         </div>
         {hasActiveFilters && (
@@ -27,7 +29,7 @@ export function FilterBar() {
             variant="ghost" 
             size="sm" 
             onClick={clearFilters}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="text-red-600 hover:bg-red-50 hover:text-red-700"
           >
             <X className="size-4 mr-1" />
             Clear Filters
@@ -37,7 +39,7 @@ export function FilterBar() {
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
           <Input
             type="text"
             placeholder="Search drivers..."
@@ -71,10 +73,8 @@ export function FilterBar() {
             <SelectValue placeholder="2026 Season" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="2026">2026 Season</SelectItem>
             <SelectItem value="2025">2025 Season</SelectItem>
-            <SelectItem value="2024">2024 Season</SelectItem>
-            <SelectItem value="2023">2023 Season</SelectItem>
+            <SelectItem value="2026">2026 Season</SelectItem>
           </SelectContent>
         </Select>
       </div>

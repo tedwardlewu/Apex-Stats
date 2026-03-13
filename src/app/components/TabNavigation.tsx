@@ -12,32 +12,23 @@ interface TabNavigationProps {
 }
 
 export function TabNavigation({ children }: TabNavigationProps) {
+  const tabs = [
+    { key: "overview", label: "Overview", icon: LayoutGrid },
+    { key: "standings", label: "Standings", icon: Trophy },
+    { key: "analytics", label: "Analytics", icon: BarChart3 },
+    { key: "graphs", label: "Graphs", icon: BarChart3 },
+    { key: "compare", label: "Compare", icon: GitCompare },
+  ] as const;
+
   return (
     <Tabs defaultValue="overview" className="w-full">
-      <TabsList className="grid w-full grid-cols-5 mb-8">
-                <TabsTrigger value="graphs" className="flex items-center gap-2">
-                  <BarChart3 className="size-4" />
-                  <span className="hidden sm:inline">Graphs</span>
-                </TabsTrigger>
-              <TabsContent value="graphs">
-                {children.graphs}
-              </TabsContent>
-        <TabsTrigger value="overview" className="flex items-center gap-2">
-          <LayoutGrid className="size-4" />
-          <span className="hidden sm:inline">Overview</span>
-        </TabsTrigger>
-        <TabsTrigger value="standings" className="flex items-center gap-2">
-          <Trophy className="size-4" />
-          <span className="hidden sm:inline">Standings</span>
-        </TabsTrigger>
-        <TabsTrigger value="analytics" className="flex items-center gap-2">
-          <BarChart3 className="size-4" />
-          <span className="hidden sm:inline">Analytics</span>
-        </TabsTrigger>
-        <TabsTrigger value="compare" className="flex items-center gap-2">
-          <GitCompare className="size-4" />
-          <span className="hidden sm:inline">Compare</span>
-        </TabsTrigger>
+      <TabsList className="mb-8 grid w-full grid-cols-2 gap-2 rounded-2xl bg-white/70 p-2 shadow-sm backdrop-blur md:grid-cols-5">
+        {tabs.map(({ key, label, icon: Icon }) => (
+          <TabsTrigger key={key} value={key} className="flex items-center gap-2 rounded-xl">
+            <Icon className="size-4" />
+            <span className="hidden sm:inline">{label}</span>
+          </TabsTrigger>
+        ))}
       </TabsList>
 
       <TabsContent value="overview">
@@ -50,6 +41,10 @@ export function TabNavigation({ children }: TabNavigationProps) {
 
       <TabsContent value="analytics">
         {children.analytics}
+      </TabsContent>
+
+      <TabsContent value="graphs">
+        {children.graphs}
       </TabsContent>
 
       <TabsContent value="compare">

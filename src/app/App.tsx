@@ -1,5 +1,5 @@
 import { Trophy, Users, Flag, TrendingUp } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "./components/Header";
 import { AnimatedStatsCard } from "./components/AnimatedStatsCard";
 import { DriverStandings } from "./components/DriverStandings";
@@ -11,44 +11,44 @@ import { RecentRaces } from "./components/RecentRaces";
 import { FilterBar } from "./components/FilterBar";
 import { TabNavigation } from "./components/TabNavigation";
 import { CompareSection } from "./components/CompareSection";
+import { GraphsSection } from "./components/GraphsSection";
 import { TeamsSection } from "./components/TeamsSection";
 import { TeamsShowcase } from "./components/TeamsShowcase";
 import * as api from "./services/api";
 
+const initialStats = {
+  totalRaces: 0,
+  topDriver: "",
+  topTeam: "",
+  totalPoints: 0,
+};
+
 export default function App() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTeam, setSelectedTeam] = useState("all");
-  const [selectedSeason, setSelectedSeason] = useState("2026");
-  const [stats, setStats] = useState({
-    totalRaces: 0,
-    topDriver: "",
-    topTeam: "",
-    totalPoints: 0
-  });
-  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState(initialStats);
 
   useEffect(() => {
     async function fetchStats() {
       try {
-        setLoading(true);
         const response = await api.getStats();
         if (response.success) {
           setStats(response.data);
         }
       } catch (error) {
         console.error("Error fetching stats from SQL database:", error);
-      } finally {
-        setLoading(false);
       }
     }
 
     fetchStats();
   }, []);
 
+  const scrollToTeamsShowcase = () => {
+    document.getElementById("teams-showcase-section")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(220,38,38,0.14),_transparent_32%),linear-gradient(180deg,_var(--background)_0%,_#edf4fb_100%)] text-foreground">
       <Header />
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8 lg:py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <AnimatedStatsCard
             title="Total Races"
@@ -108,11 +108,8 @@ export default function App() {
                   <div className="flex items-start gap-4">
                     <TeamStandings />
                     <button
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded shadow-lg transition-colors"
-                      onClick={() => {
-                        const el = document.getElementById('teams-showcase-section');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }}
+                      className="rounded-full bg-slate-900 px-4 py-2 font-semibold text-white shadow-lg transition-colors hover:bg-slate-700"
+                      onClick={scrollToTeamsShowcase}
                     >
                       View Cars
                     </button>
@@ -130,19 +127,7 @@ export default function App() {
                 <ConsistencyTable />
               </>
             ),
-             graphs: (
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                 {}
-                 <div className="bg-white rounded shadow p-6">
-                   <h2 className="text-xl font-bold mb-4">Driver Points Graph</h2>
-                   {}
-                 </div>
-                 <div className="bg-white rounded shadow p-6">
-                   <h2 className="text-xl font-bold mb-4">Team Points Graph</h2>
-                   {}
-                 </div>
-               </div>
-             ),
+            graphs: <GraphsSection />,
             compare: (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <CompareSection />
@@ -154,9 +139,9 @@ export default function App() {
       </main>
       <TeamsShowcase />
 
-      <footer className="border-t bg-white mt-12">
+      <footer className="mt-12 border-t border-slate-200/70 bg-white/80 backdrop-blur">
         <div className="container mx-auto px-6 py-6">
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm text-slate-600">
             Apex Stats - Formula 1 Analytics Dashboard | 2026 Season Data
           </p>
         </div>
