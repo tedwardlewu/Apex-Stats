@@ -1,6 +1,6 @@
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS season_2025_grand_prix_results (
+CREATE TABLE IF NOT EXISTS 2025Results (
   round_number INTEGER PRIMARY KEY,
   round_code VARCHAR(3) UNIQUE NOT NULL,
   grand_prix_name VARCHAR(100) NOT NULL,
@@ -11,14 +11,14 @@ CREATE TABLE IF NOT EXISTS season_2025_grand_prix_results (
   winning_constructor VARCHAR(150) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS season_2025_points_system (
+CREATE TABLE IF NOT EXISTS 2025Points (
   event_type VARCHAR(10) NOT NULL,
   finishing_position INTEGER NOT NULL,
   points_awarded INTEGER NOT NULL,
   PRIMARY KEY (event_type, finishing_position)
 );
 
-CREATE TABLE IF NOT EXISTS season_2025_driver_standings (
+CREATE TABLE IF NOT EXISTS 2025DriverStand (
   championship_position INTEGER PRIMARY KEY,
   driver_name VARCHAR(100) NOT NULL,
   nationality VARCHAR(100) NOT NULL,
@@ -26,19 +26,19 @@ CREATE TABLE IF NOT EXISTS season_2025_driver_standings (
   total_points INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS season_2025_constructor_standings (
+CREATE TABLE IF NOT EXISTS 2025TeamStand(
   championship_position INTEGER PRIMARY KEY,
   constructor_name VARCHAR(150) NOT NULL,
   nationality VARCHAR(100) NOT NULL,
   total_points INTEGER NOT NULL
 );
 
-DELETE FROM season_2025_grand_prix_results;
-DELETE FROM season_2025_points_system;
-DELETE FROM season_2025_driver_standings;
-DELETE FROM season_2025_constructor_standings;
+DELETE FROM 2025Results;
+DELETE FROM 2025Points;
+DELETE FROM 2025DriverStand;
+DELETE FROM 2025TeamStand;
 
-INSERT INTO season_2025_grand_prix_results (
+INSERT INTO 2025Results (
   round_number,
   round_code,
   grand_prix_name,
@@ -73,7 +73,7 @@ INSERT INTO season_2025_grand_prix_results (
   (23, 'QAT', 'Qatar Grand Prix', 'Qatar', 'Oscar Piastri', 'Oscar Piastri', 'Max Verstappen', 'Red Bull Racing-Honda RBPT'),
   (24, 'ABU', 'Abu Dhabi Grand Prix', 'United Arab Emirates', 'Max Verstappen', 'Charles Leclerc', 'Max Verstappen', 'Red Bull Racing-Honda RBPT');
 
-INSERT INTO season_2025_points_system (event_type, finishing_position, points_awarded) VALUES
+INSERT INTO 2025Points (event_type, finishing_position, points_awarded) VALUES
   ('race', 1, 25),
   ('race', 2, 18),
   ('race', 3, 15),
@@ -93,7 +93,7 @@ INSERT INTO season_2025_points_system (event_type, finishing_position, points_aw
   ('sprint', 7, 2),
   ('sprint', 8, 1);
 
-INSERT INTO season_2025_driver_standings (
+INSERT INTO 2025DriverStand (
   championship_position,
   driver_name,
   nationality,
@@ -122,7 +122,7 @@ INSERT INTO season_2025_driver_standings (
   (20, 'Franco Colapinto', 'Argentina', 'Alpine-Renault', 0),
   (21, 'Jack Doohan', 'Australia', 'Alpine-Renault', 0);
 
-INSERT INTO season_2025_constructor_standings (
+INSERT INTO 2025TeamStand(
   championship_position,
   constructor_name,
   nationality,

@@ -6,6 +6,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER after_team_performance_insert
+CREATE TRIGGER PerformanceInsert
 AFTER INSERT ON team_performance
 FOR EACH ROW EXECUTE FUNCTION update_team_points();
