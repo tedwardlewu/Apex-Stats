@@ -2,14 +2,14 @@
 
  A comprehensive Formula 1 analytics dashboard featuring real-time data visualization, driver/team standings, and performance metrics powered by a custom SQL-based backend.
 
- This project demonstrates **full-stack JavaScript and SQL database**. 
+ This project demonstrates **full-stack TypeScript and SQL database**. 
 
 **Frontend UI:** Built using Figma Make (automated React + Tailwind CSS generation)  
-**Backend & Database:** Custom-built by me using JavaScript/TypeScript and SQL
+**Backend & Database:** Custom-built by me using TypeScript/TypeScript and SQL
 
 -  **SQL Database Design** - Schema design with normalized tables and relationships
 -  **RESTful API Development** - 8 custom API endpoints using Hono framework
--  **JavaScript/TypeScript** - Server-side logic and data processing
+-  **TypeScript** - Server-side logic and data processing
 -  **Database Queries** - Complex SQL with JOINs, aggregations, and subqueries
 -  **Backend Architecture** - Three-tier architecture (Frontend → API → Database)
 -  **PostgreSQL** - Using Supabase PostgreSQL with custom SQL implementations
