@@ -7,7 +7,6 @@
 **Frontend UI:** Built using Figma Make (automated React + Tailwind CSS generation)  
 **Backend & Database:** Custom-built by me using JavaScript/TypeScript and SQL
 
-### Skills Demonstrated
 -  **SQL Database Design** - Schema design with normalized tables and relationships
 -  **RESTful API Development** - 8 custom API endpoints using Hono framework
 -  **JavaScript/TypeScript** - Server-side logic and data processing
@@ -30,4 +29,74 @@ The database contains:
 ## Acknowledgments
 
 - **Frontend UI:** Generated using Figma Make (automated Tailwind CSS)
-- **Data:** Sample F1 2026 season data for demonstration purposes
+- **Data:** Sample F1 2026 & 2025 season data for demonstration purposes
+
+***Project Overview***
+A full-stack F1 analytics dashboard that collects, stores, and visualizes Formula 1 data, providing interactive stats, insights, and predictions for drivers, teams, and races.
+Goal: Show your full-stack, SQL, and data visualization skills
+
+
+Outcome: A deployed, interactive dashboard with SQL-powered backend
+
+Tech Stuff: 
+Frontend: React + Tailwind CSS
+
+Charts/Visualizations: Chart.js or D3.js
+
+Backend: Node.js + Express
+
+Database: PostgreSQL or SQLite or SQL 
+
+Optional Analytics: Simple predictive scoring or trend detection
+
+
+Deployment: Render
+Core Features
+Driver & Team Stats
+
+**Things it can do (or will do in the future) :)**
+
+Career and seasonal stats: wins, podiums, points
+
+Compare drivers/teams side by side
+
+Race Analytics
+
+Track-specific performance trends
+
+Average lap times per driver/team
+
+Historical race leaderboard
+
+Predictions / Insights (optional but standout)
+
+Predict podium finishers for upcoming races
+
+Highlight rookies vs. veterans
+
+Calculate “most consistent driver” or “driver improvement score”
+
+Interactive Dashboard
+
+Filter by season, team, driver, or track
+
+Dynamic charts, tables, and leaderboards
+
+Visualizations: heatmaps, trend lines, and bar charts
+
+Database & API
+
+SQL database stores all driver, team, and race info
+
+Optional Personalization
+
+
+
+
+
+
+
+
+
+
+
