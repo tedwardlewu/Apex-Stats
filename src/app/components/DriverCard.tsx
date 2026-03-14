@@ -1,6 +1,8 @@
 import { Driver } from "../data/mockData";
 import { Trophy, Award, TrendingUp, CheckCircle2 } from "lucide-react";
 import { motion } from "motion/react";
+import { useMemeify } from "../contexts/MemeifyContext";
+import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
 
 interface DriverCardProps {
   driver: Driver;
@@ -10,6 +12,8 @@ interface DriverCardProps {
 }
 
 export function DriverCard({ driver, rank, isSelected, onSelect }: DriverCardProps) {
+  const { memeify } = useMemeify();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -29,9 +33,10 @@ export function DriverCard({ driver, rank, isSelected, onSelect }: DriverCardPro
       <div className="flex items-start gap-4">
         <div className="relative">
           <img
-            src={driver.image}
+            src={getDriverImage(driver.name, driver.image, memeify)}
             alt={driver.name}
             className="w-16 h-16 rounded-full object-cover object-[center_-10%] border-2 border-gray-200 scale-150"
+            style={getDriverImageStyle(driver.name, memeify)}
           />
           <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-yellow-500 border-2 border-white flex items-center justify-center text-xs font-bold">
             {rank}

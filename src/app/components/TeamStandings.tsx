@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Users } from "lucide-react";
 import * as api from "../services/api";
 import { useFilters } from "../contexts/FilterContext";
+import { useMemeify } from "../contexts/MemeifyContext";
+import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
 interface Team {
   id: number;
@@ -18,6 +20,7 @@ export function TeamStandings() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const { selectedSeason } = useFilters();
+  const { memeify } = useMemeify();
 
   useEffect(() => {
     async function fetchTeams() {
@@ -71,9 +74,10 @@ export function TeamStandings() {
                 style={{ backgroundColor: team.name === 'Ferrari' ? '#7a1a1a' : team.color || '#222' }}
               >
                 <img
-                  src={team.image}
+                  src={getTeamImage(team.name, team.image, memeify)}
                   alt={team.name}
                   className="w-8 h-8 rounded-full object-cover object-top"
+                  style={getTeamImageStyle(team.name, memeify)}
                 />
               </div>
               <div className="flex-1">

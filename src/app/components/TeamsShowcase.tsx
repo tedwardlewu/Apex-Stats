@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import * as api from "../services/api";
+import { useMemeify } from "../contexts/MemeifyContext";
+import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
 const teamCarImage: Record<string, string> = {
   Mercedes: "Mercedes.avif",
@@ -34,6 +37,7 @@ export function TeamsShowcase() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [showDrivers, setShowDrivers] = useState<string | null>(null);
   const [carHidden, setCarHidden] = useState<string | null>(null);
+  const { memeify } = useMemeify();
 
   useEffect(() => {
     async function fetchTeams() {
@@ -83,9 +87,10 @@ export function TeamsShowcase() {
             style={{ background: team.color ? `linear-gradient(90deg, ${team.color} 0%, #1e293b 100%)` : undefined }}
           >
             <img
-              src={team.image}
+              src={getTeamImage(team.name, team.image, memeify)}
               alt={team.name + " logo"}
               className="w-32 h-32 object-contain drop-shadow-xl"
+              style={getTeamImageStyle(team.name, memeify)}
             />
             <div className="flex-1">
               <h3 className="text-xl font-semibold mb-2 text-white drop-shadow-md">{team.name}</h3>
@@ -103,13 +108,21 @@ export function TeamsShowcase() {
                     {drivers
                       .filter(d => d.team === team.name)
                       .map((driver, idx) => (
-                        <img
+                        <div
                           key={driver.id}
-                          src={driver.image}
-                          alt={driver.name}
-                          className="w-48 h-48 object-contain mx-2 rounded-xl shadow-lg bg-white/10 backdrop-blur-sm transition-opacity duration-500"
-                          style={{ opacity: showDrivers === team.name ? 1 : 0, transitionDelay: `${idx * 100}ms` }}
-                        />
+                          className="mx-2 h-48 w-48 overflow-hidden rounded-xl bg-white/10 shadow-lg backdrop-blur-sm transition-opacity duration-500"
+                          style={{
+                            opacity: showDrivers === team.name ? 1 : 0,
+                            transitionDelay: `${idx * 100}ms`,
+                          }}
+                        >
+                          <img
+                            src={getDriverImage(driver.name, driver.image, memeify)}
+                            alt={driver.name}
+                            className="h-full w-full object-contain"
+                            style={getDriverImageStyle(driver.name, memeify)}
+                          />
+                        </div>
                       ))}
                   </div>
                 )}

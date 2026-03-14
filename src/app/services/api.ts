@@ -51,6 +51,45 @@ const mockDrivers2025 = [
   { id: 121, name: "Jack Doohan", number: 7, team: "Alpine", nationality: "Australia", age: 22, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Drivers 2025/Jack.avif" },
 ];
 
+const mockTeams2026 = [
+  { id: 1, name: "Mercedes", color: "#06B6D4", points: 55, wins: 1, podiums: 2, championships: 16, image: "/Team Images/Mercedes.avif" },
+  { id: 2, name: "Ferrari", color: "#DC2626", points: 40, wins: 0, podiums: 2, championships: 8, image: "/Team Images/Ferrari.avif" },
+  { id: 3, name: "McLaren", color: "#F97316", points: 18, wins: 0, podiums: 0, championships: 8, image: "/Team Images/McLaren.avif" },
+  { id: 4, name: "Red Bull Racing", color: "#1c46ce", points: 8, wins: 0, podiums: 0, championships: 6, image: "/Team Images/Redbull.avif" },
+  { id: 5, name: "Haas F1 Team", color: "#f7f5f5", points: 7, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Haas.avif" },
+  { id: 6, name: "Racing Bulls", color: "#7594c2", points: 6, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Racingbulls.avif" },
+  { id: 7, name: "Audi", color: "#771716", points: 2, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Audi.avif" },
+  { id: 8, name: "Alpine", color: "#2871cb", points: 1, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Alpine.avif" },
+  { id: 9, name: "Williams", color: "#104fb4", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Williams.avif" },
+  { id: 10, name: "Cadillac", color: "#444749", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Cadillac.avif" },
+  { id: 11, name: "Aston Martin", color: "#10853b", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Aston.avif" },
+];
+
+const mockTeams2025 = [
+  { id: 101, name: "McLaren", color: "#F97316", points: 833, wins: 10, podiums: 29, championships: 8, image: "/Team Images/McLaren.avif" },
+  { id: 102, name: "Mercedes", color: "#06B6D4", points: 469, wins: 2, podiums: 10, championships: 8, image: "/Team Images/Mercedes.avif" },
+  { id: 103, name: "Red Bull Racing", color: "#1c46ce", points: 451, wins: 8, podiums: 14, championships: 6, image: "/Team Images/Redbull.avif" },
+  { id: 104, name: "Ferrari", color: "#DC2626", points: 398, wins: 0, podiums: 8, championships: 16, image: "/Team Images/Ferrari.avif" },
+  { id: 105, name: "Williams", color: "#104fb4", points: 137, wins: 0, podiums: 1, championships: 9, image: "/Team Images/Williams.avif" },
+  { id: 106, name: "Racing Bulls", color: "#7594c2", points: 92, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Racingbulls.avif" },
+  { id: 107, name: "Aston Martin", color: "#10853b", points: 89, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Aston.avif" },
+  { id: 108, name: "Haas F1 Team", color: "#f7f5f5", points: 79, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Haas.avif" },
+  { id: 109, name: "Sauber", color: "#39FF14", points: 70, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Sauber.avif" },
+  { id: 110, name: "Alpine", color: "#2871cb", points: 22, wins: 0, podiums: 0, championships: 2, image: "/Team Images/Alpine.avif" },
+];
+
+const mockRaces = [
+  { id: 1, name: "Bahrain Grand Prix", country: "Bahrain", date: "2026-03-01", circuit: "Bahrain International Circuit", winner: "Charles Leclerc", fastestLap: "Lando Norris" },
+  { id: 2, name: "Saudi Arabian Grand Prix", country: "Saudi Arabia", date: "2026-03-08", circuit: "Jeddah Corniche Circuit", winner: "Lewis Hamilton", fastestLap: "Charles Leclerc" },
+  { id: 3, name: "Australian Grand Prix", country: "Australia", date: "2026-03-15", circuit: "Albert Park Circuit", winner: "Lando Norris", fastestLap: "Oscar Piastri" },
+  { id: 4, name: "Japanese Grand Prix", country: "Japan", date: "2026-04-05", circuit: "Suzuka Circuit", winner: "Charles Leclerc", fastestLap: "Lewis Hamilton" },
+  { id: 5, name: "Chinese Grand Prix", country: "China", date: "2026-04-19", circuit: "Shanghai International Circuit", winner: "Lewis Hamilton", fastestLap: "Charles Leclerc" },
+];
+
+const legacyTotalPointsBySeason: Record<string, number> = {
+  "2025": 1673,
+};
+
 const teamAliases: Record<string, string[]> = {
   "Red Bull Racing": ["Red Bull Racing"],
   "Ferrari": ["Ferrari"],
@@ -117,44 +156,10 @@ type TeamFilters = { season?: string };
 export async function getTeams(filters?: TeamFilters) {
   const season = filters?.season ?? DEFAULT_SEASON;
 
-  const mockTeams2026 = [
-    { id: 1, name: "Mercedes", color: "#06B6D4", points: 55, wins: 1, podiums: 2, championships: 8, image: "/Team Images/Mercedes.avif" },
-    { id: 2, name: "Ferrari", color: "#DC2626", points: 40, wins: 0, podiums: 1, championships: 16, image: "/Team Images/Ferrari.avif" },
-    { id: 3, name: "McLaren", color: "#F97316", points: 18, wins: 0, podiums: 0, championships: 8, image: "/Team Images/McLaren.avif" },
-    { id: 4, name: "Red Bull Racing", color: "#1c46ce", points: 8, wins: 0, podiums: 0, championships: 6, image: "/Team Images/Redbull.avif" },
-    { id: 5, name: "Haas F1 Team", color: "#f7f5f5", points: 7, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Haas.avif" },
-    { id: 6, name: "Racing Bulls", color: "#7594c2", points: 6, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Racingbulls.avif" },
-    { id: 7, name: "Audi", color: "#771716", points: 2, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Audi.avif" },
-    { id: 8, name: "Alpine", color: "#2871cb", points: 1, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Alpine.avif" },
-    { id: 9, name: "Williams", color: "#104fb4", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Williams.avif" },
-    { id: 10, name: "Cadillac", color: "#444749", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Cadillac.avif" },
-    { id: 11, name: "Aston Martin", color: "#10853b", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Aston.avif" },
-  ];
-
-  const mockTeams2025 = [
-    { id: 101, name: "McLaren", color: "#F97316", points: 833, wins: 10, podiums: 29, championships: 8, image: "/Team Images/McLaren.avif" },
-    { id: 102, name: "Mercedes", color: "#06B6D4", points: 469, wins: 2, podiums: 10, championships: 8, image: "/Team Images/Mercedes.avif" },
-    { id: 103, name: "Red Bull Racing", color: "#1c46ce", points: 451, wins: 8, podiums: 14, championships: 6, image: "/Team Images/Redbull.avif" },
-    { id: 104, name: "Ferrari", color: "#DC2626", points: 398, wins: 0, podiums: 8, championships: 16, image: "/Team Images/Ferrari.avif" },
-    { id: 105, name: "Williams", color: "#104fb4", points: 137, wins: 0, podiums: 1, championships: 9, image: "/Team Images/Williams.avif" },
-    { id: 106, name: "Racing Bulls", color: "#7594c2", points: 92, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Racingbulls.avif" },
-    { id: 107, name: "Aston Martin", color: "#10853b", points: 89, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Aston.avif" },
-    { id: 108, name: "Haas F1 Team", color: "#f7f5f5", points: 79, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Haas.avif" },
-    { id: 109, name: "Sauber", color: "#39FF14", points: 70, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Sauber.avif" },
-    { id: 110, name: "Alpine", color: "#2871cb", points: 22, wins: 0, podiums: 0, championships: 2, image: "/Team Images/Alpine.avif" },
-  ];
-
   return { success: true, data: season === "2025" ? mockTeams2025 : mockTeams2026 };
 }
 
 export async function getRaces() {
-  const mockRaces = [
-    { id: 1, name: "Bahrain Grand Prix", country: "Bahrain", date: "2026-03-01", circuit: "Bahrain International Circuit", winner: "Charles Leclerc", fastestLap: "Lando Norris" },
-    { id: 2, name: "Saudi Arabian Grand Prix", country: "Saudi Arabia", date: "2026-03-08", circuit: "Jeddah Corniche Circuit", winner: "Lewis Hamilton", fastestLap: "Charles Leclerc" },
-    { id: 3, name: "Australian Grand Prix", country: "Australia", date: "2026-03-15", circuit: "Albert Park Circuit", winner: "Lando Norris", fastestLap: "Oscar Piastri" },
-    { id: 4, name: "Japanese Grand Prix", country: "Japan", date: "2026-04-05", circuit: "Suzuka Circuit", winner: "Charles Leclerc", fastestLap: "Lewis Hamilton" },
-    { id: 5, name: "Chinese Grand Prix", country: "China", date: "2026-04-19", circuit: "Shanghai International Circuit", winner: "Lewis Hamilton", fastestLap: "Charles Leclerc" },
-  ];
   return { success: true, data: mockRaces };
 }
 
@@ -175,71 +180,21 @@ export async function getLapTimes() {
   return { success: true, data: mockLapTimes };
 }
 
-export async function getTeamPerformance() {
-  const mockTeamPerformance = [
-    { id: 1, season: "2023", ferrari: 551, mclaren: 302, redBull: 860, mercedes: 409 },
-    { id: 2, season: "2024", ferrari: 623, mclaren: 378, redBull: 791, mercedes: 452 },
-    { id: 3, season: "2025", ferrari: 587, mclaren: 412, redBull: 823, mercedes: 489 },
-    { id: 4, season: "2026", ferrari: 588, mclaren: 402, redBull: 340, mercedes: 187 },
-  ];
-  return { success: true, data: mockTeamPerformance };
-}
+type StatsFilters = { season?: string };
 
-export async function getConsistency() {
-  const mockConsistency = [
-    { id: 1, driver: "Leclerc", score: 94, avgPosition: 1.8 },
-    { id: 2, driver: "Hamilton", score: 91, avgPosition: 2.3 },
-    { id: 3, driver: "Norris", score: 88, avgPosition: 2.9 },
-    { id: 4, driver: "Verstappen", score: 85, avgPosition: 3.5 },
-    { id: 5, driver: "Piastri", score: 81, avgPosition: 4.2 },
-    { id: 6, driver: "Russell", score: 78, avgPosition: 5.1 },
-    { id: 7, driver: "Sainz", score: 75, avgPosition: 5.7 },
-    { id: 8, driver: "Perez", score: 71, avgPosition: 6.8 },
-  ];
-  return { success: true, data: mockConsistency };
-}
-
-export async function getStats() {
-  const mockDrivers = [
-    { id: 1, name: "Max Verstappen", number: 1, team: "Red Bull Racing", nationality: "Netherlands", points: 198, wins: 2, podiums: 8, championships: 3 },
-    { id: 2, name: "Sergio Perez", number: 11, team: "Red Bull Racing", nationality: "Mexico", points: 142, wins: 0, podiums: 4, championships: 0 },
-    { id: 3, name: "Lewis Hamilton", number: 44, team: "Ferrari", nationality: "Great Britain", points: 276, wins: 4, podiums: 10, championships: 7 },
-    { id: 4, name: "George Russell", number: 63, team: "Mercedes", nationality: "Great Britain", points: 187, wins: 1, podiums: 7, championships: 0 },
-    { id: 5, name: "Charles Leclerc", number: 16, team: "Ferrari", nationality: "Monaco", points: 312, wins: 5, podiums: 12, championships: 0 },
-    { id: 6, name: "Carlos Sainz", number: 55, team: "Williams", nationality: "Spain", points: 156, wins: 1, podiums: 5, championships: 0 },
-    { id: 7, name: "Lando Norris", number: 4, team: "McLaren", nationality: "Great Britain", points: 224, wins: 3, podiums: 9, championships: 0 },
-    { id: 8, name: "Oscar Piastri", number: 81, team: "McLaren", nationality: "Australia", points: 178, wins: 2, podiums: 6, championships: 0 },
-  ];
-
-  const mockTeams = [
-    { id: 1, name: "Mercedes", color: "#06B6D4", points: 43, wins: 1, podiums: 2, championships: 8 },
-    { id: 2, name: "Ferrari", color: "#DC2626", points: 27, wins: 0, podiums: 1, championships: 16 },
-    { id: 3, name: "McLaren", color: "#F97316", points: 10, wins: 5, podiums: 0, championships: 8 },
-    { id: 4, name: "Red Bull Racing", color: "#1c46ce", points: 8, wins: 0, podiums: 0, championships: 6 },
-    { id: 5, name: "Haas F1 Team", color: "#f7f5f5", points: 6, wins: 0, podiums: 0, championships: 0 },
-    { id: 6, name: "Racing Bulls", color: "#7594c2", points: 4, wins: 0, podiums: 0, championships: 0 },
-    { id: 7, name: "Audi", color: "#771716", points: 2, wins: 0, podiums: 0, championships: 0 },
-    { id: 8, name: "Alpine", color: "#2871cb", points: 0, wins: 0, podiums: 0, championships: 0 },
-    { id: 9, name: "Williams", color: "#104fb4", points: 0, wins: 0, podiums: 0, championships: 0 },
-    { id: 10, name: "Cadillac", color: "#444749", points: 0, wins: 0, podiums: 0, championships: 0 },
-    { id: 11, name: "Aston Martin", color: "#10853b", points: 0, wins: 0, podiums: 0, championships: 0 },
-  ];
-
-  const mockRaces = [
-    { id: 1, name: "Bahrain Grand Prix", country: "Bahrain", date: "2026-03-01", circuit: "Bahrain International Circuit", winner: "Charles Leclerc", fastestLap: "Lando Norris" },
-    { id: 2, name: "Saudi Arabian Grand Prix", country: "Saudi Arabia", date: "2026-03-08", circuit: "Jeddah Corniche Circuit", winner: "Lewis Hamilton", fastestLap: "Charles Leclerc" },
-    { id: 3, name: "Australian Grand Prix", country: "Australia", date: "2026-03-15", circuit: "Albert Park Circuit", winner: "Lando Norris", fastestLap: "Oscar Piastri" },
-    { id: 4, name: "Japanese Grand Prix", country: "Japan", date: "2026-04-05", circuit: "Suzuka Circuit", winner: "Charles Leclerc", fastestLap: "Lewis Hamilton" },
-    { id: 5, name: "Chinese Grand Prix", country: "China", date: "2026-04-19", circuit: "Shanghai International Circuit", winner: "Lewis Hamilton", fastestLap: "Charles Leclerc" },
-  ];
-
-  const topDriver = mockDrivers.reduce((leader, driver) =>
+export async function getStats(filters?: StatsFilters) {
+  const season = filters?.season ?? DEFAULT_SEASON;
+  const drivers = season === "2025" ? mockDrivers2025 : mockDrivers2026;
+  const teams = season === "2025" ? mockTeams2025 : mockTeams2026;
+  const topDriver = drivers.reduce((leader, driver) =>
     driver.points > leader.points ? driver : leader
   );
-  const topTeam = mockTeams.reduce((leader, team) =>
+  const topTeam = teams.reduce((leader, team) =>
     team.points > leader.points ? team : leader
   );
-  const totalPoints = mockDrivers.reduce((sum, driver) => sum + driver.points, 0);
+  const totalPoints = season === "2026"
+    ? drivers.reduce((sum, driver) => sum + driver.points, 0)
+    : legacyTotalPointsBySeason[season] ?? drivers.reduce((sum, driver) => sum + driver.points, 0);
 
   const totalRaces = mockRaces.length;
 

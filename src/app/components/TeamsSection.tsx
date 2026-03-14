@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import * as api from "../services/api";
+import { useMemeify } from "../contexts/MemeifyContext";
+import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
 interface Team {
   id: number;
@@ -19,6 +22,7 @@ export function TeamsSection() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [hoveredTeam, setHoveredTeam] = useState<string | null>(null);
+  const { memeify } = useMemeify();
 
   useEffect(() => {
     async function fetchTeams() {
@@ -43,13 +47,15 @@ export function TeamsSection() {
             className="flex items-center gap-8 p-6 rounded-lg"
             onMouseEnter={() => setHoveredTeam(team.name)}
             onMouseLeave={() => setHoveredTeam(null)}
-            style={{ background: team.color, boxShadow: hoveredTeam === team.name ? '0 4px 16px rgba(0,0,0,0.15)' : undefined }}
-          >
+            style={{ background: team.color, boxShadow: hoveredTeam === team.name ? '0 4px 16px rgba(0,0,0,0.15)' : undefined }}>
+
             <img
-              src={team.image}
+              src={getTeamImage(team.name, team.image, memeify)}
               alt={team.name + " logo"}
               className="w-32 h-32 object-contain"
+              style={getTeamImageStyle(team.name, memeify)}
             />
+
             <div className="flex-1">
               <h3 className="text-xl font-semibold mb-2">{team.name}</h3>
             </div>
@@ -58,17 +64,20 @@ export function TeamsSection() {
               alt={team.name + " car"}
               className="w-[500px] h-48 object-contain"
             />
+
             {hoveredTeam === team.name && (
               <div className="absolute top-1/2 right-0 bg-white rounded-lg p-4 flex gap-4 z-10 shadow-lg" style={{ transform: 'translateY(-50%)' }}>
                 {drivers
                   .filter(d => d.team === team.name)
                   .map(driver => (
-                    <img
-                      key={driver.id}
-                      src={driver.image}
-                      alt={driver.name}
-                      className="w-32 h-32 object-contain"
-                    />
+                    <div key={driver.id} className="h-32 w-32 overflow-hidden rounded-lg">
+                      <img
+                        src={getDriverImage(driver.name, driver.image, memeify)}
+                        alt={driver.name}
+                        className="h-full w-full object-contain"
+                        style={getDriverImageStyle(driver.name, memeify)}
+                      />
+                    </div>
                   ))}
               </div>
             )}

@@ -1,9 +1,11 @@
 import { Flag, TrendingUp, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useMemeify } from "../contexts/MemeifyContext";
 
 const THEME_STORAGE_KEY = "apex-stats-theme";
 
 export function Header() {
+  const { memeify, toggleMemeify } = useMemeify();
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window === "undefined") {
       return true;
@@ -31,7 +33,20 @@ export function Header() {
             <div className="flex items-center gap-2">
               <Flag className="size-8" />
               <div>
-                <h1 className="text-2xl font-bold">Apex Stats</h1>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold">Apex Stats</h1>
+                  <button
+                    onClick={toggleMemeify}
+                    className={`rounded-full border px-4 py-1.5 text-sm font-semibold shadow-md ring-1 ring-white/20 transition ${
+                      memeify
+                        ? "border-yellow-200 bg-yellow-400 text-red-950 hover:bg-yellow-300"
+                        : "border-red-200/70 bg-red-950/45 text-red-50 hover:bg-red-900/60"
+                    }`}
+                    title="Toggle meme driver and team images"
+                  >
+                    Memeify
+                  </button>
+                </div>
                 <p className="text-sm text-red-100">Formula 1 Analytics Dashboard</p>
               </div>
             </div>

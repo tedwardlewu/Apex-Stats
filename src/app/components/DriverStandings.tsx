@@ -21,6 +21,9 @@ import { useState, useEffect } from "react";
 import { Trophy } from "lucide-react";
 import * as api from "../services/api";
 import { useFilters } from "../contexts/FilterContext";
+import { useMemeify } from "../contexts/MemeifyContext";
+import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
 interface Driver {
   id: number;
@@ -64,6 +67,7 @@ export function DriverStandings() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
   const { searchQuery, selectedTeam, selectedSeason } = useFilters();
+  const { memeify } = useMemeify();
 
   useEffect(() => {
     async function fetchDrivers() {
@@ -144,9 +148,10 @@ export function DriverStandings() {
                   style={{ backgroundColor: driver.team === 'Ferrari' ? '#c92c2c' : teamColors[driver.team] || '#222' }}
                 >
                   <img
-                    src={driver.image}
+                    src={getDriverImage(driver.name, driver.image, memeify)}
                     alt={driver.name}
                     className="w-14 h-14 rounded-full object-cover object-[center_-10%]"
+                    style={getDriverImageStyle(driver.name, memeify)}
                   />
                 </div>
               </div>
@@ -164,10 +169,13 @@ export function DriverStandings() {
               </div>
               <div className="flex items-center justify-center">
                 <img
-                  src={getTeamLogo(driver.team)}
+                  src={getTeamImage(driver.team, getTeamLogo(driver.team), memeify)}
                   alt={driver.team + " logo"}
                   className="w-6 h-6 rounded-full border border-gray-700 mx-4"
-                  style={{ backgroundColor: driver.team === 'Ferrari' ? '#c92c2c' : teamColors[driver.team] || '#222' }}
+                  style={{
+                    ...getTeamImageStyle(driver.team, memeify),
+                    backgroundColor: driver.team === 'Ferrari' ? '#c92c2c' : teamColors[driver.team] || '#222',
+                  }}
                 />
               </div>
               <div className="flex flex-col items-end min-w-[60px]">

@@ -14,6 +14,7 @@ import { CompareSection } from "./components/CompareSection";
 import { GraphsSection } from "./components/GraphsSection";
 import { TeamsSection } from "./components/TeamsSection";
 import { TeamsShowcase } from "./components/TeamsShowcase";
+import { useFilters } from "./contexts/FilterContext";
 import * as api from "./services/api";
 
 const initialStats = {
@@ -25,11 +26,12 @@ const initialStats = {
 
 export default function App() {
   const [stats, setStats] = useState(initialStats);
+  const { selectedSeason } = useFilters();
 
   useEffect(() => {
     async function fetchStats() {
       try {
-        const response = await api.getStats();
+        const response = await api.getStats({ season: selectedSeason });
         if (response.success) {
           setStats(response.data);
         }
@@ -39,7 +41,7 @@ export default function App() {
     }
 
     fetchStats();
-  }, []);
+  }, [selectedSeason]);
 
   const scrollToTeamsShowcase = () => {
     document.getElementById("teams-showcase-section")?.scrollIntoView({ behavior: "smooth" });
