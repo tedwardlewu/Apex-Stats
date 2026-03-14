@@ -89,7 +89,7 @@ export function DriverStandings() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg border shadow-sm p-6">
+      <div className="rounded-lg border border-slate-200 bg-slate-100 p-6 dark:border-border dark:bg-gray-800">
         <p className="text-center text-gray-600 dark:text-gray-300">Loading driver standings from database...</p>
       </div>
     );
@@ -114,11 +114,11 @@ export function DriverStandings() {
   };
 
   return (
-    <div className="bg-card text-card-foreground border border-border shadow-lg rounded-lg">
-      <div className="border-b p-6 bg-gray-800 rounded-t-lg">
+    <div className="rounded-lg border border-slate-200 bg-slate-100 text-slate-900 dark:border-border dark:bg-card dark:text-card-foreground">
+      <div className="rounded-t-lg border-b border-slate-200 bg-slate-200 p-6 dark:border-border dark:bg-gray-800">
         <div className="flex items-center gap-3">
-          <Trophy className="size-6 text-yellow-600 drop-shadow-md" />
-          <h2 className="text-2xl font-extrabold text-blue-900 tracking-tight">Driver Standings</h2>
+          <Trophy className="size-6 text-yellow-600" />
+          <h2 className="text-2xl font-extrabold tracking-tight text-slate-800 dark:text-white">Driver Standings</h2>
         </div>
       </div>
       <div className="p-8">
@@ -126,9 +126,9 @@ export function DriverStandings() {
           {sortedDrivers.map((driver, index) => (
             <div
               key={driver.id}
-              className="flex items-center gap-4 p-2 rounded-md bg-card text-card-foreground shadow border border-border dark:bg-[#1a1f2b]"
+              className="flex items-center gap-4 rounded-md border border-slate-200 bg-white p-2 text-slate-900 dark:border-border dark:bg-[#1a1f2b] dark:text-card-foreground"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 font-bold text-base text-black dark:text-white">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-700 text-base font-bold text-white">
                 {index + 1}
               </div>
               <div className="flex items-center gap-2">
@@ -152,14 +152,14 @@ export function DriverStandings() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-base text-black dark:text-white">{driver.name}</span>
-                  <span className="text-xs px-2 py-0.5 rounded bg-gray-700 font-medium text-black dark:text-white">
+                  <span className="text-base font-semibold text-slate-900 dark:text-white">{driver.name}</span>
+                  <span className="rounded bg-gray-700 px-2 py-0.5 text-xs font-medium text-white">
                     #{driver.number}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                 </div>
-                <p className="text-xs mt-1 text-black dark:text-white">{driver.team}</p>
+                <p className="mt-1 text-xs text-slate-700 dark:text-white">{driver.team}</p>
               
               </div>
               <div className="flex items-center justify-center">
@@ -171,17 +171,17 @@ export function DriverStandings() {
                 />
               </div>
               <div className="flex flex-col items-end min-w-[60px]">
-                <p className="font-bold text-base text-black dark:text-white">{driver.points}</p>
-                <p className="text-xs text-black dark:text-white">pts</p>
+                <p className="text-base font-bold text-slate-900 dark:text-white">{driver.points}</p>
+                <p className="text-xs text-slate-700 dark:text-white">pts</p>
               </div>
               <div className="flex gap-2 text-xs text-gray-400">
                 <div className="text-center">
-                  <p className="font-semibold text-black dark:text-white">{driver.wins}</p>
-                  <p className="text-xs text-black dark:text-white">Wins</p>
+                  <p className="font-semibold text-slate-900 dark:text-white">{driver.wins}</p>
+                  <p className="text-xs text-slate-700 dark:text-white">Wins</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-black dark:text-white">{driver.podiums}</p>
-                  <p className="text-xs text-black dark:text-white">Podiums</p>
+                  <p className="font-semibold text-slate-900 dark:text-white">{driver.podiums}</p>
+                  <p className="text-xs text-slate-700 dark:text-white">Podiums</p>
                 </div>
               </div>
             </div>

@@ -39,8 +39,8 @@ export function TeamStandings() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg border shadow-sm p-6">
-        <p className="text-center text-gray-600">Loading team standings from database...</p>
+      <div className="rounded-lg border border-slate-200 bg-slate-100 p-6 dark:border-border dark:bg-gray-800">
+        <p className="text-center text-gray-600 dark:text-gray-300">Loading team standings from database...</p>
       </div>
     );
   }
@@ -48,18 +48,18 @@ export function TeamStandings() {
   const sortedTeams = [...teams].sort((a, b) => b.points - a.points);
 
   return (
-    <div className="bg-card text-card-foreground border border-border shadow-lg rounded-lg">
-      <div className="border-b p-6 bg-gray-800 rounded-t-lg">
+    <div className="rounded-lg border border-slate-200 bg-slate-100 text-slate-900 dark:border-border dark:bg-card dark:text-card-foreground">
+      <div className="rounded-t-lg border-b border-slate-200 bg-slate-200 p-6 dark:border-border dark:bg-gray-800">
         <div className="flex items-center gap-3">
-          <Users className="size-6 text-green-600 drop-shadow-md" />
-          <h2 className="text-2xl font-extrabold text-green-900 tracking-tight">Constructor Standings</h2>
+          <Users className="size-6 text-green-600" />
+          <h2 className="text-2xl font-extrabold tracking-tight text-slate-800 dark:text-white">Constructor Standings</h2>
         </div>
       </div>
       <div className="p-8">
         <div className="space-y-6">
           {sortedTeams.map((team, index) => (
-            <div key={team.id} className="flex items-center gap-4 p-2 rounded-md bg-gray-800 shadow border border-gray-700">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 font-bold text-gray-200 text-base">
+            <div key={team.id} className="flex items-center gap-4 rounded-md border border-slate-200 bg-white p-2 dark:border-gray-700 dark:bg-gray-800">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-700 text-base font-bold text-white">
                 {index + 1}
               </div>
               <div
@@ -77,20 +77,20 @@ export function TeamStandings() {
                 />
               </div>
               <div className="flex-1">
-                <p className="font-semibold text-base text-gray-200">{team.name}</p>
-                <p className="text-xs text-gray-400">{team.championships} Championships</p>
+                <p className="text-base font-semibold text-slate-900 dark:text-gray-200">{team.name}</p>
+                <p className="text-xs text-slate-600 dark:text-gray-400">{team.championships} Championships</p>
               </div>
               <div className="text-right">
-                <p className="font-bold text-base text-gray-200">{team.points}</p>
-                <p className="text-xs text-gray-400">pts</p>
+                <p className="text-base font-bold text-slate-900 dark:text-gray-200">{team.points}</p>
+                <p className="text-xs text-slate-600 dark:text-gray-400">pts</p>
               </div>
-              <div className="flex gap-2 text-xs text-gray-400">
+              <div className="flex gap-2 text-xs text-slate-600 dark:text-gray-400">
                 <div className="text-center">
-                  <p className="font-semibold text-gray-200">{team.wins}</p>
+                  <p className="font-semibold text-slate-900 dark:text-gray-200">{team.wins}</p>
                   <p className="text-xs">Wins</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-gray-200">{team.podiums}</p>
+                  <p className="font-semibold text-slate-900 dark:text-gray-200">{team.podiums}</p>
                   <p className="text-xs">Podiums</p>
                 </div>
               </div>
