@@ -14,6 +14,7 @@ import { CompareSection } from "./components/CompareSection";
 import { GraphsSection } from "./components/GraphsSection";
 import { TeamsSection } from "./components/TeamsSection";
 import { TeamsShowcase } from "./components/TeamsShowcase";
+import { NewsSection } from "./components/NewsSection";
 import { useFilters } from "./contexts/FilterContext";
 import * as api from "./services/api";
 
@@ -93,7 +94,7 @@ export default function App() {
                     <DriverStandings />
                   </div>
                   <div>
-                    <TeamStandings />
+                    <TeamStandings onViewCars={scrollToTeamsShowcase} />
                   </div>
                 </div>
 
@@ -107,15 +108,7 @@ export default function App() {
               <>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                   <DriverStandings />
-                  <div className="flex items-start gap-4">
-                    <TeamStandings />
-                    <button
-                      className="rounded-full bg-slate-900 px-4 py-2 font-semibold text-white shadow-lg transition-colors hover:bg-slate-700"
-                      onClick={scrollToTeamsShowcase}
-                    >
-                      View Cars
-                    </button>
-                  </div>
+                  <TeamStandings onViewCars={scrollToTeamsShowcase} />
                 </div>
                 <ConsistencyTable />
               </>
@@ -130,6 +123,7 @@ export default function App() {
               </>
             ),
             graphs: <GraphsSection />,
+            news: <NewsSection />,
             compare: (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <CompareSection />
