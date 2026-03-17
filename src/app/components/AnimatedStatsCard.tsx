@@ -60,13 +60,9 @@ export function AnimatedStatsCard({
             {isNumeric ? count.toLocaleString() : value}
           </motion.p>
         </div>
-        <motion.div
-          whileHover={{ rotate: 360 }}
-          transition={{ duration: 0.6 }}
-          className={`rounded-lg bg-slate-100 p-3 dark:bg-gray-700 ${color}`}
-        >
+        <div className={`rounded-lg bg-slate-100 p-3 dark:bg-gray-700 ${color}`}>
           <Icon className="size-6" />
-        </motion.div>
+        </div>
       </div>
     </motion.div>
   );
