@@ -4,25 +4,25 @@ const DEFAULT_SEASON = "2026";
 
 const mockDrivers2026 = [
     { id: 1, name: "Max Verstappen", number: 3, team: "Red Bull Racing", nationality: "Netherlands", age: 28, points: 8, wins: 0, podiums: 0, championships: 3, image: "/Driver Images/Max.avif" },
-    { id: 2, name: "Isack Hadjar", number: 20, team: "Red Bull Racing", nationality: "France", age: 21, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Isack.avif" },
-    { id: 3, name: "Charles Leclerc", number: 16, team: "Ferrari", nationality: "Monaco", age: 28, points: 22, wins: 0, podiums: 1, championships: 0, image: "/Driver Images/Charles.avif" },
-    { id: 4, name: "Lewis Hamilton", number: 44, team: "Ferrari", nationality: "Great Britain", age: 41, points: 18, wins: 0, podiums: 0, championships: 7, image: "/Driver Images/Lewis.avif" },
-    { id: 5, name: "George Russell", number: 63, team: "Mercedes", nationality: "Great Britain", age: 28, points: 33, wins: 1, podiums: 1, championships: 0, image: "/Driver Images/Russel.avif" },
-    { id: 6, name: "Kimi Antonelli", number: 7, team: "Mercedes", nationality: "Italy", age: 19, points: 22, wins: 0, podiums: 1, championships: 0, image: "/Driver Images/Antonelli.avif" },
+    { id: 2, name: "Isack Hadjar", number: 20, team: "Red Bull Racing", nationality: "France", age: 21, points: 4, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Isack.avif" },
+    { id: 3, name: "Charles Leclerc", number: 16, team: "Ferrari", nationality: "Monaco", age: 28, points: 34, wins: 0, podiums: 1, championships: 0, image: "/Driver Images/Charles.avif" },
+    { id: 4, name: "Lewis Hamilton", number: 44, team: "Ferrari", nationality: "Great Britain", age: 41, points: 33, wins: 0, podiums: 1, championships: 7, image: "/Driver Images/Lewis.avif" },
+    { id: 5, name: "George Russell", number: 63, team: "Mercedes", nationality: "Great Britain", age: 28, points: 51, wins: 1, podiums: 2, championships: 0, image: "/Driver Images/Russel.avif" },
+    { id: 6, name: "Kimi Antonelli", number: 7, team: "Mercedes", nationality: "Italy", age: 19, points: 47, wins: 1, podiums: 2, championships: 0, image: "/Driver Images/Antonelli.avif" },
     { id: 7, name: "Lando Norris", number: 1, team: "McLaren", nationality: "Great Britain", age: 26, points: 15, wins: 0, podiums: 0, championships: 1, image: "/Driver Images/Norris.avif" },
     { id: 8, name: "Oscar Piastri", number: 81, team: "McLaren", nationality: "Australia", age: 25, points: 3, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Oscar.avif" },
     { id: 9, name: "Fernando Alonso", number: 14, team: "Aston Martin", nationality: "Spain", age: 44, points: 0, wins: 0, podiums: 0, championships: 2, image: "/Driver Images/Alonso.avif" },
     { id: 10, name: "Lance Stroll", number: 18, team: "Aston Martin", nationality: "Canada", age: 27, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Stroll.avif" },
     { id: 11, name: "Nico Hulkenberg", number: 27, team: "Audi", nationality: "Germany", age: 38, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Hulkenburg.avif" },
     { id: 12, name: "Gabriel Bortoleto", number: 21, team: "Audi", nationality: "Brazil", age: 22, points: 2, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Borteoleto.avif" },
-    { id: 13, name: "Pierre Gasly", number: 10, team: "Alpine", nationality: "France", age: 30, points: 1, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Gasly.avif" },
-    { id: 14, name: "Franco Colapinto", number: 24, team: "Alpine", nationality: "Argentina", age: 23, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Colapinto.avif" },
-    { id: 15, name: "Carlos Sainz", number: 55, team: "Williams", nationality: "Spain", age: 31, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Sainz.avif" },
+    { id: 13, name: "Pierre Gasly", number: 10, team: "Alpine", nationality: "France", age: 30, points: 9, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Gasly.avif" },
+    { id: 14, name: "Franco Colapinto", number: 24, team: "Alpine", nationality: "Argentina", age: 23, points: 1, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Colapinto.avif" },
+    { id: 15, name: "Carlos Sainz", number: 55, team: "Williams", nationality: "Spain", age: 31, points: 2, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Sainz.avif" },
     { id: 16, name: "Alexander Albon", number: 23, team: "Williams", nationality: "Thailand", age: 30, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Albon.avif" },
-    { id: 17, name: "Liam Lawson", number: 40, team: "Racing Bulls", nationality: "New Zealand", age: 24, points: 2, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Lawson.avif" },
+    { id: 17, name: "Liam Lawson", number: 40, team: "Racing Bulls", nationality: "New Zealand", age: 24, points: 8, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Lawson.avif" },
     { id: 18, name: "Arvid Lindblad", number: 46, team: "Racing Bulls", nationality: "United Kingdom", age: 18, points: 4, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Lindblad.avif" },
     { id: 19, name: "Esteban Ocon", number: 31, team: "Haas F1 Team", nationality: "France", age: 29, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Ocon.avif" },
-    { id: 20, name: "Oliver Bearman", number: 50, team: "Haas F1 Team", nationality: "United Kingdom", age: 20, points: 7, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Bearman.avif" },
+    { id: 20, name: "Oliver Bearman", number: 50, team: "Haas F1 Team", nationality: "United Kingdom", age: 20, points: 17, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Bearman.avif" },
     { id: 21, name: "Sergio Perez", number: 11, team: "Cadillac", nationality: "Mexico", age: 36, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Perez.avif" },
     { id: 22, name: "Valtteri Bottas", number: 77, team: "Cadillac", nationality: "Finland", age: 36, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Bottas.avif" },
 ];
@@ -52,15 +52,15 @@ const mockDrivers2025 = [
 ];
 
 const mockTeams2026 = [
-  { id: 1, name: "Mercedes", color: "#06B6D4", points: 55, wins: 1, podiums: 2, championships: 16, image: "/Team Images/Mercedes.avif" },
-  { id: 2, name: "Ferrari", color: "#DC2626", points: 40, wins: 0, podiums: 2, championships: 8, image: "/Team Images/Ferrari.avif" },
+  { id: 1, name: "Mercedes", color: "#06B6D4", points: 98, wins: 2, podiums: 4, championships: 16, image: "/Team Images/Mercedes.avif" },
+  { id: 2, name: "Ferrari", color: "#DC2626", points: 67, wins: 0, podiums: 2, championships: 8, image: "/Team Images/Ferrari.avif" },
   { id: 3, name: "McLaren", color: "#F97316", points: 18, wins: 0, podiums: 0, championships: 8, image: "/Team Images/McLaren.avif" },
-  { id: 4, name: "Red Bull Racing", color: "#1c46ce", points: 8, wins: 0, podiums: 0, championships: 6, image: "/Team Images/Redbull.avif" },
-  { id: 5, name: "Haas F1 Team", color: "#f7f5f5", points: 7, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Haas.avif" },
-  { id: 6, name: "Racing Bulls", color: "#7594c2", points: 6, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Racingbulls.avif" },
+  { id: 4, name: "Red Bull Racing", color: "#1c46ce", points: 12, wins: 0, podiums: 0, championships: 6, image: "/Team Images/Redbull.avif" },
+  { id: 5, name: "Haas F1 Team", color: "#f7f5f5", points: 17, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Haas.avif" },
+  { id: 6, name: "Racing Bulls", color: "#7594c2", points: 12, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Racingbulls.avif" },
   { id: 7, name: "Audi", color: "#771716", points: 2, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Audi.avif" },
-  { id: 8, name: "Alpine", color: "#2871cb", points: 1, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Alpine.avif" },
-  { id: 9, name: "Williams", color: "#104fb4", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Williams.avif" },
+  { id: 8, name: "Alpine", color: "#2871cb", points: 10, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Alpine.avif" },
+  { id: 9, name: "Williams", color: "#104fb4", points: 2, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Williams.avif" },
   { id: 10, name: "Cadillac", color: "#444749", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Cadillac.avif" },
   { id: 11, name: "Aston Martin", color: "#10853b", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Aston.avif" },
 ];
@@ -79,12 +79,9 @@ const mockTeams2025 = [
 ];
 
 const mockRaces = [
-  { id: 1, name: "Bahrain Grand Prix", country: "Bahrain", date: "2026-03-01", circuit: "Bahrain International Circuit", winner: "Charles Leclerc", fastestLap: "Lando Norris" },
-  { id: 2, name: "Saudi Arabian Grand Prix", country: "Saudi Arabia", date: "2026-03-08", circuit: "Jeddah Corniche Circuit", winner: "Lewis Hamilton", fastestLap: "Charles Leclerc" },
-  { id: 3, name: "Australian Grand Prix", country: "Australia", date: "2026-03-15", circuit: "Albert Park Circuit", winner: "Lando Norris", fastestLap: "Oscar Piastri" },
-  { id: 4, name: "Japanese Grand Prix", country: "Japan", date: "2026-04-05", circuit: "Suzuka Circuit", winner: "Charles Leclerc", fastestLap: "Lewis Hamilton" },
-  { id: 5, name: "Chinese Grand Prix", country: "China", date: "2026-04-19", circuit: "Shanghai International Circuit", winner: "Lewis Hamilton", fastestLap: "Charles Leclerc" },
-];
+  { id: 1, name: "Australian Grand Prix", country: "Melbourne, Australia", date: "2026-03-07", circuit: "Melbourne Grand Prix Circuit", winner: "George Russel", fastestLap: "Max Verstappen" },
+  { id: 2, name: "Chinese Grand Prix", country: "Shang Hai, China", date: "2026-03-15", circuit: "Shanghai International Circuit", winner: "Kimi Antonelli", fastestLap: "Kimi Antonelli" },
+]; 
 
 const legacyTotalPointsBySeason: Record<string, number> = {
   "2025": 1673,

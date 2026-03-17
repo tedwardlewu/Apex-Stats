@@ -1,114 +1,82 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
+import { NewsItem, newsItems } from "../data/newsData";
 
-interface NewsPost {
-  id: number;
-  title: string;
-  image: string;
-  createdAt: string;
+interface DisplayNewsItem extends NewsItem {
+  imageSrc: string;
+}
+
+function toPublicImagePath(fileName: string) {
+  return `/News/${encodeURIComponent(fileName)}`;
 }
 
 export function NewsSection() {
-  const [posts, setPosts] = useState<NewsPost[]>([]);
-  const [title, setTitle] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [error, setError] = useState("");
+  const [selectedItem, setSelectedItem] = useState<DisplayNewsItem | null>(null);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!imageUrl.trim()) {
-      setError("Add an image URL or upload an image file before posting.");
-      return;
-    }
-
-    const newPost: NewsPost = {
-      id: Date.now(),
-      title: title.trim() || "Untitled F1 update",
-      image: imageUrl,
-      createdAt: new Date().toLocaleString(),
-    };
-
-    setPosts((prev) => [newPost, ...prev]);
-    setTitle("");
-    setImageUrl("");
-    setError("");
-  };
-
-  const handleFileUpload = (file: File | undefined) => {
-    if (!file) {
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        setImageUrl(reader.result);
-        setError("");
-      }
-    };
-    reader.readAsDataURL(file);
-  };
+  const displayNewsItems: DisplayNewsItem[] = newsItems.map((item) => ({
+    ...item,
+    imageSrc: toPublicImagePath(item.fileName),
+  }));
 
   return (
     <section className="space-y-6">
       <div className="rounded-[28px] border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur">
         <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">News</p>
         <h2 className="mt-2 text-2xl font-semibold text-slate-900">F1 News Wall</h2>
-        <p className="mt-2 max-w-2xl text-sm text-slate-600">
-          Start posting race-week updates and breaking paddock moments. This is a local-only draft feed for now.
+        <p className="mt-2 max-w-3xl text-sm text-slate-600">
+          Up-to-date Formula 1 News and Highlights from the 2026 season, curated for F1 fans. Click on any news item to view details and images.
         </p>
       </div>
 
-      <article className="rounded-[28px] border border-slate-200/70 bg-white p-6 shadow-sm">
-        <h3 className="text-lg font-semibold text-slate-900">Post a news image</h3>
-        <form className="mt-4 grid gap-4" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            placeholder="Headline (optional)"
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm text-slate-900 outline-none ring-red-500 transition focus:ring"
-          />
-          <input
-            type="url"
-            value={imageUrl}
-            onChange={(event) => setImageUrl(event.target.value)}
-            placeholder="https://image-url.com/f1-news.jpg"
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm text-slate-900 outline-none ring-red-500 transition focus:ring"
-          />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(event) => handleFileUpload(event.target.files?.[0])}
-            className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:font-semibold file:text-slate-700 hover:file:bg-slate-200"
-          />
-          {error && <p className="text-sm font-medium text-red-600">{error}</p>}
-          <button
-            type="submit"
-            className="w-fit rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-800"
-          >
-            Post update
-          </button>
-        </form>
-      </article>
-
-      {posts.length === 0 ? (
-        <div className="rounded-[28px] border border-dashed border-slate-300 bg-white/70 p-10 text-center text-slate-500">
-          No news posts yet. Add your first F1 news image above.
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {posts.map((post) => (
-            <article key={post.id} className="overflow-hidden rounded-[28px] border border-slate-200/70 bg-white shadow-sm">
-              <img src={post.image} alt={post.title} className="h-64 w-full object-cover" />
-              <div className="space-y-2 p-5">
-                <h4 className="text-lg font-semibold text-slate-900">{post.title}</h4>
-                <p className="text-xs uppercase tracking-wide text-slate-500">{post.createdAt}</p>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {displayNewsItems.map((item) => (
+          <article key={item.id} className="overflow-hidden rounded-[28px] border border-slate-200/70 bg-white shadow-sm">
+            <button
+              type="button"
+              className="group block w-full text-left"
+              onClick={() => setSelectedItem(item)}
+            >
+              <div className="relative overflow-hidden">
+                <img
+                  src={item.imageSrc}
+                  alt={item.title}
+                  className="h-64 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/75 to-transparent p-4 text-white">
+                  <p className="text-base font-semibold">{item.title}</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-200">Click to expand</p>
+                </div>
               </div>
-            </article>
-          ))}
-        </div>
-      )}
+            </button>
+
+            <div className="space-y-2 p-5">
+              <p className="text-sm leading-relaxed text-slate-700">
+                {item.description || "No description added yet."}
+              </p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <Dialog open={selectedItem !== null} onOpenChange={(open) => !open && setSelectedItem(null)}>
+        {selectedItem && (
+          <DialogContent className="max-w-5xl bg-white p-5 sm:p-7">
+            <DialogHeader>
+              <DialogTitle className="text-xl text-slate-900">{selectedItem.title}</DialogTitle>
+              <DialogDescription className="text-slate-600">
+                {selectedItem.description || "No description added yet."}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+              <img
+                src={selectedItem.imageSrc}
+                alt={selectedItem.title}
+                className="max-h-[70vh] w-full object-contain"
+              />
+            </div>
+          </DialogContent>
+        )}
+      </Dialog>
     </section>
   );
 }
