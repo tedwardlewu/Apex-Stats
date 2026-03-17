@@ -1,3 +1,5 @@
+import { raceBestLapTimes, raceCatalog } from "../data/raceLapTimes";
+
 type DriverFilters = { team?: string; search?: string; season?: string };
 
 const DEFAULT_SEASON = "2026";
@@ -78,11 +80,6 @@ const mockTeams2025 = [
   { id: 110, name: "Alpine", color: "#2871cb", points: 22, wins: 0, podiums: 0, championships: 2, image: "/Team Images/Alpine.avif" },
 ];
 
-const mockRaces = [
-  { id: 1, name: "Australian Grand Prix", country: "Melbourne, Australia", date: "2026-03-07", circuit: "Melbourne Grand Prix Circuit", winner: "George Russel", fastestLap: "Max Verstappen" },
-  { id: 2, name: "Chinese Grand Prix", country: "Shang Hai, China", date: "2026-03-15", circuit: "Shanghai International Circuit", winner: "Kimi Antonelli", fastestLap: "Kimi Antonelli" },
-]; 
-
 const legacyTotalPointsBySeason: Record<string, number> = {
   "2025": 1673,
 };
@@ -156,25 +153,33 @@ export async function getTeams(filters?: TeamFilters) {
   return { success: true, data: season === "2025" ? mockTeams2025 : mockTeams2026 };
 }
 
-export async function getRaces() {
-  return { success: true, data: mockRaces };
+type RaceFilters = { season?: string };
+
+export async function getRaces(filters?: RaceFilters) {
+  const season = filters?.season ?? DEFAULT_SEASON;
+  const races = raceCatalog
+    .filter((race) => race.season === season)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  return { success: true, data: races };
 }
 
-export async function getLapTimes() {
-  const mockLapTimes = [
-    { lap: 1, leclerc: 91.8, hamilton: 92.2, norris: 92.5, verstappen: 92.8 },
-    { lap: 5, leclerc: 90.5, hamilton: 90.9, norris: 91.2, verstappen: 91.5 },
-    { lap: 10, leclerc: 89.9, hamilton: 90.2, norris: 90.6, verstappen: 90.9 },
-    { lap: 15, leclerc: 89.5, hamilton: 89.8, norris: 90.2, verstappen: 90.5 },
-    { lap: 20, leclerc: 89.2, hamilton: 89.5, norris: 89.9, verstappen: 90.2 },
-    { lap: 25, leclerc: 89.0, hamilton: 89.3, norris: 89.7, verstappen: 90.0 },
-    { lap: 30, leclerc: 88.8, hamilton: 89.1, norris: 89.5, verstappen: 89.8 },
-    { lap: 35, leclerc: 88.6, hamilton: 88.9, norris: 89.3, verstappen: 89.6 },
-    { lap: 40, leclerc: 88.5, hamilton: 88.8, norris: 89.2, verstappen: 89.5 },
-    { lap: 45, leclerc: 88.4, hamilton: 88.7, norris: 89.1, verstappen: 89.4 },
-    { lap: 50, leclerc: 88.3, hamilton: 88.6, norris: 89.0, verstappen: 89.3 },
-  ];
-  return { success: true, data: mockLapTimes };
+type LapTimeFilters = { season?: string; raceId?: number };
+
+export async function getLapTimes(filters?: LapTimeFilters) {
+  const season = filters?.season ?? DEFAULT_SEASON;
+  const seasonRaces = raceCatalog
+    .filter((race) => race.season === season)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const selectedRaceId = filters?.raceId ?? seasonRaces[0]?.id;
+
+  if (!selectedRaceId) {
+    return { success: true, data: [] };
+  }
+
+  const raceLapTimes = [...(raceBestLapTimes[selectedRaceId] ?? [])].sort((a, b) => a.bestLap - b.bestLap);
+
+  return { success: true, data: raceLapTimes };
 }
 
 type StatsFilters = { season?: string };
@@ -193,7 +198,7 @@ export async function getStats(filters?: StatsFilters) {
     ? drivers.reduce((sum, driver) => sum + driver.points, 0)
     : legacyTotalPointsBySeason[season] ?? drivers.reduce((sum, driver) => sum + driver.points, 0);
 
-  const totalRaces = mockRaces.length;
+  const totalRaces = raceCatalog.filter((race) => race.season === season).length;
 
   return {
     success: true,

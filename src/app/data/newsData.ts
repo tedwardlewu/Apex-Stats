@@ -22,7 +22,7 @@ export const newsItems: NewsItem[] = [
     id: "kimi-feature",
     fileName: "Kimi.png",
     title: "Kimi Antonelli First Every Formula 1 Victory",
-    description: "Kimi Antonelli achieved his first Formula 1 victory at the Chinese GP, marking a significant milestone in his career. Hopefully this will be one of many wins to come.",
+    description: "KIMI WINS AT CHINA! Mercedes Driver Kimi Antonelli achieved his first Formula 1 victory at the Chinese GP, marking a significant milestone in his career. Hopefully this will be one of many wins to come.",
   },
   {
     id: "lewis-podium",
