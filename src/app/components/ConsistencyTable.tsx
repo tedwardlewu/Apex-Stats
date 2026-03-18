@@ -13,7 +13,6 @@ export function ConsistencyTable() {
   const [consistency, setConsistency] = useState<Consistency[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch consistency scores from SQL backend
   useEffect(() => {
     async function fetchConsistency() {
       try {
