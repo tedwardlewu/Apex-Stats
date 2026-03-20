@@ -7,6 +7,24 @@ export interface NewsItem {
 
 export const newsItems: NewsItem[] = [
   {
+    id: "Mercedes-AMG Petronas F1 Team appoints Bradley Lord as new Deputy Team Principal",
+    fileName: "Bradley.avif",
+    title: "Mercedes-AMG Petronas F1 Team appoints Bradley Lord as new Deputy Team Principal",
+    description: "Mercedes-AMG Petronas F1 Team has announced the appointment of Bradley Lord as the new Deputy Team Principal. Lord, who has been with the team since 2017, will work closely with Team Principal Toto Wolff to lead the team in their pursuit of championship success.",
+  },
+  {
+    id: "Jonathan Wheatley will depart from Team Principle role at Audi F1 Team with immediate effect",
+    fileName: "Jonathan.jpg",
+    title: "Audi F1 Team Jonathan Wheatley Departure",
+    description: "Audi F1 Team announced that Jonathan Wheatley will depart from his role as Team Principle with immediate effect. The team has not yet announced a replacement for the experienced motorsport manager, who has been with the team since its inception.",
+  },
+  {
+    id: "Adrian Newey steps down from team principle role at Aston Martin F1 Team",
+    fileName: "Adrian.webp",
+    title: "Aston Martin F1 Team Adrian Newey steps down as Team Principle",
+    description: "Aston Martin F1 Team announced that Adrian Newey will step down from his role as Team Principle. The legendary designer and engineer, known for his work with multiple championship-winning teams, will be replaced by current Technical Director Dan Fallows. Newey will continue to serve as Chief Technical Officer, focusing on the team's long-term technical strategy, will be focusing more on a technical role.",
+  },
+  {
     id: "chinese-gp-results",
     fileName: "Chinese GP Results.png",
     title: "Chinese Grand Prix 2026 points scorers",
@@ -36,4 +54,4 @@ export const newsItems: NewsItem[] = [
     title: "Podium at the Chinese GP",
     description: "Three Mercedes drivers on the podium at the Chinese GP, Toto must be very happy.",
   },
-];
+]; 

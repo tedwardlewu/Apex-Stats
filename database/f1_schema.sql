@@ -98,11 +98,8 @@ INSERT INTO teams (id, name, color, points, wins, podiums, championships) VALUES
 
 
 INSERT INTO races (id, name, country, date, circuit, winner_id, fastest_lap_driver_id) VALUES
-  (1, 'Bahrain Grand Prix', 'Bahrain', '2026-03-01', 'Bahrain International Circuit', 5, 7),
-  (2, 'Saudi Arabian Grand Prix', 'Saudi Arabia', '2026-03-08', 'Jeddah Corniche Circuit', 3, 5),
-  (3, 'Australian Grand Prix', 'Australia', '2026-03-15', 'Albert Park Circuit', 7, 8),
-  (4, 'Japanese Grand Prix', 'Japan', '2026-04-05', 'Suzuka Circuit', 5, 3),
-  (5, 'Chinese Grand Prix', 'China', '2026-04-19', 'Shanghai International Circuit', 3, 5);
+  (1, 'Australian Grand Prix', 'Australia', '2026-03-07', 'Albert Park Circuit', 7, 8),
+  (2, 'Chinese Grand Prix', 'China', '2026-03-15', 'Shanghai International Circuit', 3, 5);
 
 SELECT * FROM drivers;
 
