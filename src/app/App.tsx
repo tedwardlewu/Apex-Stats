@@ -12,6 +12,7 @@ import { FilterBar } from "./components/FilterBar";
 import { TabNavigation } from "./components/TabNavigation";
 import { CompareSection } from "./components/CompareSection";
 import { GraphsSection } from "./components/GraphsSection";
+import { NextRacePrediction } from "./components/NextRacePrediction";
 import { TeamsSection } from "./components/TeamsSection";
 import { TeamsShowcase } from "./components/TeamsShowcase";
 import { NewsSection } from "./components/NewsSection";
@@ -122,6 +123,7 @@ export default function App() {
                 <ConsistencyTable />
               </>
             ),
+            predictions: <NextRacePrediction />,
             graphs: <GraphsSection />,
             news: <NewsSection />,
             compare: (

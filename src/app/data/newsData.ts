@@ -7,6 +7,18 @@ export interface NewsItem {
 
 export const newsItems: NewsItem[] = [
   {
+    id: "Max Verstappen disqualified from Nurburgrin GT3 Race",
+    fileName: "Max DSQ.avif",
+    title: "Max Verstappen disqualified from Nurburgrin GT3 Race",
+    description: "Max Verstappen was disqualified from the Nurburgrin GT3 Race after another win around the track due to using 1 more set of tires during the 4-hour-race. He won by a margin of 1 minute and 30 seconds, but the disqualification means that the victory will be awarded to the second-place finisher, who was 1 minute and 45 seconds behind Verstappen.",
+  },
+  {
+    id: "Racing Bulls introduces special livery for Japanese Grand Prix",
+    fileName: "RB Japan.avif",
+    title: "Racing Bulls introduces special livery for Japanese Grand Prix",
+    description: "Racing Bulls unveiled a striking new livery for the Japanese Grand Prix, featuring a bold red and black design with intricate patterns inspired by traditional Japanese art. The team hopes the new look will bring them good fortune at Suzuka.",
+  },
+  {
     id: "Mercedes-AMG Petronas F1 Team appoints Bradley Lord as new Deputy Team Principal",
     fileName: "Bradley.avif",
     title: "Mercedes-AMG Petronas F1 Team appoints Bradley Lord as new Deputy Team Principal",
@@ -39,7 +51,7 @@ export const newsItems: NewsItem[] = [
   {
     id: "kimi-feature",
     fileName: "Kimi.png",
-    title: "Kimi Antonelli First Every Formula 1 Victory",
+    title: "Kimi Antonelli First Formula 1 Victory",
     description: "KIMI WINS AT CHINA! Mercedes Driver Kimi Antonelli achieved his first Formula 1 victory at the Chinese GP, marking a significant milestone in his career. Hopefully this will be one of many wins to come.",
   },
   {
