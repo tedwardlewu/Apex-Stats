@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
-import { Activity, LayoutGrid, BarChart3, Trophy, GitCompare, Newspaper } from "lucide-react";
+import { Activity, LayoutGrid, BarChart3, Trophy, GitCompare, Newspaper, CalendarDays } from "lucide-react";
 
 interface TabNavigationProps {
   children: {
@@ -10,6 +10,7 @@ interface TabNavigationProps {
     compare: React.ReactNode;
     graphs: React.ReactNode;
     news: React.ReactNode;
+    calendar: React.ReactNode;
   };
 }
 
@@ -20,13 +21,14 @@ export function TabNavigation({ children }: TabNavigationProps) {
     { key: "analytics", label: "Analytics", icon: BarChart3 },
     { key: "predictions", label: "Predictions", icon: Activity },
     { key: "graphs", label: "Graphs", icon: BarChart3 },
+    { key: "calendar", label: "Calendar", icon: CalendarDays },
     { key: "news", label: "News", icon: Newspaper },
     { key: "compare", label: "Compare", icon: GitCompare },
   ] as const;
 
   return (
     <Tabs defaultValue="overview" className="w-full">
-      <TabsList className="mb-8 grid w-full grid-cols-2 gap-2 rounded-2xl bg-white/70 p-2 shadow-sm backdrop-blur md:grid-cols-4 xl:grid-cols-7">
+      <TabsList className="mb-8 grid w-full grid-cols-2 gap-2 rounded-2xl bg-white/70 p-2 shadow-sm backdrop-blur md:grid-cols-4 xl:grid-cols-8">
         {tabs.map(({ key, label, icon: Icon }) => (
           <TabsTrigger key={key} value={key} className="flex items-center gap-2 rounded-xl">
             <Icon className="size-4" />
@@ -61,6 +63,10 @@ export function TabNavigation({ children }: TabNavigationProps) {
 
       <TabsContent value="compare">
         {children.compare}
+      </TabsContent>
+
+      <TabsContent value="calendar">
+        {children.calendar}
       </TabsContent>
     </Tabs>
   );
