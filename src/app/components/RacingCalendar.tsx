@@ -104,7 +104,11 @@ export function RacingCalendar() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    {race.sprint ? (
+                    {race.cancelled ? (
+                      <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700 dark:bg-red-500/20 dark:text-red-300">
+                        Cancelled
+                      </span>
+                    ) : race.sprint ? (
                       <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-500/20 dark:text-blue-300">
                         Sprint
                       </span>

@@ -5,6 +5,7 @@ export interface CalendarRace {
   country: string;
   venue: string;
   sprint: boolean;
+  cancelled?: boolean;
   note?: string;
 }
 
@@ -13,8 +14,8 @@ export const raceCalendarBySeason: Record<string, CalendarRace[]> = {
     { round: 1, startDate: "2026-03-06", endDate: "2026-03-08", country: "Australia", venue: "Melbourne", sprint: false },
     { round: 2, startDate: "2026-03-13", endDate: "2026-03-15", country: "China", venue: "Shanghai", sprint: true },
     { round: 3, startDate: "2026-03-27", endDate: "2026-03-29", country: "Japan", venue: "Suzuka", sprint: false },
-    { round: 4, startDate: "2026-04-10", endDate: "2026-04-12", country: "Bahrain", venue: "Sakhir", sprint: false },
-    { round: 5, startDate: "2026-04-17", endDate: "2026-04-19", country: "Saudi Arabia", venue: "Jeddah", sprint: false },
+    { round: 4, startDate: "2026-04-10", endDate: "2026-04-12", country: "Bahrain", venue: "Sakhir", sprint: false, cancelled: true },
+    { round: 5, startDate: "2026-04-17", endDate: "2026-04-19", country: "Saudi Arabia", venue: "Jeddah", sprint: false, cancelled: true },
     { round: 6, startDate: "2026-05-01", endDate: "2026-05-03", country: "USA", venue: "Miami", sprint: true },
     { round: 7, startDate: "2026-05-22", endDate: "2026-05-24", country: "Canada", venue: "Montreal", sprint: true },
     { round: 8, startDate: "2026-06-05", endDate: "2026-06-07", country: "Monaco", venue: "Monaco", sprint: false },

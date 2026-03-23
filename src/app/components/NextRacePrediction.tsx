@@ -33,6 +33,14 @@ interface PredictionRow extends DriverStats {
   reasons: string[];
 }
 
+const PREDICTION_WEIGHTS = {
+  qualifying: 0.3,
+  racePace: 0.3,
+  teamPerformance: 0.2,
+  trackHistory: 0.1,
+  consistency: 0.1,
+} as const;
+
 function clamp(value: number, minimum = 0, maximum = 1) {
   return Math.min(maximum, Math.max(minimum, value));
 }
@@ -43,6 +51,16 @@ function normalise(value: number, maxValue: number) {
   }
 
   return value / maxValue;
+}
+
+function normaliseRange(value: number, minValue: number, maxValue: number) {
+  const range = maxValue - minValue;
+
+  if (range <= 0) {
+    return 0.5;
+  }
+
+  return clamp((value - minValue) / range);
 }
 
 function buildRecentPaceScores(season: string) {
@@ -74,20 +92,19 @@ function buildRecentPaceScores(season: string) {
 }
 
 function buildReasons(values: {
-  formScore: number;
-  teamScore: number;
+  qualifyingScore: number;
+  racePaceScore: number;
+  teamPerformanceScore: number;
+  trackHistoryScore: number;
+  consistencyScore: number;
   paceScore: number;
-  winScore: number;
-  podiumScore: number;
-  experienceScore: number;
 }) {
   const reasonPool = [
-    { label: "strong season form", value: values.formScore },
-    { label: "constructor momentum", value: values.teamScore },
-    { label: "recent lap pace", value: values.paceScore },
-    { label: "win conversion", value: values.winScore },
-    { label: "podium consistency", value: values.podiumScore },
-    { label: "championship experience", value: values.experienceScore },
+    { label: "qualifying edge", value: values.qualifyingScore },
+    { label: "race pace", value: values.racePaceScore },
+    { label: "team performance", value: values.teamPerformanceScore },
+    { label: "track history", value: values.trackHistoryScore },
+    { label: "consistency", value: values.consistencyScore },
   ];
 
   return reasonPool
@@ -105,46 +122,45 @@ function buildPredictions(drivers: DriverStats[], teams: TeamStats[], season: st
   }
 
   const maxPoints = Math.max(...drivers.map((driver) => driver.points), 0);
-  const maxWins = Math.max(...drivers.map((driver) => driver.wins), 0);
-  const maxPodiums = Math.max(...drivers.map((driver) => driver.podiums), 0);
-  const maxChampionships = Math.max(...drivers.map((driver) => driver.championships), 0);
   const maxTeamPoints = Math.max(...teams.map((team) => team.points), 0);
+  const maxQualifyingProxy = Math.max(...drivers.map((driver) => driver.wins * 2 + driver.podiums), 0);
   const teamPointMap = new Map(teams.map((team) => [team.name, team.points]));
   const teamColorMap = new Map(teams.map((team) => [team.name, team.color]));
   const { latestRace, paceByDriver } = buildRecentPaceScores(season);
+  const trackBiasValues = Object.values(upcomingRace.teamBiases);
+  const minTrackBias = Math.min(...trackBiasValues, 1);
+  const maxTrackBias = Math.max(...trackBiasValues, 1);
 
   const scoredDrivers = drivers.map((driver) => {
-    const formScore = normalise(driver.points, maxPoints);
-    const winScore = normalise(driver.wins, maxWins);
-    const podiumScore = normalise(driver.podiums, maxPodiums);
-    const teamScore = normalise(teamPointMap.get(driver.team) ?? 0, maxTeamPoints);
-    const experienceScore = normalise(Math.min(driver.championships, 4), Math.min(maxChampionships, 4) || 1);
-    const paceScore = paceByDriver.get(driver.name) ?? 0.32;
+    const qualifyingProxy = driver.wins * 2 + driver.podiums;
+    const qualifyingScore = normalise(qualifyingProxy, maxQualifyingProxy);
+    const racePaceScore = paceByDriver.get(driver.name) ?? normalise(driver.points, maxPoints);
+    const teamPerformanceScore = normalise(teamPointMap.get(driver.team) ?? 0, maxTeamPoints);
     const trackBias = upcomingRace.teamBiases[driver.team] ?? 1;
-    const winnerBoost = latestRace?.winner === driver.name ? 0.06 : 0;
-    const fastLapBoost = latestRace?.fastestLap === driver.name ? 0.03 : 0;
-    const baseScore = (
-      formScore * 0.34 +
-      winScore * 0.18 +
-      podiumScore * 0.16 +
-      teamScore * 0.16 +
-      paceScore * 0.11 +
-      experienceScore * 0.05 +
-      winnerBoost +
-      fastLapBoost
-    ) * trackBias;
+    const trackHistoryScore = normaliseRange(trackBias, minTrackBias, maxTrackBias);
+    const consistencyScore = clamp(
+      normalise(driver.points, maxPoints) * 0.4 +
+      (driver.podiums / Math.max(driver.wins + driver.podiums + 4, 1)) * 0.6,
+    );
+
+    const baseScore =
+      qualifyingScore * PREDICTION_WEIGHTS.qualifying +
+      racePaceScore * PREDICTION_WEIGHTS.racePace +
+      teamPerformanceScore * PREDICTION_WEIGHTS.teamPerformance +
+      trackHistoryScore * PREDICTION_WEIGHTS.trackHistory +
+      consistencyScore * PREDICTION_WEIGHTS.consistency;
 
     return {
       driver,
       score: baseScore,
       teamColor: teamColorMap.get(driver.team) ?? "#475569",
       reasons: buildReasons({
-        formScore,
-        teamScore,
-        paceScore,
-        winScore,
-        podiumScore,
-        experienceScore,
+        qualifyingScore,
+        racePaceScore,
+        teamPerformanceScore,
+        trackHistoryScore,
+        consistencyScore,
+        paceScore: racePaceScore,
       }),
     };
   });
@@ -259,7 +275,7 @@ export function NextRacePrediction() {
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Predictions</p>
             <h2 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">Next race win probability</h2>
             <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-              A weighted form model for the {upcomingRace.name}. It blends season points, wins, podiums, constructor strength, championship experience, and the latest recorded lap pace.
+              A weighted score model for the {upcomingRace.name}. It blends qualifying, race pace, team performance, track history, and consistency.
             </p>
           </div>
           <div className="rounded-[24px] border border-slate-200/70 bg-slate-50 px-5 py-4 text-sm text-slate-600 dark:border-slate-700/70 dark:bg-slate-900 dark:text-slate-300">
@@ -389,24 +405,24 @@ export function NextRacePrediction() {
             <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Model inputs</h3>
             <div className="mt-4 space-y-3 text-sm text-slate-600 dark:text-slate-300">
               <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Season points and current form</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">34%</span>
+                <span>Qualifying</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">30%</span>
               </div>
               <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Wins and podium conversion</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">34%</span>
+                <span>Race pace</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">30%</span>
               </div>
               <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Constructor strength</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">16%</span>
+                <span>Team performance</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">20%</span>
               </div>
               <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Latest lap pace</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">11%</span>
+                <span>Track history</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">10%</span>
               </div>
               <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Championship experience</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">5%</span>
+                <span>Consistency</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">10%</span>
               </div>
             </div>
           </article>

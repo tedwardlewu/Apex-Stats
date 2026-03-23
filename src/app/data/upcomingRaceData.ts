@@ -36,7 +36,7 @@ export const upcomingRaceBySeason: Record<string, UpcomingRaceContext> = {
     name: "Japanese Grand Prix",
     country: "Suzuka, Japan",
     circuit: "Suzuka Circuit",
-    date: "2026-04-05",
+    date: "2026-03-29",
     summary: "Suzuka rewards aero stability, confidence through fast direction changes, and drivers already carrying clean single-lap momentum.",
     modelFocus: "Latest lap pace and constructor strength carry extra weight here, with a small bonus for proven race winners.",
     teamBiases: {
