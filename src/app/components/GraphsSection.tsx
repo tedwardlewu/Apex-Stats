@@ -1,7 +1,7 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
-import { ChartData, ChartOptions } from "chart.js";
+import { ChartData, ChartOptions, Plugin } from "chart.js";
 import { useFilters } from "../contexts/FilterContext";
 import * as api from "../services/api";
 
@@ -29,81 +29,243 @@ const teamAliases: Record<string, string[]> = {
   "Kick Sauber": ["Kick Sauber", "Audi", "Sauber"],
 };
 
-const baseBarOptions: ChartOptions<"bar"> = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      labels: {
-        color: "#475569",
-        usePointStyle: true,
-        pointStyle: "circle",
-      },
-    },
-  },
-  scales: {
-    x: {
-      grid: {
-        color: "rgba(148, 163, 184, 0.18)",
-      },
-      ticks: {
-        color: "#64748b",
-      },
-    },
-    y: {
-      beginAtZero: true,
-      grid: {
-        color: "rgba(148, 163, 184, 0.18)",
-      },
-      ticks: {
-        color: "#64748b",
-        precision: 0,
-      },
-    },
-  },
+const TEAM_LOGO_PATHS: Record<string, string> = {
+  alpine: "/Team Images/Alpine.avif",
+  "aston martin": "/Team Images/Aston.avif",
+  aston: "/Team Images/Aston.avif",
+  audi: "/Team Images/Audi.avif",
+  cadillac: "/Team Images/Cadillac.avif",
+  ferrari: "/Team Images/Ferrari.avif",
+  haas: "/Team Images/Haas.avif",
+  "haas f1 team": "/Team Images/Haas.avif",
+  mclaren: "/Team Images/McLaren.avif",
+  mercedes: "/Team Images/Mercedes.avif",
+  rb: "/Team Images/Racingbulls.avif",
+  "racing bulls": "/Team Images/Racingbulls.avif",
+  "red bull": "/Team Images/Redbull.avif",
+  "red bull racing": "/Team Images/Redbull.avif",
+  "oracle red bull racing": "/Team Images/Redbull.avif",
+  redbull: "/Team Images/Redbull.avif",
+  sauber: "/Team Images/Sauber.avif",
+  "kick sauber": "/Team Images/Sauber.avif",
+  williams: "/Team Images/Williams.avif",
 };
 
-const horizontalBarOptions: ChartOptions<"bar"> = {
-  ...baseBarOptions,
-  indexAxis: "y",
-  plugins: {
-    legend: {
-      display: false,
-    },
-  },
-};
+const HAAS_BAR_COLOR = "#6b7280";
 
-const groupedBarOptions: ChartOptions<"bar"> = {
-  ...baseBarOptions,
-  plugins: {
-    legend: {
-      position: "top",
-      labels: {
-        color: "#475569",
-        usePointStyle: true,
-        pointStyle: "circle",
+const logoImageCache = new Map<string, HTMLImageElement>();
+
+function normalizeTeamName(teamName: string) {
+  return teamName
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function resolveTeamLogo(teamName: string) {
+  const normalizedName = normalizeTeamName(teamName);
+
+  if (TEAM_LOGO_PATHS[normalizedName]) {
+    return TEAM_LOGO_PATHS[normalizedName];
+  }
+
+  if (normalizedName.includes("red bull")) {
+    return "/Team Images/Redbull.avif";
+  }
+
+  if (normalizedName.includes("racing bulls") || normalizedName === "rb") {
+    return "/Team Images/Racingbulls.avif";
+  }
+
+  return null;
+}
+
+function getLogoImage(path: string, redraw: () => void) {
+  const cached = logoImageCache.get(path);
+
+  if (cached) {
+    return cached;
+  }
+
+  const image = new Image();
+  image.src = path;
+  image.onload = redraw;
+  logoImageCache.set(path, image);
+
+  return image;
+}
+
+function createTeamLogoPlugin(resolveTeamName: (label: string) => string | undefined): Plugin<"bar"> {
+  return {
+    id: "teamLogos",
+    afterDatasetsDraw(chart) {
+      const labels = chart.data.labels;
+
+      if (!labels || labels.length === 0) {
+        return;
+      }
+
+      const { ctx, chartArea, options } = chart;
+      const isHorizontal = options.indexAxis === "y";
+      const datasetMeta = chart.getDatasetMeta(0);
+
+      if (!datasetMeta?.data?.length) {
+        return;
+      }
+
+      labels.forEach((labelValue, index) => {
+        const label = String(labelValue ?? "");
+        const teamName = resolveTeamName(label);
+
+        if (!teamName) {
+          return;
+        }
+
+        const logoPath = resolveTeamLogo(teamName);
+
+        if (!logoPath) {
+          return;
+        }
+
+        const barElement = datasetMeta.data[index];
+
+        if (!barElement) {
+          return;
+        }
+
+        const logo = getLogoImage(logoPath, () => chart.draw());
+
+        if (!logo.complete || logo.naturalWidth === 0) {
+          return;
+        }
+
+        const { x, y, base } = barElement.getProps(["x", "y", "base"], true);
+        const logoSize = 16;
+        let drawX = 0;
+        let drawY = 0;
+
+        if (isHorizontal) {
+          const barStart = Math.min(base, x);
+          const barEnd = Math.max(base, x);
+          const barWidth = barEnd - barStart;
+
+          drawX = barWidth > logoSize + 10 ? barStart + 5 : barEnd + 5;
+          drawY = y - logoSize / 2;
+        } else {
+          const barTop = Math.min(base, y);
+          const barBottom = Math.max(base, y);
+          const barHeight = barBottom - barTop;
+
+          drawX = x - logoSize / 2;
+          drawY = barHeight > logoSize + 6 ? barTop + 4 : barTop - logoSize - 2;
+        }
+
+        drawX = Math.max(chartArea.left + 2, Math.min(drawX, chartArea.right - logoSize - 2));
+        drawY = Math.max(chartArea.top + 2, Math.min(drawY, chartArea.bottom - logoSize - 2));
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(drawX + logoSize / 2, drawY + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(logo, drawX, drawY, logoSize, logoSize);
+        ctx.restore();
+      });
+    },
+  };
+}
+
+function createBaseBarOptions(isDarkMode: boolean): ChartOptions<"bar"> {
+  const labelColor = isDarkMode ? "#cbd5e1" : "#475569";
+  const tickColor = isDarkMode ? "#94a3b8" : "#64748b";
+  const gridColor = isDarkMode ? "rgba(148, 163, 184, 0.25)" : "rgba(148, 163, 184, 0.18)";
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: labelColor,
+          usePointStyle: true,
+          pointStyle: "circle",
+        },
       },
     },
-  },
-};
-
-const doughnutOptions: ChartOptions<"doughnut"> = {
-  responsive: true,
-  maintainAspectRatio: false,
-  cutout: "62%",
-  rotation: 0,
-  plugins: {
-    legend: {
-      position: "bottom",
-      labels: {
-        color: "#475569",
-        usePointStyle: true,
-        pointStyle: "circle",
-        padding: 18,
+    scales: {
+      x: {
+        grid: {
+          color: gridColor,
+        },
+        ticks: {
+          color: tickColor,
+        },
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: gridColor,
+        },
+        ticks: {
+          color: tickColor,
+          precision: 0,
+        },
       },
     },
-  },
-};
+  };
+}
+
+function createHorizontalBarOptions(baseBarOptions: ChartOptions<"bar">): ChartOptions<"bar"> {
+  return {
+    ...baseBarOptions,
+    indexAxis: "y",
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
+}
+
+function createGroupedBarOptions(baseBarOptions: ChartOptions<"bar">, isDarkMode: boolean): ChartOptions<"bar"> {
+  const labelColor = isDarkMode ? "#cbd5e1" : "#475569";
+
+  return {
+    ...baseBarOptions,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          color: labelColor,
+          usePointStyle: true,
+          pointStyle: "circle",
+        },
+      },
+    },
+  };
+}
+
+function createDoughnutOptions(isDarkMode: boolean): ChartOptions<"doughnut"> {
+  const labelColor = isDarkMode ? "#cbd5e1" : "#475569";
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: "62%",
+    rotation: 0,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          color: labelColor,
+          usePointStyle: true,
+          pointStyle: "circle",
+          padding: 18,
+        },
+      },
+    },
+  };
+}
 
 function resolveVisibleTeams(teams: TeamStats[], selectedTeam: string) {
   if (selectedTeam === "all") {
@@ -119,13 +281,23 @@ function buildDriverPointsData(drivers: DriverStats[], teams: TeamStats[]): Char
   const leaderboard = [...drivers].sort((a, b) => b.points - a.points).slice(0, 10);
   const teamColorMap = new Map(teams.map((team) => [team.name, team.color]));
 
+  function resolveDriverBarColor(teamName: string) {
+    const normalizedTeam = normalizeTeamName(teamName);
+
+    if (normalizedTeam === "haas" || normalizedTeam === "haas f1 team") {
+      return HAAS_BAR_COLOR;
+    }
+
+    return teamColorMap.get(teamName) ?? "#dc2626";
+  }
+
   return {
     labels: leaderboard.map((driver) => driver.name),
     datasets: [
       {
         label: "Points",
         data: leaderboard.map((driver) => driver.points),
-        backgroundColor: leaderboard.map((driver) => teamColorMap.get(driver.team) ?? "#dc2626"),
+        backgroundColor: leaderboard.map((driver) => resolveDriverBarColor(driver.team)),
         borderRadius: 12,
         maxBarThickness: 28,
       },
@@ -155,7 +327,7 @@ function buildWinsAndPodiumsData(drivers: DriverStats[]): ChartData<"bar"> {
   };
 }
 
-function buildTeamPointsShareData(teams: TeamStats[]): ChartData<"doughnut"> {
+function buildTeamPointsShareData(teams: TeamStats[], isDarkMode: boolean): ChartData<"doughnut"> {
   const rankedTeams = [...teams].sort((a, b) => b.points - a.points);
 
   return {
@@ -165,7 +337,7 @@ function buildTeamPointsShareData(teams: TeamStats[]): ChartData<"doughnut"> {
         label: "Team Points",
         data: rankedTeams.map((team) => team.points),
         backgroundColor: rankedTeams.map((team) => team.color),
-        borderColor: "#ffffff",
+        borderColor: isDarkMode ? "#0f172a" : "#ffffff",
         borderWidth: 2,
       },
     ],
@@ -192,13 +364,23 @@ function buildAverageDriverPointsData(drivers: DriverStats[], teams: TeamStats[]
     .sort((a, b) => b.averagePoints - a.averagePoints);
   const teamColorMap = new Map(teams.map((team) => [team.name, team.color]));
 
+  function resolveTeamBarColor(teamName: string) {
+    const normalizedTeam = normalizeTeamName(teamName);
+
+    if (normalizedTeam === "haas" || normalizedTeam === "haas f1 team") {
+      return HAAS_BAR_COLOR;
+    }
+
+    return teamColorMap.get(teamName) ?? "#0f766e";
+  }
+
   return {
     labels: teamAverages.map((team) => team.team),
     datasets: [
       {
         label: "Avg points per driver",
         data: teamAverages.map((team) => team.averagePoints),
-        backgroundColor: teamAverages.map((team) => teamColorMap.get(team.team) ?? "#0f766e"),
+        backgroundColor: teamAverages.map((team) => resolveTeamBarColor(team.team)),
         borderRadius: 12,
         maxBarThickness: 42,
       },
@@ -208,7 +390,7 @@ function buildAverageDriverPointsData(drivers: DriverStats[], teams: TeamStats[]
 
 function EmptyChartState({ message }: { message: string }) {
   return (
-    <div className="flex h-72 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500">
+    <div className="flex h-72 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-300">
       {message}
     </div>
   );
@@ -216,9 +398,9 @@ function EmptyChartState({ message }: { message: string }) {
 
 function ChartCard({ title, description, children }: { title: string; description: string; children: ReactNode }) {
   return (
-    <article className="rounded-[28px] border border-slate-200/70 bg-white p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-      <p className="mt-1 text-sm text-slate-600">{description}</p>
+    <article className="rounded-[28px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
+      <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{description}</p>
       <div className="mt-6 h-72">{children}</div>
     </article>
   );
@@ -229,6 +411,19 @@ export function GraphsSection() {
   const [drivers, setDrivers] = useState<DriverStats[]>([]);
   const [teams, setTeams] = useState<TeamStats[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains("dark"));
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    });
+
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -272,15 +467,31 @@ export function GraphsSection() {
   const visibleTeams = resolveVisibleTeams(teams, selectedTeam);
   const driverPointsData = buildDriverPointsData(drivers, teams);
   const winsAndPodiumsData = buildWinsAndPodiumsData(drivers);
-  const teamPointsShareData = buildTeamPointsShareData(visibleTeams);
+  const teamPointsShareData = buildTeamPointsShareData(visibleTeams, isDarkMode);
   const averageDriverPointsData = buildAverageDriverPointsData(drivers, teams);
+  const driverTeamMap = useMemo(() => new Map(drivers.map((driver) => [driver.name, driver.team])), [drivers]);
+  const baseBarOptions = useMemo(() => createBaseBarOptions(isDarkMode), [isDarkMode]);
+  const horizontalBarOptions = useMemo(() => createHorizontalBarOptions(baseBarOptions), [baseBarOptions]);
+  const groupedBarOptions = useMemo(
+    () => createGroupedBarOptions(baseBarOptions, isDarkMode),
+    [baseBarOptions, isDarkMode],
+  );
+  const doughnutOptions = useMemo(() => createDoughnutOptions(isDarkMode), [isDarkMode]);
+  const driverLogoPlugin = useMemo(
+    () => createTeamLogoPlugin((label) => driverTeamMap.get(label)),
+    [driverTeamMap],
+  );
+  const teamLogoPlugin = useMemo(
+    () => createTeamLogoPlugin((label) => label),
+    [],
+  );
 
   return (
     <section className="space-y-6">
-      <div className="rounded-[28px] border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur">
-        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">Graphs</p>
-        <h2 className="mt-2 text-2xl font-semibold text-slate-900">Season performance view</h2>
-        <p className="mt-2 max-w-3xl text-sm text-slate-600">
+      <div className="rounded-[28px] border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/70">
+        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-300">Graphs</p>
+        <h2 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">Season performance view</h2>
+        <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
          Analytical graphs including: {selectedSeason} data{selectedTeam !== "all" ? ` for ${selectedTeam}` : " across the full grid"}{searchQuery ? ` with the search term \"${searchQuery}\" applied` : ""}.
         </p>
       </div>
@@ -288,7 +499,7 @@ export function GraphsSection() {
       {loading ? (
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="h-[23rem] animate-pulse rounded-[28px] border border-slate-200/70 bg-white/70" />
+            <div key={index} className="h-[23rem] animate-pulse rounded-[28px] border border-slate-200/70 bg-white/70 dark:border-slate-700/70 dark:bg-slate-900/70" />
           ))}
         </div>
       ) : (
@@ -298,7 +509,7 @@ export function GraphsSection() {
             description="Top scoring drivers for the current season and active filters."
           >
             {driverPointsData.labels && driverPointsData.labels.length > 0 ? (
-              <Bar data={driverPointsData} options={horizontalBarOptions} />
+              <Bar data={driverPointsData} options={horizontalBarOptions} plugins={[driverLogoPlugin]} />
             ) : (
               <EmptyChartState message="No drivers match the current filters." />
             )}
@@ -309,7 +520,7 @@ export function GraphsSection() {
             description="How the leading drivers are converting pace into standout race results."
           >
             {winsAndPodiumsData.labels && winsAndPodiumsData.labels.length > 0 ? (
-              <Bar data={winsAndPodiumsData} options={groupedBarOptions} />
+              <Bar data={winsAndPodiumsData} options={groupedBarOptions} plugins={[driverLogoPlugin]} />
             ) : (
               <EmptyChartState message="Adjust the filters to compare wins and podiums." />
             )}
@@ -331,7 +542,7 @@ export function GraphsSection() {
             description="Quick read on how productive each filtered team pairing is on average."
           >
             {averageDriverPointsData.labels && averageDriverPointsData.labels.length > 0 ? (
-              <Bar data={averageDriverPointsData} options={baseBarOptions} />
+              <Bar data={averageDriverPointsData} options={baseBarOptions} plugins={[teamLogoPlugin]} />
             ) : (
               <EmptyChartState message="No driver averages can be calculated for the current filters." />
             )}

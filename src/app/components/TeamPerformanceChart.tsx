@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
 import { BarChart3 } from "lucide-react";
 import * as api from "../services/api";
@@ -91,6 +91,19 @@ export function TeamPerformanceChart() {
   const { selectedSeason, selectedTeam } = useFilters();
   const [teamsBySeason, setTeamsBySeason] = useState<Record<string, TeamStat[]>>({});
   const [loading, setLoading] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains("dark"));
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    });
+
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchTeamPerformance() {
@@ -117,40 +130,53 @@ export function TeamPerformanceChart() {
 
   const teamSeries = buildTeamSeries(teamsBySeason, selectedSeason, selectedTeam);
   const teamPerformanceData = buildSeasonRows(teamsBySeason, teamSeries);
+  const axisTickColor = isDarkMode ? "#cbd5e1" : "#475569";
+  const gridStroke = isDarkMode ? "#334155" : "#e2e8f0";
+  const tooltipStyle = useMemo(
+    () => ({
+      backgroundColor: isDarkMode ? "#0f172a" : "#ffffff",
+      borderColor: isDarkMode ? "#334155" : "#cbd5e1",
+      color: isDarkMode ? "#e2e8f0" : "#0f172a",
+    }),
+    [isDarkMode],
+  );
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg border shadow-sm p-6">
-        <p className="text-center text-gray-600">Loading team performance from database...</p>
+      <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
+        <p className="text-center text-gray-600 dark:text-slate-300">Loading team performance from database...</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg border shadow-sm">
-      <div className="border-b p-6">
+    <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
+      <div className="border-b border-slate-200 p-6 dark:border-slate-700">
         <div className="flex items-center gap-2">
           <BarChart3 className="size-5 text-purple-600" />
-          <h2 className="text-xl font-bold">Team Performance Trends</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Team Performance Trends</h2>
         </div>
-        <p className="text-sm text-gray-600 mt-1">
+        <p className="mt-1 text-sm text-gray-600 dark:text-slate-300">
           Points scored by season{selectedTeam !== "all" ? ` for ${selectedTeam}` : " for top teams"}
         </p>
       </div>
       <div className="p-6">
         {teamPerformanceData.length === 0 || teamSeries.length === 0 ? (
-          <p className="text-sm text-gray-500">No team trend data is available for the current filters.</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400">No team trend data is available for the current filters.</p>
         ) : (
           <div className="space-y-8">
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-gray-500">Season Points Comparison</h3>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-slate-400">Season Points Comparison</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={teamPerformanceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="season" />
-                  <YAxis label={{ value: "Points", angle: -90, position: "insideLeft" }} />
-                  <Tooltip />
-                  <Legend />
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+                  <XAxis dataKey="season" tick={{ fill: axisTickColor, fontSize: 12 }} />
+                  <YAxis
+                    tick={{ fill: axisTickColor, fontSize: 12 }}
+                    label={{ value: "Points", angle: -90, position: "insideLeft", style: { fill: axisTickColor } }}
+                  />
+                  <Tooltip contentStyle={tooltipStyle} />
+                  <Legend wrapperStyle={{ color: axisTickColor }} />
                   {teamSeries.map((series) => (
                     <Bar key={series.key} dataKey={series.key} fill={series.color} name={series.name} />
                   ))}
@@ -159,14 +185,17 @@ export function TeamPerformanceChart() {
             </div>
 
             <div>
-              <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-gray-500">Team Performance Trend</h3>
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-slate-400">Team Performance Trend</h3>
               <ResponsiveContainer width="100%" height={260}>
                 <LineChart data={teamPerformanceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="season" />
-                  <YAxis label={{ value: "Points", angle: -90, position: "insideLeft" }} />
-                  <Tooltip />
-                  <Legend />
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+                  <XAxis dataKey="season" tick={{ fill: axisTickColor, fontSize: 12 }} />
+                  <YAxis
+                    tick={{ fill: axisTickColor, fontSize: 12 }}
+                    label={{ value: "Points", angle: -90, position: "insideLeft", style: { fill: axisTickColor } }}
+                  />
+                  <Tooltip contentStyle={tooltipStyle} />
+                  <Legend wrapperStyle={{ color: axisTickColor }} />
                   {teamSeries.map((series) => (
                     <Line
                       key={series.key}
