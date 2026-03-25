@@ -28,7 +28,7 @@ export function TabNavigation({ children }: TabNavigationProps) {
 
   return (
     <Tabs defaultValue="overview" className="w-full">
-      <TabsList className="mb-8 grid w-full grid-cols-2 gap-2 rounded-2xl bg-white/70 p-2 shadow-sm backdrop-blur md:grid-cols-4 xl:grid-cols-8">
+      <TabsList className="mb-8 grid w-full grid-cols-2 gap-2 rounded-xl bg-white/70 p-2 shadow-sm backdrop-blur md:grid-cols-4 xl:grid-cols-8">
         {tabs.map(({ key, label, icon: Icon }) => (
           <TabsTrigger key={key} value={key} className="flex items-center gap-2 rounded-xl">
             <Icon className="size-4" />

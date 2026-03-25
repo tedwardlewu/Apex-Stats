@@ -20,7 +20,7 @@ export function NewsSection() {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-[28px] border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur">
+      <div className="rounded-[16px] border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur">
         <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">News</p>
         <h2 className="mt-2 text-2xl font-semibold text-slate-900">F1 News Wall</h2>
         <p className="mt-2 max-w-3xl text-sm text-slate-600">
@@ -30,7 +30,7 @@ export function NewsSection() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {displayNewsItems.map((item) => (
-          <article key={item.id} className="overflow-hidden rounded-[28px] border border-slate-200/70 bg-white shadow-sm">
+          <article key={item.id} className="overflow-hidden rounded-[16px] border border-slate-200/70 bg-white shadow-sm">
             <button
               type="button"
               className="group block w-full text-left"
@@ -67,7 +67,7 @@ export function NewsSection() {
                 {selectedItem.description || "No description added yet."}
               </DialogDescription>
             </DialogHeader>
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
               <img
                 src={selectedItem.imageSrc}
                 alt={selectedItem.title}

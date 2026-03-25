@@ -33,14 +33,6 @@ interface PredictionRow extends DriverStats {
   reasons: string[];
 }
 
-const PREDICTION_WEIGHTS = {
-  qualifying: 0.3,
-  racePace: 0.3,
-  teamPerformance: 0.2,
-  trackHistory: 0.1,
-  consistency: 0.1,
-} as const;
-
 function clamp(value: number, minimum = 0, maximum = 1) {
   return Math.min(maximum, Math.max(minimum, value));
 }
@@ -51,16 +43,6 @@ function normalise(value: number, maxValue: number) {
   }
 
   return value / maxValue;
-}
-
-function normaliseRange(value: number, minValue: number, maxValue: number) {
-  const range = maxValue - minValue;
-
-  if (range <= 0) {
-    return 0.5;
-  }
-
-  return clamp((value - minValue) / range);
 }
 
 function buildRecentPaceScores(season: string) {
@@ -92,19 +74,20 @@ function buildRecentPaceScores(season: string) {
 }
 
 function buildReasons(values: {
-  qualifyingScore: number;
-  racePaceScore: number;
-  teamPerformanceScore: number;
-  trackHistoryScore: number;
-  consistencyScore: number;
+  formScore: number;
+  teamScore: number;
   paceScore: number;
+  winScore: number;
+  podiumScore: number;
+  experienceScore: number;
 }) {
   const reasonPool = [
-    { label: "qualifying edge", value: values.qualifyingScore },
-    { label: "race pace", value: values.racePaceScore },
-    { label: "team performance", value: values.teamPerformanceScore },
-    { label: "track history", value: values.trackHistoryScore },
-    { label: "consistency", value: values.consistencyScore },
+    { label: "strong season form", value: values.formScore },
+    { label: "constructor momentum", value: values.teamScore },
+    { label: "recent lap pace", value: values.paceScore },
+    { label: "win conversion", value: values.winScore },
+    { label: "podium consistency", value: values.podiumScore },
+    { label: "championship experience", value: values.experienceScore },
   ];
 
   return reasonPool
@@ -122,45 +105,46 @@ function buildPredictions(drivers: DriverStats[], teams: TeamStats[], season: st
   }
 
   const maxPoints = Math.max(...drivers.map((driver) => driver.points), 0);
+  const maxWins = Math.max(...drivers.map((driver) => driver.wins), 0);
+  const maxPodiums = Math.max(...drivers.map((driver) => driver.podiums), 0);
+  const maxChampionships = Math.max(...drivers.map((driver) => driver.championships), 0);
   const maxTeamPoints = Math.max(...teams.map((team) => team.points), 0);
-  const maxQualifyingProxy = Math.max(...drivers.map((driver) => driver.wins * 2 + driver.podiums), 0);
   const teamPointMap = new Map(teams.map((team) => [team.name, team.points]));
   const teamColorMap = new Map(teams.map((team) => [team.name, team.color]));
   const { latestRace, paceByDriver } = buildRecentPaceScores(season);
-  const trackBiasValues = Object.values(upcomingRace.teamBiases);
-  const minTrackBias = Math.min(...trackBiasValues, 1);
-  const maxTrackBias = Math.max(...trackBiasValues, 1);
 
   const scoredDrivers = drivers.map((driver) => {
-    const qualifyingProxy = driver.wins * 2 + driver.podiums;
-    const qualifyingScore = normalise(qualifyingProxy, maxQualifyingProxy);
-    const racePaceScore = paceByDriver.get(driver.name) ?? normalise(driver.points, maxPoints);
-    const teamPerformanceScore = normalise(teamPointMap.get(driver.team) ?? 0, maxTeamPoints);
+    const formScore = normalise(driver.points, maxPoints);
+    const winScore = normalise(driver.wins, maxWins);
+    const podiumScore = normalise(driver.podiums, maxPodiums);
+    const teamScore = normalise(teamPointMap.get(driver.team) ?? 0, maxTeamPoints);
+    const experienceScore = normalise(Math.min(driver.championships, 4), Math.min(maxChampionships, 4) || 1);
+    const paceScore = paceByDriver.get(driver.name) ?? 0.32;
     const trackBias = upcomingRace.teamBiases[driver.team] ?? 1;
-    const trackHistoryScore = normaliseRange(trackBias, minTrackBias, maxTrackBias);
-    const consistencyScore = clamp(
-      normalise(driver.points, maxPoints) * 0.4 +
-      (driver.podiums / Math.max(driver.wins + driver.podiums + 4, 1)) * 0.6,
-    );
-
-    const baseScore =
-      qualifyingScore * PREDICTION_WEIGHTS.qualifying +
-      racePaceScore * PREDICTION_WEIGHTS.racePace +
-      teamPerformanceScore * PREDICTION_WEIGHTS.teamPerformance +
-      trackHistoryScore * PREDICTION_WEIGHTS.trackHistory +
-      consistencyScore * PREDICTION_WEIGHTS.consistency;
+    const winnerBoost = latestRace?.winner === driver.name ? 0.06 : 0;
+    const fastLapBoost = latestRace?.fastestLap === driver.name ? 0.03 : 0;
+    const baseScore = (
+      formScore * 0.34 +
+      winScore * 0.18 +
+      podiumScore * 0.16 +
+      teamScore * 0.16 +
+      paceScore * 0.11 +
+      experienceScore * 0.05 +
+      winnerBoost +
+      fastLapBoost
+    ) * trackBias;
 
     return {
       driver,
       score: baseScore,
       teamColor: teamColorMap.get(driver.team) ?? "#475569",
       reasons: buildReasons({
-        qualifyingScore,
-        racePaceScore,
-        teamPerformanceScore,
-        trackHistoryScore,
-        consistencyScore,
-        paceScore: racePaceScore,
+        formScore,
+        teamScore,
+        paceScore,
+        winScore,
+        podiumScore,
+        experienceScore,
       }),
     };
   });
@@ -189,13 +173,13 @@ function formatRaceDate(date: string) {
 
 function SummaryCard({ icon: Icon, label, value, accent }: { icon: typeof Trophy; label: string; value: string; accent: string }) {
   return (
-    <div className="rounded-[24px] border border-slate-200/70 bg-white p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
+    <div className="rounded-[14px] border border-slate-200/70 bg-white p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{label}</p>
           <p className="mt-3 text-xl font-semibold text-slate-900 dark:text-slate-100">{value}</p>
         </div>
-        <div className={`rounded-2xl p-3 ${accent}`}>
+        <div className={`rounded-xl p-3 ${accent}`}>
           <Icon className="size-5" />
         </div>
       </div>
@@ -257,7 +241,7 @@ export function NextRacePrediction() {
 
   if (!upcomingRace) {
     return (
-      <section className="rounded-[28px] border border-slate-200/70 bg-white/85 p-8 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/70">
+      <section className="rounded-[16px] border border-slate-200/70 bg-white/85 p-8 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/70">
         <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Predictions</p>
         <h2 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">Next race outlook unavailable</h2>
         <p className="mt-3 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
@@ -269,16 +253,16 @@ export function NextRacePrediction() {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-[28px] border border-slate-200/70 bg-white/85 p-6 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/70">
+      <div className="rounded-[16px] border border-slate-200/70 bg-white/85 p-6 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/70">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Predictions</p>
             <h2 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">Next race win probability</h2>
             <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-              A weighted score model for the {upcomingRace.name}. It blends qualifying, race pace, team performance, track history, and consistency.
+              A weighted form model for the {upcomingRace.name}. It blends season points, wins, podiums, constructor strength, championship experience, and the latest recorded lap pace.
             </p>
           </div>
-          <div className="rounded-[24px] border border-slate-200/70 bg-slate-50 px-5 py-4 text-sm text-slate-600 dark:border-slate-700/70 dark:bg-slate-900 dark:text-slate-300">
+          <div className="rounded-[14px] border border-slate-200/70 bg-slate-50 px-5 py-4 text-sm text-slate-600 dark:border-slate-700/70 dark:bg-slate-900 dark:text-slate-300">
             <p className="font-semibold text-slate-900 dark:text-slate-100">{upcomingRace.name}</p>
             <p>{upcomingRace.circuit}</p>
             <p>{upcomingRace.country} · {formatRaceDate(upcomingRace.date)}</p>
@@ -308,7 +292,7 @@ export function NextRacePrediction() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.7fr_1fr]">
-        <article className="rounded-[28px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
+        <article className="rounded-[16px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
           <div className="flex items-center justify-between gap-4 border-b border-slate-200/70 pb-4 dark:border-slate-700/70">
             <div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Projected race leaderboard</h3>
@@ -327,17 +311,17 @@ export function NextRacePrediction() {
           {loading ? (
             <div className="mt-6 space-y-4">
               {Array.from({ length: 6 }).map((_, index) => (
-                <div key={index} className="h-20 animate-pulse rounded-[22px] bg-slate-100 dark:bg-slate-800" />
+                <div key={index} className="h-20 animate-pulse rounded-[12px] bg-slate-100 dark:bg-slate-800" />
               ))}
             </div>
           ) : rows.length === 0 ? (
-            <div className="mt-6 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 p-8 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-300">
+            <div className="mt-6 rounded-[14px] border border-dashed border-slate-300 bg-slate-50 p-8 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-300">
               No drivers match the current filters.
             </div>
           ) : (
             <div className="mt-6 space-y-4">
               {rows.map((row, index) => (
-                <div key={row.id} className="rounded-[24px] border border-slate-200/70 bg-slate-50/80 p-4 dark:border-slate-700/70 dark:bg-slate-900/60">
+                <div key={row.id} className="rounded-[14px] border border-slate-200/70 bg-slate-50/80 p-4 dark:border-slate-700/70 dark:bg-slate-900/60">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
                     <div className="flex min-w-0 flex-1 items-center gap-4">
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white dark:bg-slate-100 dark:text-slate-900">
@@ -386,43 +370,43 @@ export function NextRacePrediction() {
         </article>
 
         <div className="space-y-6">
-          <article className="rounded-[28px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
+          <article className="rounded-[16px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
             <div className="flex items-center gap-2">
               <Flag className="size-5 text-red-600" />
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Circuit read</h3>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{upcomingRace.summary}</p>
-            <p className="mt-4 rounded-[20px] bg-slate-50 p-4 text-sm leading-relaxed text-slate-600 dark:bg-slate-900 dark:text-slate-300">{upcomingRace.modelFocus}</p>
+            <p className="mt-4 rounded-[12px] bg-slate-50 p-4 text-sm leading-relaxed text-slate-600 dark:bg-slate-900 dark:text-slate-300">{upcomingRace.modelFocus}</p>
             {latestRace && (
-              <div className="mt-4 rounded-[20px] border border-slate-200/70 bg-white p-4 text-sm text-slate-600 dark:border-slate-700/70 dark:bg-slate-800/70 dark:text-slate-300">
+              <div className="mt-4 rounded-[12px] border border-slate-200/70 bg-white p-4 text-sm text-slate-600 dark:border-slate-700/70 dark:bg-slate-800/70 dark:text-slate-300">
                 <p className="font-semibold text-slate-900 dark:text-slate-100">Latest data feed</p>
                 <p className="mt-2">Using lap pace and result signals from the {latestRace.name}.</p>
               </div>
             )}
           </article>
 
-          <article className="rounded-[28px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
+          <article className="rounded-[16px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
             <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Model inputs</h3>
             <div className="mt-4 space-y-3 text-sm text-slate-600 dark:text-slate-300">
-              <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Qualifying</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">30%</span>
+              <div className="flex items-center justify-between rounded-[10px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
+                <span>Season points and current form</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">34%</span>
               </div>
-              <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Race pace</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">30%</span>
+              <div className="flex items-center justify-between rounded-[10px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
+                <span>Wins and podium conversion</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">34%</span>
               </div>
-              <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Team performance</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">20%</span>
+              <div className="flex items-center justify-between rounded-[10px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
+                <span>Constructor strength</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">16%</span>
               </div>
-              <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Track history</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">10%</span>
+              <div className="flex items-center justify-between rounded-[10px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
+                <span>Latest lap pace</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">11%</span>
               </div>
-              <div className="flex items-center justify-between rounded-[18px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
-                <span>Consistency</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-100">10%</span>
+              <div className="flex items-center justify-between rounded-[10px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
+                <span>Championship experience</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-100">5%</span>
               </div>
             </div>
           </article>

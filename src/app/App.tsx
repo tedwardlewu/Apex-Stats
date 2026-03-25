@@ -16,7 +16,7 @@ import { NextRacePrediction } from "./components/NextRacePrediction";
 import { TeamsSection } from "./components/TeamsSection";
 import { TeamsShowcase } from "./components/TeamsShowcase";
 import { NewsSection } from "./components/NewsSection";
-import { RacingCalendar } from "./components/RacingCalendar";
+import RacingCalendar from "./components/RacingCalendar";
 import { useFilters } from "./contexts/FilterContext";
 import * as api from "./services/api";
 

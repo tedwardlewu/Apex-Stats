@@ -7,6 +7,24 @@ export interface NewsItem {
 
 export const newsItems: NewsItem[] = [
   {
+    id: "Mercedes-AMG Petronas F1 Team announces new wolf-inspired livery change for Japanese Grand Prix",
+    fileName: "Mercedes.avif",
+    title: "Mercedes-AMG Petronas F1 Team announces new wolf-inspired livery change for Japanese Grand Prix",
+    description: "Mercedes-AMG Petronas F1 Team has unveiled a new wolf-inspired livery for the upcoming Japanese Grand Prix. The design features a sleek combination of silver, black and turquoise, with intricate details inspired by the team's iconic logo. This matches an on-going theme of wolf-inspired merchandise and branding for the team, which has been well received by fans. ",
+  },
+  {
+    id: "Jak Crawford will take part in the opening practice session at the Japanese Grand Prix",
+    fileName: "Crawford.avif",
+    title: "Jak Crawford to take part in the opening practice session at the Japanese Grand Prix",
+    description: "Aston Martin has announced that Jak Crawford will take part in the opening practice session at the Japanese Grand Prix, replacing Alonso at the FP1 session. American racer Crawford, 20, finished runner-up to now McLaren junior Leonardo Fornaroli in Formula 2 last season, having previously won races at F3 and F4 level.",
+  },
+  {
+    id: "HAAS F1 Team announces special Godzilla themed livery for the Japanese Grand Prix",
+    fileName: "HAAS.avif",
+    title: "HAAS F1 Team announces special Godzilla themed livery for the Japanese Grand Prix",
+    description: "HAAS F1 Team has unveiled a special Godzilla themed livery for the upcoming Japanese Grand Prix. The design features a striking combination of red, white and black, with intricate details inspired by the iconic monster. The team hopes that the new livery will bring them good luck at Suzuka.",
+  },
+  {
     id: "Max Verstappen disqualified from Nurburgrin GT3 Race",
     fileName: "Max DSQ.avif",
     title: "Max Verstappen disqualified from Nurburgrin GT3 Race",

@@ -390,7 +390,7 @@ function buildAverageDriverPointsData(drivers: DriverStats[], teams: TeamStats[]
 
 function EmptyChartState({ message }: { message: string }) {
   return (
-    <div className="flex h-72 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-300">
+    <div className="flex h-72 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-300">
       {message}
     </div>
   );
@@ -398,7 +398,7 @@ function EmptyChartState({ message }: { message: string }) {
 
 function ChartCard({ title, description, children }: { title: string; description: string; children: ReactNode }) {
   return (
-    <article className="rounded-[28px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
+    <article className="rounded-[16px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
       <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
       <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{description}</p>
       <div className="mt-6 h-72">{children}</div>
@@ -488,7 +488,7 @@ export function GraphsSection() {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-[28px] border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/70">
+      <div className="rounded-[16px] border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/70">
         <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-300">Graphs</p>
         <h2 className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">Season performance view</h2>
         <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-300">
@@ -499,7 +499,7 @@ export function GraphsSection() {
       {loading ? (
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="h-[23rem] animate-pulse rounded-[28px] border border-slate-200/70 bg-white/70 dark:border-slate-700/70 dark:bg-slate-900/70" />
+            <div key={index} className="h-[23rem] animate-pulse rounded-[16px] border border-slate-200/70 bg-white/70 dark:border-slate-700/70 dark:bg-slate-900/70" />
           ))}
         </div>
       ) : (

@@ -18,7 +18,7 @@ export function FilterBar() {
   };
 
   return (
-    <div className="mb-8 rounded-[28px] border border-slate-200/70 bg-white/85 p-6 text-slate-900 backdrop-blur dark:border-gray-700 dark:bg-gray-800/90 dark:text-gray-100">
+    <div className="mb-8 rounded-[16px] border border-slate-200/70 bg-white/85 p-6 text-slate-900 backdrop-blur dark:border-gray-700 dark:bg-gray-800/90 dark:text-gray-100">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Filter className="size-5 text-red-500" />

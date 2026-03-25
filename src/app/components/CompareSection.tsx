@@ -16,6 +16,7 @@ interface Driver {
   wins: number;
   podiums: number;
   championships: number;
+  image: string;
 }
 
 export function CompareSection() {

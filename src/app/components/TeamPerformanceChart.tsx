@@ -143,14 +143,14 @@ export function TeamPerformanceChart() {
 
   if (loading) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
+      <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
         <p className="text-center text-gray-600 dark:text-slate-300">Loading team performance from database...</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
+    <div className="rounded-md border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
       <div className="border-b border-slate-200 p-6 dark:border-slate-700">
         <div className="flex items-center gap-2">
           <BarChart3 className="size-5 text-purple-600" />

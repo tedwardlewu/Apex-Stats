@@ -6,36 +6,6 @@ import { upcomingRaceBySeason } from "../data/upcomingRaceData";
 
 const THEME_STORAGE_KEY = "apex-stats-theme";
 
-const COUNTRY_FLAG_BY_KEYWORD: Record<string, string> = {
-  "Japan": "/Countries/Japan.png",
-  "United Arab Emirates": "/Countries/UAE.svg",
-  "Abu Dhabi": "/Countries/UAE.svg",
-  "Australia": "/Countries/Australia.webp",
-  "China": "/Countries/China.png",
-  "Bahrain": "/Countries/Bahrain.webp",
-  "Saudi Arabia": "/Countries/Saudi Arabia.png",
-  "USA": "/Countries/USA.png",
-  "Canada": "/Countries/Canada.svg",
-  "Monaco": "/Countries/Monaco.svg",
-  "Spain": "/Countries/Spain.svg",
-  "Austria": "/Countries/Austria.png",
-  "Great Britain": "/Countries/UK.webp",
-  "Belgium": "/Countries/Belgium.png",
-  "Hungary": "/Countries/Hungary.png",
-  "Netherlands": "/Countries/Dutch.webp",
-  "Italy": "/Countries/Italy.webp",
-  "Azerbaijan": "/Countries/Azerbaijan.svg",
-  "Singapore": "/Countries/Singapore.png",
-  "Mexico": "/Countries/Mexico.svg",
-  "Brazil": "/Countries/Brazil.webp",
-  "Qatar": "/Countries/Qatar.png",
-};
-
-function getRaceFlagPath(location: string) {
-  const match = Object.entries(COUNTRY_FLAG_BY_KEYWORD).find(([keyword]) => location.includes(keyword));
-  return match?.[1] ?? null;
-}
-
 function formatCountdown(targetDate: string) {
   const now = Date.now();
   const target = new Date(`${targetDate}T00:00:00`).getTime();
@@ -64,7 +34,6 @@ export function Header() {
   const { memeify, toggleMemeify } = useMemeify();
   const { selectedSeason } = useFilters();
   const upcomingRace = upcomingRaceBySeason[selectedSeason];
-  const raceFlagPath = upcomingRace ? getRaceFlagPath(upcomingRace.country) : null;
   const [countdown, setCountdown] = useState(
     upcomingRace ? formatCountdown(upcomingRace.date) : "Calendar pending",
   );
@@ -144,29 +113,14 @@ export function Header() {
         </div>
 
         {upcomingRace ? (
-          <div className="mt-4 rounded-2xl border border-white/30 bg-black/20 px-5 py-4 backdrop-blur">
-            <div className="flex items-center gap-4">
-              <div>
-                {raceFlagPath ? (
-                  <img
-                    src={raceFlagPath}
-                    alt={upcomingRace.country}
-                    className="h-10 w-14 rounded-md object-cover shadow-md"
-                  />
-                ) : (
-                  <div className="h-10 w-14 rounded-md bg-red-950/40" />
-                )}
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-100">Next Race Countdown</p>
-                <h2 className="mt-1 text-3xl font-black tracking-tight md:text-4xl">
-                  {upcomingRace.name} · {countdown}
-                </h2>
-                <p className="mt-1 text-sm text-red-100">
-                  {upcomingRace.circuit}, {upcomingRace.country} · {formatRaceDate(upcomingRace.date)}
-                </p>
-              </div>
-            </div>
+          <div className="mt-4 rounded-xl border border-white/30 bg-black/20 px-5 py-4 backdrop-blur">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-100">Next Race Countdown</p>
+            <h2 className="mt-1 text-3xl font-black tracking-tight md:text-4xl">
+              {upcomingRace.name} · {countdown}
+            </h2>
+            <p className="mt-1 text-sm text-red-100">
+              {upcomingRace.circuit}, {upcomingRace.country} · {formatRaceDate(upcomingRace.date)}
+            </p>
           </div>
         ) : null}
       </div>
