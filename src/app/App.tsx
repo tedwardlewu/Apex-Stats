@@ -11,6 +11,7 @@ import { RecentRaces } from "./components/RecentRaces";
 import { FilterBar } from "./components/FilterBar";
 import { TabNavigation } from "./components/TabNavigation";
 import { CompareSection } from "./components/CompareSection";
+import { ChampionshipSnapshot } from "./components/ChampionshipSnapshot";
 import { GraphsSection } from "./components/GraphsSection";
 import { NextRacePrediction } from "./components/NextRacePrediction";
 import { TeamsSection } from "./components/TeamsSection";
@@ -91,14 +92,7 @@ export default function App() {
           {{
             overview: (
               <>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                  <div className="lg:col-span-2">
-                    <DriverStandings />
-                  </div>
-                  <div>
-                    <TeamStandings onViewCars={scrollToTeamsShowcase} />
-                  </div>
-                </div>
+                <ChampionshipSnapshot />
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <RecentRaces />

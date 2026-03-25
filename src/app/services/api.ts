@@ -54,15 +54,15 @@ const mockDrivers2025 = [
 ];
 
 const mockTeams2026 = [
-  { id: 1, name: "Mercedes", color: "#06B6D4", points: 98, wins: 2, podiums: 4, championships: 16, image: "/Team Images/Mercedes.avif" },
-  { id: 2, name: "Ferrari", color: "#DC2626", points: 67, wins: 0, podiums: 2, championships: 8, image: "/Team Images/Ferrari.avif" },
-  { id: 3, name: "McLaren", color: "#F97316", points: 18, wins: 0, podiums: 0, championships: 8, image: "/Team Images/McLaren.avif" },
-  { id: 4, name: "Red Bull Racing", color: "#1c46ce", points: 12, wins: 0, podiums: 0, championships: 6, image: "/Team Images/Redbull.avif" },
+  { id: 1, name: "Mercedes", color: "#06B6D4", points: 98, wins: 2, podiums: 4, championships: 8, image: "/Team Images/Mercedes.avif" },
+  { id: 2, name: "Ferrari", color: "#DC2626", points: 67, wins: 0, podiums: 2, championships: 16, image: "/Team Images/Ferrari.avif" },
+  { id: 3, name: "McLaren", color: "#F97316", points: 18, wins: 0, podiums: 0, championships: 10, image: "/Team Images/McLaren.avif" },
+  { id: 4, name: "Red Bull Racing", color: "#1c46ce", points: 12, wins: 0, podiums: 0, championships: 14, image: "/Team Images/Redbull.avif" },
   { id: 5, name: "Haas F1 Team", color: "#f7f5f5", points: 17, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Haas.avif" },
   { id: 6, name: "Racing Bulls", color: "#7594c2", points: 12, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Racingbulls.avif" },
   { id: 7, name: "Audi", color: "#771716", points: 2, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Audi.avif" },
   { id: 8, name: "Alpine", color: "#2871cb", points: 10, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Alpine.avif" },
-  { id: 9, name: "Williams", color: "#104fb4", points: 2, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Williams.avif" },
+  { id: 9, name: "Williams", color: "#104fb4", points: 2, wins: 0, podiums: 0, championships: 16, image: "/Team Images/Williams.avif" },
   { id: 10, name: "Cadillac", color: "#444749", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Cadillac.avif" },
   { id: 11, name: "Aston Martin", color: "#10853b", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Aston.avif" },
 ];
