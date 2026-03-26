@@ -47,12 +47,12 @@ export function AnimatedStatsCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      whileHover={{ scale: 1.05, y: -5 }}
-      className="cursor-pointer rounded-lg border border-slate-200 bg-white p-6 text-slate-900 transition-colors dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+      whileHover={{ scale: 1.015, y: -2 }}
+      className="cursor-pointer rounded-2xl border border-slate-200/90 bg-white/95 p-6 text-slate-900 transition duration-200 dark:border-slate-700 dark:bg-slate-900/75 dark:text-gray-200"
     >
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm text-slate-600 dark:text-gray-400">{title}</p>
+          <p className="text-sm font-medium text-slate-600 dark:text-gray-400">{title}</p>
           <motion.p 
             className="mt-2 text-3xl font-bold text-slate-900 dark:text-white"
             key={count}
@@ -60,7 +60,7 @@ export function AnimatedStatsCard({
             {isNumeric ? count.toLocaleString() : value}
           </motion.p>
         </div>
-        <div className={`rounded-lg bg-slate-100 p-3 dark:bg-gray-700 ${color}`}>
+        <div className={`rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800 ${color}`}>
           <Icon className="size-6" />
         </div>
       </div>

@@ -42,6 +42,22 @@ const teamAliases: Record<string, string[]> = {
   Cadillac: ["Cadillac"],
 };
 
+const teamLogoBackgrounds: Record<string, string> = {
+  Mercedes: "#06B6D4",
+  Ferrari: "#c92c2c",
+  McLaren: "#F97316",
+  "Red Bull Racing": "#1c46ce",
+  Williams: "#104fb4",
+  Cadillac: "#444749",
+  "Aston Martin": "#10853b",
+  Audi: "#771716",
+  "Kick Sauber": "#39FF14",
+  Sauber: "#39FF14",
+  Alpine: "#2871cb",
+  "Haas F1 Team": "#d1d1d1",
+  "Racing Bulls": "#7594c2",
+};
+
 function matchesSelectedTeam(teamName: string, selectedTeam: string) {
   if (selectedTeam === "all") {
     return true;
@@ -130,9 +146,6 @@ export function ChampionshipSnapshot() {
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Overview</p>
           <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Championship snapshot</h2>
         </div>
-        <p className="text-sm text-slate-600 dark:text-slate-300">
-          Quick standings context for the {selectedSeason} season without duplicating the full standings tab.
-        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
@@ -188,7 +201,10 @@ export function ChampionshipSnapshot() {
             : teams.map((team, index) => (
                 <div key={team.id} className="flex items-center justify-between gap-4 rounded-[14px] bg-slate-50 px-4 py-4 dark:bg-slate-800/70">
                   <div className="flex min-w-0 flex-1 items-center gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
+                    <div
+                      className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-200 dark:border-slate-700"
+                      style={{ backgroundColor: teamLogoBackgrounds[team.name] ?? team.color ?? "#334155" }}
+                    >
                       <img
                         src={getTeamImage(team.name, team.image, memeify)}
                         alt={team.name}

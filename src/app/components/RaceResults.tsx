@@ -172,14 +172,14 @@ export function RaceResults() {
 
   if (loading) {
     return (
-      <div className="rounded-[24px] border border-slate-700/70 bg-[linear-gradient(180deg,_rgba(15,23,42,0.96),_rgba(17,24,39,0.96))] p-6 text-gray-200 shadow-sm">
+      <div className="rounded-[24px] border border-slate-700/70 bg-[linear-gradient(180deg,_rgba(15,23,42,0.94),_rgba(17,24,39,0.94))] p-6 text-gray-200">
         <p className="text-center text-gray-300">Loading race results...</p>
       </div>
     );
   }
 
   return (
-    <section className="overflow-hidden rounded-[24px] border border-slate-700/70 bg-[linear-gradient(180deg,_rgba(15,23,42,0.98),_rgba(17,24,39,0.98))] text-gray-200 shadow-[0_18px_50px_rgba(15,23,42,0.28)]">
+    <section className="overflow-hidden rounded-[24px] border border-slate-700/70 bg-[linear-gradient(180deg,_rgba(15,23,42,0.97),_rgba(17,24,39,0.97))] text-gray-200">
       <div className="border-b border-slate-700/70 p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -188,9 +188,6 @@ export function RaceResults() {
               <Flag className="size-5 text-red-500" />
               <h2 className="text-2xl font-semibold text-white">Race Classification</h2>
             </div>
-            <p className="mt-2 max-w-2xl text-sm text-slate-300">
-              Switch between completed rounds and view the full race classification with driver portraits, team branding, and race outcome details.
-            </p>
           </div>
 
           <div className="w-full max-w-sm">
@@ -198,7 +195,7 @@ export function RaceResults() {
             <select
               value={selectedRaceId ?? ""}
               onChange={(event) => setSelectedRaceId(Number(event.target.value))}
-              className="w-full rounded-2xl border border-slate-600 bg-slate-950/80 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-red-400"
+              className="w-full rounded-2xl border border-slate-600 bg-slate-950/80 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-500/25"
             >
               {races.map((availableRace) => (
                 <option key={availableRace.id} value={availableRace.id}>
@@ -214,7 +211,7 @@ export function RaceResults() {
         {race && results.length > 0 ? (
           <div className="space-y-6">
             <div className="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
-              <div className="rounded-[20px] border border-slate-700/70 bg-slate-900/60 p-5">
+              <div className="rounded-[20px] border border-slate-700/70 bg-slate-900/55 p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Event</p>
                 <h3 className="mt-2 text-2xl font-semibold text-white">{race.name}</h3>
                 <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-300">
@@ -232,7 +229,7 @@ export function RaceResults() {
                 </p>
               </div>
 
-              <div className="rounded-[20px] border border-amber-500/30 bg-[linear-gradient(135deg,_rgba(120,53,15,0.2),_rgba(15,23,42,0.92))] p-5">
+              <div className="rounded-[20px] border border-amber-500/30 bg-[linear-gradient(135deg,_rgba(120,53,15,0.15),_rgba(15,23,42,0.9))] p-5">
                 <div className="flex items-center gap-2 text-amber-300">
                   <Trophy className="size-4" />
                   <p className="text-xs font-semibold uppercase tracking-[0.24em]">Winner</p>

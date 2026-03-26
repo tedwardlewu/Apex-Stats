@@ -2,35 +2,35 @@
 
 :root {
   --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
+  --background: #f5f8fc;
+  --foreground: #0f172a;
   --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #b91c1c;
+  --primary-foreground: #ffffff;
+  --secondary: #e2e8f0;
+  --secondary-foreground: #0f172a;
+  --muted: #eef2f7;
+  --muted-foreground: #475569;
+  --accent: #e8eff8;
+  --accent-foreground: #0f172a;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-    --background: #f7fafd;
-    --foreground: #18181b;
-    --card: #f7fafd;
-    --card-foreground: #18181b;
+  --border: #d7e0ec;
+  --input: #ffffff;
+  --input-background: #ffffff;
+  --switch-background: #cbd5e1;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
+  --ring: #ef4444;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.5rem;
+  --radius: 0.55rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: #030213;
@@ -42,27 +42,28 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-    --background: #e5e7eb;
-    --card: #e5e7eb;
-    --border: #e0e4ea;
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-    --background: #1a2330;
-    --card: #232d3a;
-    --card-foreground: #ffffff;
+  --background: #0b1220;
+  --foreground: #e2e8f0;
+  --card: #111b2f;
+  --card-foreground: #e2e8f0;
+  --popover: #111b2f;
+  --popover-foreground: #e2e8f0;
+  --primary: #ef4444;
+  --primary-foreground: #ffffff;
+  --secondary: #1f2a40;
+  --secondary-foreground: #e2e8f0;
+  --muted: #1c2639;
+  --muted-foreground: #94a3b8;
+  --accent: #23314b;
+  --accent-foreground: #e2e8f0;
+  --destructive: #f87171;
+  --destructive-foreground: #111827;
+  --border: #2b3a53;
+  --input: #111b2f;
+  --input-background: #111b2f;
+  --switch-background: #334155;
   --font-weight-normal: 400;
+  --ring: #f87171;
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -85,9 +86,9 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-    --card: #232d3a;
-    --card-foreground: oklch(0.985 0 0);
-    --border: #2c3748;
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -126,6 +127,9 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: "Space Grotesk", "Sora", "Segoe UI", sans-serif;
+    min-height: 100dvh;
+    letter-spacing: 0.01em;
   }
 
   html {
@@ -172,5 +176,48 @@
     font-size: var(--text-base);
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
+  }
+
+  ::selection {
+    background: rgba(239, 68, 68, 0.24);
+    color: inherit;
+  }
+}
+
+@layer utilities {
+  .rounded-lg {
+    border-radius: 0.45rem;
+  }
+
+  .rounded-xl {
+    border-radius: 0.55rem;
+  }
+
+  .rounded-2xl {
+    border-radius: 0.7rem;
+  }
+
+  [class*="rounded-[24px]"] {
+    border-radius: 0.7rem;
+  }
+
+  [class*="rounded-[20px]"] {
+    border-radius: 0.6rem;
+  }
+
+  [class*="rounded-[18px]"] {
+    border-radius: 0.55rem;
+  }
+
+  [class*="rounded-[16px]"] {
+    border-radius: 0.5rem;
+  }
+
+  [class*="rounded-[14px]"] {
+    border-radius: 0.45rem;
+  }
+
+  [class*="rounded-[12px]"] {
+    border-radius: 0.4rem;
   }
 }

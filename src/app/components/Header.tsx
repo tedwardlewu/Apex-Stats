@@ -74,7 +74,7 @@ export function Header() {
   };
 
   return (
-    <header className="border-b bg-gradient-to-r from-red-700 to-red-800 text-white">
+    <header className="border-b border-red-900/30 bg-gradient-to-r from-red-700 via-red-700 to-red-800 text-white">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -85,7 +85,7 @@ export function Header() {
                   <h1 className="text-2xl font-bold">Apex Stats</h1>
                   <button
                     onClick={toggleMemeify}
-                    className={`rounded-full border px-4 py-1.5 text-sm font-semibold shadow-md ring-1 ring-white/20 transition ${
+                    className={`rounded-full border px-4 py-1.5 text-sm font-semibold ring-1 ring-white/20 transition ${
                       memeify
                         ? "border-yellow-200 bg-yellow-400 text-red-950 hover:bg-yellow-300"
                         : "border-red-200/70 bg-red-950/45 text-red-50 hover:bg-red-900/60"
@@ -102,7 +102,7 @@ export function Header() {
           <div className="flex items-center gap-4 text-sm">
             <button
               onClick={toggleDarkMode}
-              className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-700 bg-gray-900 text-yellow-400 hover:bg-gray-700 transition"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-red-950/45 text-yellow-300 transition hover:bg-red-900/60"
               title="Toggle dark mode"
             >
               {darkMode ? <Sun className="size-5" /> : <Moon className="size-5" />}
@@ -113,7 +113,7 @@ export function Header() {
         </div>
 
         {upcomingRace ? (
-          <div className="mt-4 rounded-xl border border-white/30 bg-black/20 px-5 py-4 backdrop-blur">
+          <div className="mt-4 rounded-2xl border border-white/25 bg-black/15 px-5 py-4 backdrop-blur-sm">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-100">Next Race Countdown</p>
             <h2 className="mt-1 text-3xl font-black tracking-tight md:text-4xl">
               {upcomingRace.name} · {countdown}

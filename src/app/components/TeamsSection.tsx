@@ -4,6 +4,20 @@ import { useMemeify } from "../contexts/MemeifyContext";
 import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
 import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
+const teamCarImage: Record<string, string> = {
+  Mercedes: "Mercedes.avif",
+  Ferrari: "Ferrari.avif",
+  McLaren: "McLaren.avif",
+  "Red Bull Racing": "Redbull.avif",
+  "Haas F1 Team": "Haas.avif",
+  "Racing Bulls": "Racingbulls.avif",
+  Audi: "Audi.avif",
+  Alpine: "Alpine.avif",
+  Williams: "Williams.avif",
+  Cadillac: "Cadillac.avif",
+  "Aston Martin": "Aston.avif",
+};
+
 interface Team {
   id: number;
   name: string;
@@ -21,7 +35,8 @@ interface Driver {
 export function TeamsSection() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
-  const [hoveredTeam, setHoveredTeam] = useState<string | null>(null);
+  const [showDrivers, setShowDrivers] = useState<string | null>(null);
+  const [carHidden, setCarHidden] = useState<string | null>(null);
   const { memeify } = useMemeify();
 
   useEffect(() => {
@@ -44,43 +59,67 @@ export function TeamsSection() {
         {teams.map(team => (
           <div
             key={team.id}
-            className="flex items-center gap-8 p-6 rounded-lg"
-            onMouseEnter={() => setHoveredTeam(team.name)}
-            onMouseLeave={() => setHoveredTeam(null)}
-            style={{ background: team.color, boxShadow: hoveredTeam === team.name ? '0 4px 16px rgba(0,0,0,0.15)' : undefined }}>
+            className="flex items-center gap-8 p-6 rounded-lg relative bg-gradient-to-r from-black/60 via-blue-900/40 to-transparent shadow-lg backdrop-blur-md"
+            onMouseEnter={() => {
+              setCarHidden(null);
+              setShowDrivers(null);
+              setTimeout(() => {
+                setCarHidden(team.name);
+                setTimeout(() => {
+                  setShowDrivers(team.name);
+                }, 350);
+              }, 10);
+            }}
+            onMouseLeave={() => {
+              setShowDrivers(null);
+              setCarHidden(null);
+            }}
+            style={{ background: team.color ? `linear-gradient(90deg, ${team.color} 0%, #1e293b 100%)` : undefined }}
+          >
 
             <img
               src={getTeamImage(team.name, team.image, memeify)}
               alt={team.name + " logo"}
-              className="w-32 h-32 object-contain"
+              className="w-32 h-32 object-contain drop-shadow-xl"
               style={getTeamImageStyle(team.name, memeify)}
             />
 
             <div className="flex-1">
-              <h3 className="text-xl font-semibold mb-2">{team.name}</h3>
+              <h3 className="text-xl font-semibold mb-2 text-white drop-shadow-md">{team.name}</h3>
             </div>
-            <img
-              src={"/Cars/" + team.name.replace(/ /g, "") + ".avif"}
-              alt={team.name + " car"}
-              className="w-[500px] h-48 object-contain"
-            />
-
-            {hoveredTeam === team.name && (
-              <div className="absolute top-1/2 right-0 bg-white rounded-lg p-4 flex gap-4 z-10 shadow-lg" style={{ transform: 'translateY(-50%)' }}>
-                {drivers
-                  .filter(d => d.team === team.name)
-                  .map(driver => (
-                    <div key={driver.id} className="h-32 w-32 overflow-hidden rounded-lg">
-                      <img
-                        src={getDriverImage(driver.name, driver.image, memeify)}
-                        alt={driver.name}
-                        className="h-full w-full object-contain"
-                        style={getDriverImageStyle(driver.name, memeify)}
-                      />
-                    </div>
-                  ))}
+            <div className="w-[500px] h-48 flex items-center justify-center">
+              <div className="relative w-full h-full">
+                <img
+                  src={"/Cars/" + teamCarImage[team.name]}
+                  alt={team.name + " car"}
+                  className="absolute left-0 top-0 w-[500px] h-48 object-contain rounded-xl shadow-2xl bg-white/10 backdrop-blur-sm transition-opacity duration-500"
+                  style={{ opacity: carHidden === team.name ? 0 : 1, zIndex: carHidden === team.name ? 1 : 2 }}
+                />
+                {showDrivers === team.name && carHidden === team.name && (
+                  <div className="flex items-center justify-center w-full h-full">
+                    {drivers
+                      .filter(d => d.team === team.name)
+                      .map((driver, idx) => (
+                        <div
+                          key={driver.id}
+                          className="mx-2 h-48 w-48 overflow-hidden rounded-xl bg-white/10 shadow-lg backdrop-blur-sm transition-opacity duration-500"
+                          style={{
+                            opacity: showDrivers === team.name ? 1 : 0,
+                            transitionDelay: `${idx * 100}ms`,
+                          }}
+                        >
+                          <img
+                            src={getDriverImage(driver.name, driver.image, memeify)}
+                            alt={driver.name}
+                            className="h-full w-full object-contain"
+                            style={getDriverImageStyle(driver.name, memeify)}
+                          />
+                        </div>
+                      ))}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         ))}
       </div>

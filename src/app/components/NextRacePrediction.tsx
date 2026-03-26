@@ -296,11 +296,11 @@ export function NextRacePrediction() {
           <div className="flex items-center justify-between gap-4 border-b border-slate-200/70 pb-4 dark:border-slate-700/70">
             <div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Projected race leaderboard</h3>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                {selectedTeam !== "all" || searchQuery
-                  ? "Percentages are normalized across the currently visible drivers, based on your filters."
-                  : "Percentages are normalized across the full visible grid for this season snapshot."}
-              </p>
+              {selectedTeam !== "all" || searchQuery ? (
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                  Percentages are normalized across the currently visible drivers, based on your filters.
+                </p>
+              ) : null}
             </div>
             <div className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
               <Activity className="size-4" />
