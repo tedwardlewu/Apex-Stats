@@ -6,6 +6,38 @@ import { upcomingRaceBySeason } from "../data/upcomingRaceData";
 
 const THEME_STORAGE_KEY = "apex-stats-theme";
 
+const countryFlagByKeyword: Array<{ keyword: string; flagPath: string; label: string }> = [
+  { keyword: "japan", flagPath: "/Countries/Japan.png", label: "Japan" },
+  { keyword: "united arab emirates", flagPath: "/Countries/UAE.svg", label: "United Arab Emirates" },
+  { keyword: "uae", flagPath: "/Countries/UAE.svg", label: "United Arab Emirates" },
+  { keyword: "australia", flagPath: "/Countries/Australia.webp", label: "Australia" },
+  { keyword: "great britain", flagPath: "/Countries/UK.webp", label: "Great Britain" },
+  { keyword: "united kingdom", flagPath: "/Countries/UK.webp", label: "United Kingdom" },
+  { keyword: "italy", flagPath: "/Countries/Italy.webp", label: "Italy" },
+  { keyword: "monaco", flagPath: "/Countries/Monaco.svg", label: "Monaco" },
+  { keyword: "spain", flagPath: "/Countries/Spain.svg", label: "Spain" },
+  { keyword: "canada", flagPath: "/Countries/Canada.svg", label: "Canada" },
+  { keyword: "bahrain", flagPath: "/Countries/Bahrain.webp", label: "Bahrain" },
+  { keyword: "saudi arabia", flagPath: "/Countries/Saudi Arabia.png", label: "Saudi Arabia" },
+  { keyword: "qatar", flagPath: "/Countries/Qatar.png", label: "Qatar" },
+  { keyword: "usa", flagPath: "/Countries/USA.png", label: "United States" },
+  { keyword: "united states", flagPath: "/Countries/USA.png", label: "United States" },
+  { keyword: "mexico", flagPath: "/Countries/Mexico.svg", label: "Mexico" },
+  { keyword: "brazil", flagPath: "/Countries/Brazil.webp", label: "Brazil" },
+  { keyword: "singapore", flagPath: "/Countries/Singapore.png", label: "Singapore" },
+  { keyword: "austria", flagPath: "/Countries/Austria.png", label: "Austria" },
+  { keyword: "belgium", flagPath: "/Countries/Belgium.png", label: "Belgium" },
+  { keyword: "hungary", flagPath: "/Countries/Hungary.png", label: "Hungary" },
+  { keyword: "netherlands", flagPath: "/Countries/Dutch.webp", label: "Netherlands" },
+  { keyword: "azerbaijan", flagPath: "/Countries/Azerbaijan.svg", label: "Azerbaijan" },
+  { keyword: "china", flagPath: "/Countries/China.png", label: "China" },
+];
+
+function getRaceCountryFlag(country: string) {
+  const normalized = country.toLowerCase();
+  return countryFlagByKeyword.find((entry) => normalized.includes(entry.keyword));
+}
+
 function formatCountdown(targetDate: string) {
   const now = Date.now();
   const target = new Date(`${targetDate}T00:00:00`).getTime();
@@ -45,6 +77,7 @@ export function Header() {
     const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
     return savedTheme ? savedTheme === "dark" : true;
   });
+  const raceFlag = upcomingRace ? getRaceCountryFlag(upcomingRace.country) : undefined;
 
   useEffect(() => {
     const html = document.documentElement;
@@ -114,7 +147,16 @@ export function Header() {
 
         {upcomingRace ? (
           <div className="mt-4 rounded-2xl border border-white/25 bg-black/15 px-5 py-4 backdrop-blur-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-100">Next Race Countdown</p>
+            <div className="flex items-center gap-2">
+              {raceFlag ? (
+                <img
+                  src={raceFlag.flagPath}
+                  alt={`${raceFlag.label} flag`}
+                  className="h-5 w-5 rounded-full border border-white/45 object-cover"
+                />
+              ) : null}
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-100">Next Race Countdown</p>
+            </div>
             <h2 className="mt-1 text-3xl font-black tracking-tight md:text-4xl">
               {upcomingRace.name} · {countdown}
             </h2>

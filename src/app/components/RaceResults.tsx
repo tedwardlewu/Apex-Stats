@@ -169,6 +169,9 @@ export function RaceResults() {
     () => results.find((entry) => entry.positionLabel !== "NC") ?? null,
     [results],
   );
+  const winnerBackgroundImage = winner
+    ? getDriverImage(winner.driverName, driverImages[winner.driverName] ?? "/Driver Images/Max.avif", memeify)
+    : "";
 
   if (loading) {
     return (
@@ -229,7 +232,19 @@ export function RaceResults() {
                 </p>
               </div>
 
-              <div className="rounded-[20px] border border-amber-500/30 bg-[linear-gradient(135deg,_rgba(120,53,15,0.15),_rgba(15,23,42,0.9))] p-5">
+              <div className="group relative overflow-hidden rounded-[20px] border border-amber-500/30 bg-[linear-gradient(135deg,_rgba(120,53,15,0.15),_rgba(15,23,42,0.9))] p-5">
+                {winnerBackgroundImage ? (
+                  <div
+                    className="pointer-events-none absolute inset-0 scale-[1.03] bg-cover bg-no-repeat opacity-95 transition-transform duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-1 group-hover:scale-[1.08]"
+                    style={{
+                      backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.72) 0%, rgba(15,23,42,0.52) 44%, rgba(15,23,42,0.16) 100%), url("${encodeURI(winnerBackgroundImage)}")`,
+                      backgroundPosition: "center 4%",
+                    }}
+                  />
+                ) : null}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/8" />
+
+                <div className="relative z-10">
                 <div className="flex items-center gap-2 text-amber-300">
                   <Trophy className="size-4" />
                   <p className="text-xs font-semibold uppercase tracking-[0.24em]">Winner</p>
@@ -267,6 +282,7 @@ export function RaceResults() {
                     </div>
                   </div>
                 ) : null}
+                </div>
               </div>
             </div>
 

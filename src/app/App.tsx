@@ -29,16 +29,89 @@ const initialStats = {
   totalPoints: 0,
 };
 
+const driverBackgroundByName: Record<string, string> = {
+  "Max Verstappen": "/Driver Images/Max.avif",
+  "Isack Hadjar": "/Driver Images/Isack.avif",
+  "Charles Leclerc": "/Driver Images/Charles.avif",
+  "Lewis Hamilton": "/Driver Images/Lewis.avif",
+  "George Russell": "/Driver Images/Russel.avif",
+  "Kimi Antonelli": "/Driver Images/Antonelli.avif",
+  "Lando Norris": "/Driver Images/Norris.avif",
+  "Oscar Piastri": "/Driver Images/Oscar.avif",
+  "Fernando Alonso": "/Driver Images/Alonso.avif",
+  "Lance Stroll": "/Driver Images/Stroll.avif",
+  "Nico Hulkenberg": "/Driver Images/Hulkenburg.avif",
+  "Gabriel Bortoleto": "/Driver Images/Borteoleto.avif",
+  "Pierre Gasly": "/Driver Images/Gasly.avif",
+  "Franco Colapinto": "/Driver Images/Colapinto.avif",
+  "Carlos Sainz": "/Driver Images/Sainz.avif",
+  "Alexander Albon": "/Driver Images/Albon.avif",
+  "Liam Lawson": "/Driver Images/Lawson.avif",
+  "Arvid Lindblad": "/Driver Images/Lindblad.avif",
+  "Esteban Ocon": "/Driver Images/Ocon.avif",
+  "Oliver Bearman": "/Driver Images/Bearman.avif",
+  "Sergio Perez": "/Driver Images/Perez.avif",
+  "Valtteri Bottas": "/Driver Images/Bottas.avif",
+};
+
+const teamBackgroundByName: Record<string, string> = {
+  Mercedes: "/Team Images/Mercedes.avif",
+  Ferrari: "/Team Images/Ferrari.avif",
+  McLaren: "/Team Images/McLaren.avif",
+  "Red Bull Racing": "/Team Images/Redbull.avif",
+  "Haas F1 Team": "/Team Images/Haas.avif",
+  "Racing Bulls": "/Team Images/Racingbulls.avif",
+  Audi: "/Team Images/Audi.avif",
+  Alpine: "/Team Images/Alpine.avif",
+  Williams: "/Team Images/Williams.avif",
+  Cadillac: "/Team Images/Cadillac.avif",
+  "Aston Martin": "/Team Images/Aston.avif",
+  Sauber: "/Team Images/Sauber.avif",
+};
+
 export default function App() {
   const [stats, setStats] = useState(initialStats);
+  const [topDriverImage, setTopDriverImage] = useState("");
+  const [topDriverTeamColor, setTopDriverTeamColor] = useState("#334155");
+  const [topTeamImage, setTopTeamImage] = useState("");
+  const [topTeamColor, setTopTeamColor] = useState("#334155");
   const { selectedSeason } = useFilters();
 
   useEffect(() => {
     async function fetchStats() {
       try {
-        const response = await api.getStats({ season: selectedSeason });
-        if (response.success) {
-          setStats(response.data);
+        const [statsResponse, driversResponse, teamsResponse] = await Promise.all([
+          api.getStats({ season: selectedSeason }),
+          api.getDrivers({ season: selectedSeason }),
+          api.getTeams({ season: selectedSeason }),
+        ]);
+
+        if (statsResponse.success) {
+          setStats(statsResponse.data);
+        }
+
+        if (driversResponse.success && driversResponse.data.length > 0) {
+          const leader = [...driversResponse.data].sort((a, b) => b.points - a.points)[0];
+          const resolvedDriverImage = leader?.name ? driverBackgroundByName[leader.name] ?? leader.image ?? "" : "";
+          setTopDriverImage(resolvedDriverImage);
+
+          if (teamsResponse.success) {
+            const leaderTeamColor = teamsResponse.data.find((team) => team.name === leader?.team)?.color ?? "#334155";
+            setTopDriverTeamColor(leaderTeamColor);
+          }
+        } else {
+          setTopDriverImage("");
+          setTopDriverTeamColor("#334155");
+        }
+
+        if (teamsResponse.success && teamsResponse.data.length > 0) {
+          const leaderTeam = [...teamsResponse.data].sort((a, b) => b.points - a.points)[0];
+          const resolvedTeamImage = leaderTeam?.name ? teamBackgroundByName[leaderTeam.name] ?? leaderTeam.image ?? "" : "";
+          setTopTeamImage(resolvedTeamImage);
+          setTopTeamColor(leaderTeam?.color ?? "#334155");
+        } else {
+          setTopTeamImage("");
+          setTopTeamColor("#334155");
         }
       } catch (error) {
         console.error("Error fetching stats from SQL database:", error);
@@ -70,6 +143,9 @@ export default function App() {
             icon={Trophy}
             color="text-yellow-600"
             delay={0.1}
+            backgroundImage={topDriverImage}
+            backgroundVariant="driver"
+            backgroundAccentColor={topDriverTeamColor}
           />
           <AnimatedStatsCard
             title="Leading Team"
@@ -77,6 +153,9 @@ export default function App() {
             icon={Users}
             color="text-blue-600"
             delay={0.2}
+            backgroundImage={topTeamImage}
+            backgroundVariant="team"
+            backgroundAccentColor={topTeamColor}
           />
           <AnimatedStatsCard
             title="Total Points"
