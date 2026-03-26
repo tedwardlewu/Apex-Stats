@@ -20,7 +20,9 @@ import { TeamsShowcase } from "./components/TeamsShowcase";
 import { NewsSection } from "./components/NewsSection";
 import RacingCalendar from "./components/RacingCalendar";
 import { useFilters } from "./contexts/FilterContext";
+import { useMemeify } from "./contexts/MemeifyContext";
 import * as api from "./services/api";
+import { getDriverImage } from "./utils/driverImages";
 
 const initialStats = {
   totalRaces: 0,
@@ -76,6 +78,7 @@ export default function App() {
   const [topTeamImage, setTopTeamImage] = useState("");
   const [topTeamColor, setTopTeamColor] = useState("#334155");
   const { selectedSeason } = useFilters();
+  const { memeify } = useMemeify();
 
   useEffect(() => {
     async function fetchStats() {
@@ -92,7 +95,8 @@ export default function App() {
 
         if (driversResponse.success && driversResponse.data.length > 0) {
           const leader = [...driversResponse.data].sort((a, b) => b.points - a.points)[0];
-          const resolvedDriverImage = leader?.name ? driverBackgroundByName[leader.name] ?? leader.image ?? "" : "";
+          const baseDriverImage = leader?.name ? driverBackgroundByName[leader.name] ?? leader.image ?? "" : "";
+          const resolvedDriverImage = leader?.name ? getDriverImage(leader.name, baseDriverImage, memeify) : "";
           setTopDriverImage(resolvedDriverImage);
 
           if (teamsResponse.success) {
@@ -119,7 +123,7 @@ export default function App() {
     }
 
     fetchStats();
-  }, [selectedSeason]);
+  }, [selectedSeason, memeify]);
 
   const scrollToTeamsShowcase = () => {
     document.getElementById("teams-showcase-section")?.scrollIntoView({ behavior: "smooth" });
