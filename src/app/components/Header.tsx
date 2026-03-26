@@ -118,14 +118,14 @@ export function Header() {
                   <h1 className="text-2xl font-bold">Apex Stats</h1>
                   <button
                     onClick={toggleMemeify}
-                    className={`rounded-full border px-4 py-1.5 text-sm font-semibold ring-1 ring-white/20 transition ${
+                    className={`rounded-full border-2 px-5 py-2 text-sm font-black uppercase tracking-[0.08em] shadow-[0_0_0_2px_rgba(255,255,255,0.18)] transition ${
                       memeify
-                        ? "border-yellow-200 bg-yellow-400 text-red-950 hover:bg-yellow-300"
-                        : "border-red-200/70 bg-red-950/45 text-red-50 hover:bg-red-900/60"
+                        ? "border-yellow-100 bg-yellow-300 text-red-950 hover:bg-yellow-200"
+                        : "animate-pulse border-yellow-200 bg-red-950/55 text-yellow-100 hover:bg-red-900/70"
                     }`}
                     title="Toggle meme driver and team images"
                   >
-                    Memeify
+                    {memeify ? "Meme version on" : "Click for meme version"}
                   </button>
                 </div>
                 <p className="text-sm text-red-100">Formula 1 Analytics Dashboard</p>

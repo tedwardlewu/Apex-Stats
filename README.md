@@ -1,94 +1,97 @@
 # Apex Stats
 
- A comprehensive Formula 1 analytics dashboard featuring real-time data visualization, driver/team standings, and performance metrics powered by a custom SQL-based backend.
+Apex Stats is a Formula 1 analytics dashboard built with React, TypeScript, and Vite.
 
- This project demonstrates **full-stack TypeScript and SQL database**. 
+It includes standings, race analytics, comparison views, prediction widgets, and an F1 news feed, with a fast frontend workflow powered by local service data.
 
-**Frontend UI:** Built using Figma Make (automated React + Tailwind CSS generation)  
-**Backend & Database:** Custom-built by me using TypeScript/TypeScript and SQL
+## Features
 
--  **SQL Database Design** - Schema design with normalized tables and relationships
--  **RESTful API Development** - 8 custom API endpoints using Hono framework
--  **TypeScript** - Server-side logic and data processing
--  **Database Queries** - Complex SQL with JOINs, aggregations, and subqueries
--  **Backend Architecture** - Three-tier architecture (Frontend → API → Database)
--  **PostgreSQL** - Using Supabase PostgreSQL with custom SQL implementations
+- Multi-tab dashboard: Overview, Standings, Analytics, Results, Predictions, Calendar, News, Compare
+- Season-aware filtering (currently focused on 2025 and 2026 datasets)
+- Driver and team comparison UI
+- Visual analytics using Recharts and Chart.js
+- Rich media assets for drivers, teams, cars, and news cards
+- Database SQL scripts and Supabase function scaffolding for backend evolution
 
-## 📊 Data Model
+## Tech Stack
 
-The database contains:
-- **20 Drivers** across 10 teams (if not then changes are being made)
-- **10 Constructor Teams** with historical data
-- **5+ Race Results** from 2025 season
-- **11 Lap Time Entries** per driver
-- **5 Years** of historical team performance
-- **22 Driver Consistency Scores**
+- React 18
+- TypeScript
+- Vite 6
+- Tailwind CSS 4
+- Recharts + Chart.js
+- Radix UI + MUI components
+- Supabase CLI/tooling
 
-***Still in early development***
+## Requirements
 
-## Acknowledgments
+- Node.js 20+
+- npm 9+
 
-- **Frontend UI:** Generated using Figma Make (automated Tailwind CSS)
-- **Data:** Sample F1 2026 & 2025 season data for demonstration purposes
+## Quick Start
 
-***Project Overview***
-A full-stack F1 analytics dashboard that collects, stores, and visualizes Formula 1 data, providing interactive stats, insights, and predictions for drivers, teams, and races.
-Goal: Show your full-stack, SQL, and data visualization skills
+```bash
+npm install
+npm run dev
+```
 
+Open the local URL printed by Vite (typically `http://localhost:5173`).
 
-Outcome: A deployed, interactive dashboard with SQL-powered backend
+## Scripts
 
-Tech Stuff: 
-Frontend: React + Tailwind CSS
+- `npm run dev` - start the local development server
+- `npm run build` - create the production build in `dist/`
 
-Charts/Visualizations: Chart.js or D3.js
+## Data Source (Current State)
 
-Backend: Node.js + Express
+The current UI is powered by local/mock services while backend integration continues:
 
-Database: PostgreSQL or SQLite or SQL 
+- `src/app/services/api.ts`
+- `src/app/services/driverStatsApi.ts`
 
-Optional Analytics: Simple predictive scoring or trend detection
+This keeps iteration fast and deterministic during UI and feature development.
 
+## Project Layout
 
-Deployment: Render
-Core Features
-Driver & Team Stats
+```text
+src/
+  app/
+    App.tsx
+    components/
+    contexts/
+    data/
+    services/
+    utils/
+public/
+  Cars/
+  Countries/
+  Driver Images/
+  Drivers 2025/
+  Team Images/
+  News/
+database/
+  f1_schema.sql
+  f1_views.sql
+  f1_procedures.sql
+  f1_triggers.sql
+  f1_2025_season_data.sql
+supabase/
+  functions/server/
+```
 
-**Things it can do (or will do in the future) :)**
+## Deployment
 
-Career and seasonal stats: wins, podiums, points
+`render.yaml` is configured for static hosting on Render:
 
-Compare drivers/teams side by side
+- Build command: `npm install && npm run build`
+- Publish path: `./dist`
+- Rewrite rule: `/* -> /index.html` (SPA routing support)
 
-Race Analytics
+## Roadmap Notes
 
-Track-specific performance trends
-
-Average lap times per driver/team
-
-Historical race leaderboard
-
-Predictions / Insights (optional but standout)
-
-Predict podium finishers for upcoming races
-
-Highlight rookies vs. veterans
-
-Calculate “most consistent driver” or “driver improvement score”
-
-Interactive Dashboard
-
-Filter by season, team, driver, or track
-
-Dynamic charts, tables, and leaderboards
-
-Visualizations: heatmaps, trend lines, and bar charts
-
-Database & API
-
-SQL database stores all driver, team, and race info
-
-Optional Personalization
+- SQL files in `database/` define schema, views, procedures, triggers, and seed data.
+- News content is currently maintained in `src/app/data/newsData.ts`.
+- Package name in `package.json` (`@figma/my-make-file`) appears to be a placeholder and can be renamed when publishing or standardizing project metadata.
 
 
 
