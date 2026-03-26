@@ -84,13 +84,13 @@ INSERT INTO drivers (id, name, number, team, nationality, points, wins, podiums,
   (22, 'Kimi Antonelli', 7, 'Mercedes', 'Italy', 47, 0, 1, 0);
 
 INSERT INTO teams (id, name, color, points, wins, podiums, championships) VALUES
-  (1, 'Mercedes','#06B6D4', 98, 1, 2, 16),
-  (2, 'McLaren', '#F97316', 18, 0, 0, 8),
-  (3, 'Red Bull Racing', '#1E40AF', 12, 0, 0, 6),
-  (4, 'Ferrari', '#DC2626', 67, 0, 2, 8),
+  (1, 'Mercedes','#06B6D4', 98, 1, 2, 8),
+  (2, 'McLaren', '#F97316', 18, 0, 0, 10),
+  (3, 'Red Bull Racing', '#1E40AF', 12, 0, 0, 14),
+  (4, 'Ferrari', '#DC2626', 67, 0, 2, 16),
   (5, 'Aston Martin', '#1aa84e', 0, 0, 0, 0),
   (6, 'Alpine', '#8B5CF6', 10, 0, 0, 0),
-  (7, 'Williams', '#3B82F6', 2, 0, 0, 0),
+  (7, 'Williams', '#3B82F6', 2, 0, 0, 16),
   (8, 'Audi', '#02f406', 2, 0, 0, 0),
   (9, 'Racing Bulls', '#7594c2', 12, 0, 0, 0),
   (10, 'Haas', '#f7f5f5', 17, 0, 0, 0),

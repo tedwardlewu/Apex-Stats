@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
-import { Activity, LayoutGrid, BarChart3, Trophy, GitCompare, Newspaper, CalendarDays } from "lucide-react";
+import { Activity, LayoutGrid, BarChart3, Trophy, GitCompare, Newspaper, CalendarDays, Flag } from "lucide-react";
 
 interface TabNavigationProps {
   children: {
@@ -7,8 +7,8 @@ interface TabNavigationProps {
     analytics: React.ReactNode;
     standings: React.ReactNode;
     predictions: React.ReactNode;
+    results: React.ReactNode;
     compare: React.ReactNode;
-    graphs: React.ReactNode;
     news: React.ReactNode;
     calendar: React.ReactNode;
   };
@@ -18,9 +18,9 @@ export function TabNavigation({ children }: TabNavigationProps) {
   const tabs = [
     { key: "overview", label: "Overview", icon: LayoutGrid },
     { key: "standings", label: "Standings", icon: Trophy },
+    { key: "results", label: "Results", icon: Flag },
     { key: "analytics", label: "Analytics", icon: BarChart3 },
     { key: "predictions", label: "Predictions", icon: Activity },
-    { key: "graphs", label: "Graphs", icon: BarChart3 },
     { key: "calendar", label: "Calendar", icon: CalendarDays },
     { key: "news", label: "News", icon: Newspaper },
     { key: "compare", label: "Compare", icon: GitCompare },
@@ -49,12 +49,12 @@ export function TabNavigation({ children }: TabNavigationProps) {
         {children.analytics}
       </TabsContent>
 
-      <TabsContent value="predictions">
-        {children.predictions}
+      <TabsContent value="results">
+        {children.results}
       </TabsContent>
 
-      <TabsContent value="graphs">
-        {children.graphs}
+      <TabsContent value="predictions">
+        {children.predictions}
       </TabsContent>
 
       <TabsContent value="news">

@@ -14,6 +14,7 @@ import { CompareSection } from "./components/CompareSection";
 import { ChampionshipSnapshot } from "./components/ChampionshipSnapshot";
 import { GraphsSection } from "./components/GraphsSection";
 import { NextRacePrediction } from "./components/NextRacePrediction";
+import { RaceResults } from "./components/RaceResults";
 import { TeamsSection } from "./components/TeamsSection";
 import { TeamsShowcase } from "./components/TeamsShowcase";
 import { NewsSection } from "./components/NewsSection";
@@ -116,10 +117,13 @@ export default function App() {
                   <TeamPerformanceChart />
                 </div>
                 <ConsistencyTable />
+                <div className="mt-8">
+                  <GraphsSection />
+                </div>
               </>
             ),
+            results: <RaceResults />,
             predictions: <NextRacePrediction />,
-            graphs: <GraphsSection />,
             calendar: <RacingCalendar />,
             news: <NewsSection />,
             compare: (

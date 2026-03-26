@@ -1,8 +1,43 @@
-import { raceBestLapTimes, raceCatalog } from "../data/raceLapTimes";
+import { raceBestLapTimes, raceCatalog, raceResultsById } from "../data/raceLapTimes";
 
 type DriverFilters = { team?: string; search?: string; season?: string };
 
 const DEFAULT_SEASON = "2026";
+
+const DRIVER_DEBUT_SEASONS: Record<string, number> = {
+  "Max Verstappen": 2015,
+  "Isack Hadjar": 2025,
+  "Charles Leclerc": 2018,
+  "Lewis Hamilton": 2007,
+  "George Russell": 2019,
+  "Kimi Antonelli": 2025,
+  "Lando Norris": 2019,
+  "Oscar Piastri": 2023,
+  "Fernando Alonso": 2001,
+  "Lance Stroll": 2017,
+  "Nico Hulkenberg": 2010,
+  "Gabriel Bortoleto": 2025,
+  "Pierre Gasly": 2018,
+  "Franco Colapinto": 2025,
+  "Carlos Sainz": 2015,
+  "Carlos Sainz Jr.": 2015,
+  "Alexander Albon": 2019,
+  "Liam Lawson": 2023,
+  "Arvid Lindblad": 2026,
+  "Esteban Ocon": 2016,
+  "Oliver Bearman": 2024,
+  "Sergio Perez": 2011,
+  "Valtteri Bottas": 2013,
+  "Yuki Tsunoda": 2021,
+  "Jack Doohan": 2025,
+};
+
+function withDriverExperience<T extends { name: string }>(drivers: T[]) {
+  return drivers.map((driver) => ({
+    ...driver,
+    debutSeason: DRIVER_DEBUT_SEASONS[driver.name] ?? DEFAULT_SEASON,
+  }));
+}
 
 const mockDrivers2026 = [
     { id: 1, name: "Max Verstappen", number: 3, team: "Red Bull Racing", nationality: "Netherlands", age: 28, points: 8, wins: 0, podiums: 0, championships: 3, image: "/Driver Images/Max.avif" },
@@ -104,7 +139,7 @@ const teamAliases: Record<string, string[]> = {
 
 export async function getDrivers(filters?: DriverFilters) {
   const season = filters?.season ?? DEFAULT_SEASON;
-  const baseDrivers = season === "2025" ? mockDrivers2025 : mockDrivers2026;
+  const baseDrivers = withDriverExperience(season === "2025" ? mockDrivers2025 : mockDrivers2026);
   const searchTerm = filters?.search?.trim().toLowerCase();
 
   let filteredDrivers = [...baseDrivers];
@@ -166,6 +201,8 @@ export async function getRaces(filters?: RaceFilters) {
 
 type LapTimeFilters = { season?: string; raceId?: number };
 
+type RaceResultsFilters = { season?: string; raceId?: number; latest?: boolean };
+
 export async function getLapTimes(filters?: LapTimeFilters) {
   const season = filters?.season ?? DEFAULT_SEASON;
   const seasonRaces = raceCatalog
@@ -180,6 +217,28 @@ export async function getLapTimes(filters?: LapTimeFilters) {
   const raceLapTimes = [...(raceBestLapTimes[selectedRaceId] ?? [])].sort((a, b) => a.bestLap - b.bestLap);
 
   return { success: true, data: raceLapTimes };
+}
+
+export async function getRaceResults(filters?: RaceResultsFilters) {
+  const season = filters?.season ?? DEFAULT_SEASON;
+  const seasonRaces = raceCatalog
+    .filter((race) => race.season === season)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const selectedRace = filters?.latest
+    ? seasonRaces[seasonRaces.length - 1]
+    : seasonRaces.find((race) => race.id === filters?.raceId) ?? seasonRaces[seasonRaces.length - 1];
+
+  if (!selectedRace) {
+    return { success: true, data: { race: null, results: [] } };
+  }
+
+  return {
+    success: true,
+    data: {
+      race: selectedRace,
+      results: raceResultsById[selectedRace.id] ?? [],
+    },
+  };
 }
 
 type StatsFilters = { season?: string };

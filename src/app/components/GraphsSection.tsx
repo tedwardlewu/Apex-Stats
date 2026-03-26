@@ -12,6 +12,7 @@ interface DriverStats {
   points: number;
   wins: number;
   podiums: number;
+  debutSeason: number;
 }
 
 interface TeamStats {
@@ -21,6 +22,33 @@ interface TeamStats {
   points: number;
   wins: number;
   podiums: number;
+}
+
+interface Race {
+  id: number;
+}
+
+interface DriverBestLap {
+  driverName: string;
+  bestLap: number;
+}
+
+interface TeammateAdjustedPaceRow {
+  driverName: string;
+  team: string;
+  racesCompared: number;
+  averageDeltaSeconds: number;
+  tapRaw: number;
+  tapShrunk: number;
+}
+
+interface PureDriverIndexRow {
+  driverName: string;
+  team: string;
+  racesCompared: number;
+  experienceSeasons: number;
+  expectedTap: number;
+  pureDriverIndex: number;
 }
 
 const teamAliases: Record<string, string[]> = {
@@ -277,6 +305,176 @@ function resolveVisibleTeams(teams: TeamStats[], selectedTeam: string) {
   return filteredTeams.length > 0 ? filteredTeams : teams;
 }
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function mean(values: number[]) {
+  if (values.length === 0) {
+    return 0;
+  }
+
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function median(values: number[]) {
+  if (values.length === 0) {
+    return 0;
+  }
+
+  const sortedValues = [...values].sort((a, b) => a - b);
+  const middleIndex = Math.floor(sortedValues.length / 2);
+
+  if (sortedValues.length % 2 === 0) {
+    return (sortedValues[middleIndex - 1] + sortedValues[middleIndex]) / 2;
+  }
+
+  return sortedValues[middleIndex];
+}
+
+function stdDev(values: number[]) {
+  if (values.length <= 1) {
+    return 0;
+  }
+
+  const avg = mean(values);
+  const variance = values.reduce((sum, value) => sum + (value - avg) ** 2, 0) / values.length;
+  return Math.sqrt(variance);
+}
+
+function getExpectedExperienceAdjustment(experienceSeasons: number) {
+  if (experienceSeasons <= 1) {
+    return -18;
+  }
+
+  if (experienceSeasons === 2) {
+    return -10;
+  }
+
+  if (experienceSeasons === 3) {
+    return -5;
+  }
+
+  if (experienceSeasons === 4) {
+    return -2;
+  }
+
+  return 0;
+}
+
+function calculateTeammateAdjustedPace(
+  drivers: DriverStats[],
+  lapTimesByRace: DriverBestLap[][],
+): TeammateAdjustedPaceRow[] {
+  const driverToTeam = new Map(drivers.map((driver) => [driver.name, driver.team]));
+  const accumulator = new Map<string, { team: string; deltas: number[]; zScores: number[] }>();
+
+  lapTimesByRace.forEach((raceLapTimes) => {
+    const validLapTimes = raceLapTimes
+      .filter((entry) => Number.isFinite(Number(entry.bestLap)) && driverToTeam.has(entry.driverName))
+      .map((entry) => ({
+        driverName: entry.driverName,
+        bestLap: Number(entry.bestLap),
+        team: driverToTeam.get(entry.driverName) as string,
+      }));
+
+    if (validLapTimes.length < 4) {
+      return;
+    }
+
+    const spread = stdDev(validLapTimes.map((entry) => entry.bestLap));
+    const normalizedSpread = spread > 0 ? spread : 0.25;
+    const entriesByTeam = validLapTimes.reduce<Record<string, { driverName: string; bestLap: number }[]>>((acc, entry) => {
+      const current = acc[entry.team] ?? [];
+      current.push({ driverName: entry.driverName, bestLap: entry.bestLap });
+      acc[entry.team] = current;
+      return acc;
+    }, {});
+
+    Object.entries(entriesByTeam).forEach(([teamName, teamEntries]) => {
+      if (teamEntries.length < 2) {
+        return;
+      }
+
+      teamEntries.forEach((driverEntry) => {
+        const teammateBest = Math.min(
+          ...teamEntries
+            .filter((entry) => entry.driverName !== driverEntry.driverName)
+            .map((entry) => entry.bestLap),
+        );
+
+        if (!Number.isFinite(teammateBest)) {
+          return;
+        }
+
+        const delta = driverEntry.bestLap - teammateBest;
+        const zScore = clamp(delta / normalizedSpread, -2, 2);
+        const current = accumulator.get(driverEntry.driverName) ?? { team: teamName, deltas: [], zScores: [] };
+
+        current.deltas.push(delta);
+        current.zScores.push(zScore);
+        accumulator.set(driverEntry.driverName, current);
+      });
+    });
+  });
+
+  return Array.from(accumulator.entries())
+    .map(([driverName, values]) => {
+      const racesCompared = values.zScores.length;
+      const tapRaw = -100 * median(values.zScores);
+      const shrinkFactor = racesCompared / (racesCompared + 4);
+      const tapShrunk = tapRaw * shrinkFactor;
+
+      return {
+        driverName,
+        team: values.team,
+        racesCompared,
+        averageDeltaSeconds: Number(median(values.deltas).toFixed(3)),
+        tapRaw: Number(tapRaw.toFixed(1)),
+        tapShrunk: Number(tapShrunk.toFixed(1)),
+      };
+    })
+    .sort((a, b) => b.tapShrunk - a.tapShrunk);
+}
+
+function calculatePureDriverIndex(
+  rows: TeammateAdjustedPaceRow[],
+  drivers: DriverStats[],
+  selectedSeason: string,
+): PureDriverIndexRow[] {
+  const currentSeason = Number(selectedSeason);
+  const driverExperience = new Map(
+    drivers.map((driver) => [
+      driver.name,
+      Math.max(1, currentSeason - Number(driver.debutSeason) + 1),
+    ]),
+  );
+
+  return rows
+    .map((row) => {
+      const experienceSeasons = driverExperience.get(row.driverName);
+
+      if (!experienceSeasons) {
+        return null;
+      }
+
+      const expectedTap = getExpectedExperienceAdjustment(experienceSeasons);
+      const shrinkFactor = row.racesCompared / (row.racesCompared + 4);
+      const pureDriverIndex = (row.tapRaw - expectedTap) * shrinkFactor;
+
+      return {
+        driverName: row.driverName,
+        team: row.team,
+        racesCompared: row.racesCompared,
+        experienceSeasons,
+        expectedTap: Number(expectedTap.toFixed(1)),
+        pureDriverIndex: Number(pureDriverIndex.toFixed(1)),
+      };
+    })
+    .filter((row): row is PureDriverIndexRow => row !== null)
+    .sort((a, b) => b.pureDriverIndex - a.pureDriverIndex);
+}
+
 function buildDriverPointsData(drivers: DriverStats[], teams: TeamStats[]): ChartData<"bar"> {
   const leaderboard = [...drivers].sort((a, b) => b.points - a.points).slice(0, 10);
   const teamColorMap = new Map(teams.map((team) => [team.name, team.color]));
@@ -388,6 +586,36 @@ function buildAverageDriverPointsData(drivers: DriverStats[], teams: TeamStats[]
   };
 }
 
+function buildTeammateAdjustedPaceData(rows: TeammateAdjustedPaceRow[]): ChartData<"bar"> {
+  return {
+    labels: rows.map((row) => row.driverName),
+    datasets: [
+      {
+        label: "TAP score",
+        data: rows.map((row) => row.tapShrunk),
+        backgroundColor: rows.map((row) => (row.tapShrunk >= 0 ? "#16a34a" : "#dc2626")),
+        borderRadius: 12,
+        maxBarThickness: 28,
+      },
+    ],
+  };
+}
+
+function buildPureDriverIndexData(rows: PureDriverIndexRow[]): ChartData<"bar"> {
+  return {
+    labels: rows.map((row) => row.driverName),
+    datasets: [
+      {
+        label: "Pure driver index",
+        data: rows.map((row) => row.pureDriverIndex),
+        backgroundColor: rows.map((row) => (row.pureDriverIndex >= 0 ? "#2563eb" : "#f97316")),
+        borderRadius: 12,
+        maxBarThickness: 28,
+      },
+    ],
+  };
+}
+
 function EmptyChartState({ message }: { message: string }) {
   return (
     <div className="flex h-72 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-900/40 dark:text-slate-300">
@@ -396,12 +624,22 @@ function EmptyChartState({ message }: { message: string }) {
   );
 }
 
-function ChartCard({ title, description, children }: { title: string; description: string; children: ReactNode }) {
+function ChartCard({
+  title,
+  description,
+  children,
+  contentHeightClassName = "h-72",
+}: {
+  title: string;
+  description: string;
+  children: ReactNode;
+  contentHeightClassName?: string;
+}) {
   return (
     <article className="rounded-[16px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
       <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
       <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{description}</p>
-      <div className="mt-6 h-72">{children}</div>
+      <div className={`mt-6 ${contentHeightClassName}`}>{children}</div>
     </article>
   );
 }
@@ -410,6 +648,8 @@ export function GraphsSection() {
   const { selectedSeason, selectedTeam, searchQuery } = useFilters();
   const [drivers, setDrivers] = useState<DriverStats[]>([]);
   const [teams, setTeams] = useState<TeamStats[]>([]);
+  const [teammateAdjustedPaceRows, setTeammateAdjustedPaceRows] = useState<TeammateAdjustedPaceRow[]>([]);
+  const [pureDriverIndexRows, setPureDriverIndexRows] = useState<PureDriverIndexRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains("dark"));
 
@@ -437,6 +677,15 @@ export function GraphsSection() {
           api.getTeams({ season: selectedSeason }),
         ]);
 
+        const [allDriversResponse, racesResponse] = await Promise.all([
+          api.getDrivers({ season: selectedSeason }),
+          api.getRaces({ season: selectedSeason }),
+        ]);
+
+        const raceLapResponses = racesResponse.success
+          ? await Promise.all(racesResponse.data.map((race: Race) => api.getLapTimes({ season: selectedSeason, raceId: race.id })))
+          : [];
+
         if (!isMounted) {
           return;
         }
@@ -447,6 +696,19 @@ export function GraphsSection() {
 
         if (teamResponse.success) {
           setTeams(teamResponse.data);
+        }
+
+        if (allDriversResponse.success && racesResponse.success) {
+          const lapTimesByRace = raceLapResponses
+            .filter((response) => response.success)
+            .map((response) => response.data as DriverBestLap[]);
+          const teammateRows = calculateTeammateAdjustedPace(allDriversResponse.data, lapTimesByRace);
+
+          setTeammateAdjustedPaceRows(teammateRows);
+          setPureDriverIndexRows(calculatePureDriverIndex(teammateRows, allDriversResponse.data, selectedSeason));
+        } else {
+          setTeammateAdjustedPaceRows([]);
+          setPureDriverIndexRows([]);
         }
       } catch (error) {
         console.error("Error fetching graph data:", error);
@@ -469,7 +731,41 @@ export function GraphsSection() {
   const winsAndPodiumsData = buildWinsAndPodiumsData(drivers);
   const teamPointsShareData = buildTeamPointsShareData(visibleTeams, isDarkMode);
   const averageDriverPointsData = buildAverageDriverPointsData(drivers, teams);
+  const filteredTeammateAdjustedRows = useMemo(() => {
+    const searchTerm = searchQuery.trim().toLowerCase();
+
+    return teammateAdjustedPaceRows.filter((row) => {
+      const teamMatches = selectedTeam === "all"
+        ? true
+        : (teamAliases[selectedTeam] ?? [selectedTeam]).includes(row.team);
+      const searchMatches = searchTerm ? row.driverName.toLowerCase().includes(searchTerm) : true;
+
+      return teamMatches && searchMatches;
+    });
+  }, [searchQuery, selectedTeam, teammateAdjustedPaceRows]);
+  const filteredPureDriverIndexRows = useMemo(() => {
+    const searchTerm = searchQuery.trim().toLowerCase();
+
+    return pureDriverIndexRows.filter((row) => {
+      const teamMatches = selectedTeam === "all"
+        ? true
+        : (teamAliases[selectedTeam] ?? [selectedTeam]).includes(row.team);
+      const searchMatches = searchTerm ? row.driverName.toLowerCase().includes(searchTerm) : true;
+
+      return teamMatches && searchMatches;
+    });
+  }, [pureDriverIndexRows, searchQuery, selectedTeam]);
+  const teammateAdjustedPaceData = buildTeammateAdjustedPaceData(filteredTeammateAdjustedRows);
+  const pureDriverIndexData = buildPureDriverIndexData(filteredPureDriverIndexRows);
   const driverTeamMap = useMemo(() => new Map(drivers.map((driver) => [driver.name, driver.team])), [drivers]);
+  const teammatePaceDriverTeamMap = useMemo(
+    () => new Map(filteredTeammateAdjustedRows.map((row) => [row.driverName, row.team])),
+    [filteredTeammateAdjustedRows],
+  );
+  const pureDriverTeamMap = useMemo(
+    () => new Map(filteredPureDriverIndexRows.map((row) => [row.driverName, row.team])),
+    [filteredPureDriverIndexRows],
+  );
   const baseBarOptions = useMemo(() => createBaseBarOptions(isDarkMode), [isDarkMode]);
   const horizontalBarOptions = useMemo(() => createHorizontalBarOptions(baseBarOptions), [baseBarOptions]);
   const groupedBarOptions = useMemo(
@@ -485,6 +781,14 @@ export function GraphsSection() {
     () => createTeamLogoPlugin((label) => label),
     [],
   );
+  const teammateLogoPlugin = useMemo(
+    () => createTeamLogoPlugin((label) => teammatePaceDriverTeamMap.get(label)),
+    [teammatePaceDriverTeamMap],
+  );
+  const pureDriverLogoPlugin = useMemo(
+    () => createTeamLogoPlugin((label) => pureDriverTeamMap.get(label)),
+    [pureDriverTeamMap],
+  );
 
   return (
     <section className="space-y-6">
@@ -498,7 +802,7 @@ export function GraphsSection() {
 
       {loading ? (
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="h-[23rem] animate-pulse rounded-[16px] border border-slate-200/70 bg-white/70 dark:border-slate-700/70 dark:bg-slate-900/70" />
           ))}
         </div>
@@ -545,6 +849,30 @@ export function GraphsSection() {
               <Bar data={averageDriverPointsData} options={baseBarOptions} plugins={[teamLogoPlugin]} />
             ) : (
               <EmptyChartState message="No driver averages can be calculated for the current filters." />
+            )}
+          </ChartCard>
+
+          <ChartCard
+            title="Teammate-Adjusted Pace"
+            description="Per-race lap delta versus teammate, normalized by race pace spread and shrunk for low sample sizes."
+            contentHeightClassName="h-[40rem]"
+          >
+            {teammateAdjustedPaceData.labels && teammateAdjustedPaceData.labels.length > 0 ? (
+              <Bar data={teammateAdjustedPaceData} options={horizontalBarOptions} plugins={[teammateLogoPlugin]} />
+            ) : (
+              <EmptyChartState message="Not enough teammate lap comparisons for the current filters." />
+            )}
+          </ChartCard>
+
+          <ChartCard
+            title="Pure Driver Index"
+            description="Teammate-adjusted pace with the expected experience curve removed, leaving a driver-only residual signal."
+            contentHeightClassName="h-[40rem]"
+          >
+            {pureDriverIndexData.labels && pureDriverIndexData.labels.length > 0 ? (
+              <Bar data={pureDriverIndexData} options={horizontalBarOptions} plugins={[pureDriverLogoPlugin]} />
+            ) : (
+              <EmptyChartState message="Not enough experience-aware driver data is available for this view." />
             )}
           </ChartCard>
         </div>
