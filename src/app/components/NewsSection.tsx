@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 import { NewsItem, newsItems } from "../data/newsData";
 
 interface DisplayNewsItem extends NewsItem {
   imageSrc: string;
+  imageSrcs: string[];
 }
 
 function toPublicImagePath(fileName: string) {
@@ -12,11 +14,35 @@ function toPublicImagePath(fileName: string) {
 
 export function NewsSection() {
   const [selectedItem, setSelectedItem] = useState<DisplayNewsItem | null>(null);
+  const [imageIndex, setImageIndex] = useState(0);
 
-  const displayNewsItems: DisplayNewsItem[] = newsItems.map((item) => ({
-    ...item,
-    imageSrc: toPublicImagePath(item.fileName),
-  }));
+  useEffect(() => {
+    if (!selectedItem) return;
+
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        setImageIndex((prev) => (prev + 1) % selectedItem.imageSrcs.length);
+      } else if (e.key === "ArrowLeft") {
+        setImageIndex(
+          (prev) => (prev - 1 + selectedItem.imageSrcs.length) % selectedItem.imageSrcs.length
+        );
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [selectedItem]);
+
+  const displayNewsItems: DisplayNewsItem[] = newsItems.map((item) => {
+    const imageSrcs = item.fileNames
+      ? item.fileNames.map(toPublicImagePath)
+      : [toPublicImagePath(item.fileName)];
+    return {
+      ...item,
+      imageSrc: imageSrcs[0],
+      imageSrcs,
+    };
+  });
 
   return (
     <section className="space-y-6">
@@ -61,7 +87,15 @@ export function NewsSection() {
         ))}
       </div>
 
-      <Dialog open={selectedItem !== null} onOpenChange={(open) => !open && setSelectedItem(null)}>
+      <Dialog
+        open={selectedItem !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedItem(null);
+            setImageIndex(0);
+          }
+        }}
+      >
         {selectedItem && (
           <DialogContent className="max-w-5xl border-slate-200 bg-white p-5 sm:p-7 dark:border-slate-700 dark:bg-slate-900">
             <DialogHeader>
@@ -72,12 +106,52 @@ export function NewsSection() {
                 {selectedItem.description || "No description added yet."}
               </DialogDescription>
             </DialogHeader>
-            <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-950">
+            <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-950">
               <img
-                src={selectedItem.imageSrc}
+                src={selectedItem.imageSrcs[imageIndex]}
                 alt={selectedItem.title}
                 className="max-h-[70vh] w-full object-contain"
               />
+              {selectedItem.imageSrcs.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setImageIndex(
+                        (prev) =>
+                          (prev - 1 + selectedItem.imageSrcs.length) % selectedItem.imageSrcs.length
+                      )
+                    }
+                    className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white transition hover:bg-black/60"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setImageIndex((prev) => (prev + 1) % selectedItem.imageSrcs.length)
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white transition hover:bg-black/60"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 rounded-full bg-black/40 px-3 py-1">
+                    {selectedItem.imageSrcs.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setImageIndex(i)}
+                        className={`h-2 w-2 rounded-full transition ${
+                          i === imageIndex ? "bg-white" : "bg-white/50"
+                        }`}
+                        aria-label={`Go to image ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </DialogContent>
         )}

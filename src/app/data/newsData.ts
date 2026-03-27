@@ -1,11 +1,25 @@
 export interface NewsItem {
   id: string;
   fileName: string;
+  fileNames?: string[];
   title: string;
   description: string;
 }
 
 export const newsItems: NewsItem[] = [
+  {
+    id: "fp2-japan-2026",
+    fileName: "Fp2 Japan.webp",
+    fileNames: ["Fp2 Japan.webp", "Fp2 Japan2.jpg"],
+    title: "Free Practice 2 - Japanese Grand Prix 2026",
+    description: "Free Practice 2 session at Suzuka Circuit. Teams are fine-tuning their setups and gathering data ahead of qualifying.",
+  },
+  {
+    id: "fp1-japan-2026",
+    fileName: "FP1 Japan.webp",
+    title: "Free Practice 1 - Japanese Grand Prix 2026",
+    description: "Free Practice 1 session underway at Suzuka Circuit for the 2026 Japanese Grand Prix. Teams and drivers are getting their first taste of track conditions for the weekend.",
+  },
   {
     id: "Mercedes-AMG Petronas F1 Team announces new wolf-inspired livery change for Japanese Grand Prix",
     fileName: "Mercedes.avif",
