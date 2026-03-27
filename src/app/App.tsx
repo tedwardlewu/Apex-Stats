@@ -15,7 +15,6 @@ import { ChampionshipSnapshot } from "./components/ChampionshipSnapshot";
 import { GraphsSection } from "./components/GraphsSection";
 import { NextRacePrediction } from "./components/NextRacePrediction";
 import { RaceResults } from "./components/RaceResults";
-import { TeamsSection } from "./components/TeamsSection";
 import { TeamsShowcase } from "./components/TeamsShowcase";
 import { NewsSection } from "./components/NewsSection";
 import RacingCalendar from "./components/RacingCalendar";
@@ -130,7 +129,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(220,38,38,0.14),_transparent_32%),linear-gradient(180deg,_#f8fbff_0%,_#edf4fb_100%)] text-foreground dark:bg-[radial-gradient(circle_at_top,_rgba(220,38,38,0.18),_transparent_32%),linear-gradient(180deg,_#0f1723_0%,_#182230_100%)]">
+    <div className="min-h-screen bg-[linear-gradient(180deg,_#f8fafc_0%,_#e5e7eb_100%)] text-foreground dark:bg-[linear-gradient(180deg,_#111111_0%,_#1b1b1b_100%)]">
       <Header />
       <main className="container mx-auto px-6 py-8 lg:py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -209,12 +208,7 @@ export default function App() {
             predictions: <NextRacePrediction />,
             calendar: <RacingCalendar />,
             news: <NewsSection />,
-            compare: (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <CompareSection />
-                <TeamsSection />
-              </div>
-            )
+            compare: <CompareSection />
           }}
         </TabNavigation>
       </main>

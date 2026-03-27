@@ -1,6 +1,8 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Driver } from "../data/mockData";
 import { Trophy, Award, Target, TrendingUp, Crown } from "lucide-react";
+import { useMemeify } from "../contexts/MemeifyContext";
+import { getTeamDisplayName } from "../utils/teamImages";
 
 const TEAM_COLORS: Record<string, string> = {
   Mercedes: "#06B6D4",
@@ -31,6 +33,8 @@ export function DriverComparisonModal({
   driver1,
   driver2
 }: DriverComparisonModalProps) {
+  const { memeify } = useMemeify();
+
   if (!driver1 || !driver2) return null;
 
   const stats = [
@@ -80,7 +84,7 @@ export function DriverComparisonModal({
                 </div>
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white">{driver1.name}</h3>
-              <p className="text-sm font-semibold" style={{ color: leftColor }}>{driver1.team}</p>
+              <p className="text-sm font-semibold" style={{ color: leftColor }}>{getTeamDisplayName(driver1.team, memeify)}</p>
               <p className="text-xs text-slate-500 dark:text-gray-400">{driver1.nationality}</p>
             </div>
 
@@ -104,7 +108,7 @@ export function DriverComparisonModal({
                 </div>
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white">{driver2.name}</h3>
-              <p className="text-sm font-semibold" style={{ color: rightColor }}>{driver2.team}</p>
+              <p className="text-sm font-semibold" style={{ color: rightColor }}>{getTeamDisplayName(driver2.team, memeify)}</p>
               <p className="text-xs text-slate-500 dark:text-gray-400">{driver2.nationality}</p>
             </div>
           </div>

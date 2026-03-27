@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Activity, Flag, Shield, Sparkles, Trophy } from "lucide-react";
 import * as api from "../services/api";
 import { raceBestLapTimes, raceCatalog } from "../data/raceLapTimes";
 import { upcomingRaceBySeason } from "../data/upcomingRaceData";
 import { useFilters } from "../contexts/FilterContext";
 import { useMemeify } from "../contexts/MemeifyContext";
-import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getDriverDisplayName, getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getTeamDisplayName } from "../utils/teamImages";
 
 interface DriverStats {
   id: number;
@@ -171,17 +171,12 @@ function formatRaceDate(date: string) {
   });
 }
 
-function SummaryCard({ icon: Icon, label, value, accent }: { icon: typeof Trophy; label: string; value: string; accent: string }) {
+function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[14px] border border-slate-200/70 bg-white p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{label}</p>
-          <p className="mt-3 text-xl font-semibold text-slate-900 dark:text-slate-100">{value}</p>
-        </div>
-        <div className={`rounded-xl p-3 ${accent}`}>
-          <Icon className="size-5" />
-        </div>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{label}</p>
+        <p className="mt-3 text-xl font-semibold text-slate-900 dark:text-slate-100">{value}</p>
       </div>
     </div>
   );
@@ -272,22 +267,16 @@ export function NextRacePrediction() {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <SummaryCard
-          icon={Trophy}
           label="Favorite"
           value={favorite ? `${favorite.name} · ${favorite.probability.toFixed(1)}%` : "No prediction"}
-          accent="bg-amber-100 text-amber-700"
         />
         <SummaryCard
-          icon={Shield}
           label="Closest Challenger"
           value={challenger ? `${challenger.name} · ${challenger.probability.toFixed(1)}%` : "No challenger"}
-          accent="bg-blue-100 text-blue-700"
         />
         <SummaryCard
-          icon={Sparkles}
           label="Best Sleeper Pick"
           value={sleeper ? `${sleeper.name} · ${sleeper.probability.toFixed(1)}%` : "No sleeper"}
-          accent="bg-emerald-100 text-emerald-700"
         />
       </div>
 
@@ -302,8 +291,7 @@ export function NextRacePrediction() {
                 </p>
               ) : null}
             </div>
-            <div className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-2 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-              <Activity className="size-4" />
+            <div className="rounded-full bg-slate-100 px-3 py-2 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
               Weighted form model
             </div>
           </div>
@@ -333,17 +321,17 @@ export function NextRacePrediction() {
                       >
                         <img
                           src={getDriverImage(row.name, row.image, memeify)}
-                          alt={row.name}
+                          alt={getDriverDisplayName(row.name, memeify)}
                           className="h-14 w-14 rounded-full object-cover object-[center_-10%]"
                           style={getDriverImageStyle(row.name, memeify)}
                         />
                       </div>
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{row.name}</p>
+                          <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{getDriverDisplayName(row.name, memeify)}</p>
                           <span className="rounded-full bg-slate-900 px-2 py-0.5 text-xs font-medium text-white dark:bg-slate-100 dark:text-slate-900">#{row.number}</span>
                         </div>
-                        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{row.team}</p>
+                        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{getTeamDisplayName(row.team, memeify)}</p>
                         <p className="mt-2 text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                           {row.reasons.join(" · ") || "balanced profile"}
                         </p>
@@ -371,10 +359,7 @@ export function NextRacePrediction() {
 
         <div className="space-y-6">
           <article className="rounded-[16px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
-            <div className="flex items-center gap-2">
-              <Flag className="size-5 text-red-600" />
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Circuit read</h3>
-            </div>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Circuit read</h3>
             <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{upcomingRace.summary}</p>
             <p className="mt-4 rounded-[12px] bg-slate-50 p-4 text-sm leading-relaxed text-slate-600 dark:bg-slate-900 dark:text-slate-300">{upcomingRace.modelFocus}</p>
             {latestRace && (
@@ -407,6 +392,54 @@ export function NextRacePrediction() {
               <div className="flex items-center justify-between rounded-[10px] bg-slate-50 px-4 py-3 dark:bg-slate-800/70">
                 <span>Championship experience</span>
                 <span className="font-semibold text-slate-900 dark:text-slate-100">5%</span>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-[12px] border border-slate-200/80 bg-slate-50 p-4 text-xs leading-relaxed text-slate-700 dark:border-slate-700/70 dark:bg-slate-900 dark:text-slate-300">
+              <p className="font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Formula used</p>
+
+              <div className="mt-3 space-y-4">
+                <div>
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Driver score</p>
+                  <p className="font-mono text-[13px] font-semibold text-slate-900 dark:text-slate-100">
+                    S<sub>i</sub> = (0.34F<sub>i</sub> + 0.18W<sub>i</sub> + 0.16P<sub>i</sub> + 0.16C<sub>i</sub> + 0.11L<sub>i</sub> + 0.05E<sub>i</sub> + B<sub>win,i</sub> + B<sub>fastlap,i</sub>) x T<sub>i</sub>
+                  </p>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Win probability</p>
+                  <div className="font-mono text-[13px] font-semibold text-slate-900 dark:text-slate-100">
+                    <p>
+                      Pr(win)<sub>i</sub> =
+                    </p>
+                    <div className="mt-1 inline-flex flex-col items-center">
+                      <span>exp(4S<sub>i</sub>)</span>
+                      <span className="w-full border-t border-slate-400 dark:border-slate-500" />
+                      <span>sum<sub>j</sub>(exp(4S<sub>j</sub>))</span>
+                    </div>
+                    <span className="ml-1">x 100</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-2 text-[11px] sm:grid-cols-2">
+                <p><span className="font-semibold text-slate-900 dark:text-slate-100">F<sub>i</sub></span>: points/maxPoints</p>
+                <p><span className="font-semibold text-slate-900 dark:text-slate-100">W<sub>i</sub></span>: wins/maxWins</p>
+                <p><span className="font-semibold text-slate-900 dark:text-slate-100">P<sub>i</sub></span>: podiums/maxPodiums</p>
+                <p><span className="font-semibold text-slate-900 dark:text-slate-100">C<sub>i</sub></span>: teamPoints/maxTeamPoints</p>
+                <p><span className="font-semibold text-slate-900 dark:text-slate-100">L<sub>i</sub></span>: lap pace score</p>
+                <p><span className="font-semibold text-slate-900 dark:text-slate-100">E<sub>i</sub></span>: min(champs,4)/min(maxChamps,4)</p>
+                <p className="sm:col-span-2"><span className="font-semibold text-slate-900 dark:text-slate-100">T<sub>i</sub></span>: track bias multiplier</p>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Code form</p>
+                  <pre className="overflow-x-auto rounded bg-slate-100 p-3 text-[11px] leading-relaxed text-slate-800 dark:bg-slate-950 dark:text-slate-200">{`score = (
+  0.34*form + 0.18*wins + 0.16*podiums + 0.16*team +
+  0.11*pace + 0.05*experience + winnerBoost + fastLapBoost
+) * trackBias
+
+probability_i = exp(4*score_i) / sum_j(exp(4*score_j)) * 100`}</pre>
+                </div>
               </div>
             </div>
           </article>

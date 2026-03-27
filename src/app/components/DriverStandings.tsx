@@ -22,8 +22,8 @@ import { Trophy } from "lucide-react";
 import * as api from "../services/api";
 import { useFilters } from "../contexts/FilterContext";
 import { useMemeify } from "../contexts/MemeifyContext";
-import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
-import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
+import { getDriverDisplayName, getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getTeamDisplayName, getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
 interface Driver {
   id: number;
@@ -127,7 +127,10 @@ export function DriverStandings() {
       </div>
       <div className="p-8">
         <div className="space-y-6">
-          {sortedDrivers.map((driver, index) => (
+          {sortedDrivers.map((driver, index) => {
+            const displayName = getDriverDisplayName(driver.name, memeify);
+
+            return (
             <div
               key={driver.id}
               className="flex items-center gap-4 rounded-md border border-slate-200 bg-white p-2 text-slate-900 dark:border-border dark:bg-[#1a1f2b] dark:text-card-foreground"
@@ -149,7 +152,7 @@ export function DriverStandings() {
                 >
                   <img
                     src={getDriverImage(driver.name, driver.image, memeify)}
-                    alt={driver.name}
+                    alt={displayName}
                     className="w-14 h-14 rounded-full object-cover object-[center_-10%]"
                     style={getDriverImageStyle(driver.name, memeify)}
                   />
@@ -157,14 +160,14 @@ export function DriverStandings() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-base font-semibold text-slate-900 dark:text-white">{driver.name}</span>
+                  <span className="text-base font-semibold text-slate-900 dark:text-white">{displayName}</span>
                   <span className="rounded bg-gray-700 px-2 py-0.5 text-xs font-medium text-white">
                     #{driver.number}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                 </div>
-                <p className="mt-1 text-xs text-slate-700 dark:text-white">{driver.team}</p>
+                <p className="mt-1 text-xs text-slate-700 dark:text-white">{getTeamDisplayName(driver.team, memeify)}</p>
               
               </div>
               <div className="flex items-center justify-center">
@@ -193,7 +196,8 @@ export function DriverStandings() {
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

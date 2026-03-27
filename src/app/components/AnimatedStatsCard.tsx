@@ -68,9 +68,9 @@ export function AnimatedStatsCard({
     >
       {showImageBackdrop && imageVariant === "driver" ? (
         <motion.div
-          className="pointer-events-none absolute inset-0"
+          className={`pointer-events-none absolute inset-0 ${isHovered ? "z-20" : "z-0"}`}
           style={{
-            backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.62) 0%, rgba(15,23,42,0.4) 46%, rgba(15,23,42,0.08) 100%), url("${encodedBackgroundImage}")`,
+            backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.34) 0%, rgba(15,23,42,0.18) 46%, rgba(15,23,42,0.02) 100%), url("${encodedBackgroundImage}")`,
             backgroundPosition: "center 2%",
             backgroundRepeat: "no-repeat",
             backgroundSize: "96% auto",
@@ -108,21 +108,27 @@ export function AnimatedStatsCard({
         </>
       ) : null}
 
-      {showImageBackdrop ? <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-white/8" /> : null}
+      {showImageBackdrop ? (
+        <div
+          className={`pointer-events-none absolute inset-0 z-10 ${imageVariant === "driver" ? "bg-gradient-to-t from-black/12 via-transparent to-white/6" : "bg-gradient-to-t from-black/28 via-transparent to-white/8"}`}
+        />
+      ) : null}
 
-      <div className="relative z-10 flex items-start justify-between">
-        <div className="flex-1">
-          <p className={`text-sm font-medium ${showImageBackdrop ? "text-slate-200" : "text-slate-600 dark:text-gray-400"}`}>
+      <div className="relative flex items-start justify-between">
+        <div className={`relative flex-1 overflow-hidden ${showImageBackdrop && imageVariant === "driver" && isHovered ? "z-0" : "z-20"}`}>
+          <p className={`text-sm ${showImageBackdrop ? "font-semibold text-white/95 drop-shadow-[0_1px_2px_rgba(15,23,42,0.7)]" : "font-medium text-slate-600 dark:text-gray-400"}`}>
             {title}
           </p>
-          <motion.p 
-            className={`mt-2 text-3xl font-bold ${showImageBackdrop ? "text-white drop-shadow-[0_1px_2px_rgba(15,23,42,0.6)]" : "text-slate-900 dark:text-white"}`}
-            key={count}
-          >
-            {isNumeric ? count.toLocaleString() : value}
-          </motion.p>
+          <div className="relative mt-2 min-h-[2.35rem]">
+            <motion.p
+              className={`text-3xl font-extrabold ${showImageBackdrop ? "text-white drop-shadow-[0_1px_2px_rgba(15,23,42,0.7)]" : "text-slate-900 dark:text-white"}`}
+              key={count}
+            >
+              {isNumeric ? count.toLocaleString() : value}
+            </motion.p>
+          </div>
         </div>
-        <div className={`rounded-xl border p-3 ${showImageBackdrop ? "border-white/40 bg-white/20 backdrop-blur-[2px]" : "border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800"} ${color}`}>
+        <div className={`relative z-30 rounded-xl border p-3 ${showImageBackdrop ? "border-white/40 bg-white/20 backdrop-blur-[2px]" : "border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800"} ${color}`}>
           <Icon className="size-6" />
         </div>
       </div>

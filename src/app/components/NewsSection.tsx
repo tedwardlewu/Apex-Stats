@@ -20,17 +20,20 @@ export function NewsSection() {
 
   return (
     <section className="space-y-6">
-      <div className="rounded-[16px] border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur">
-        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">News</p>
-        <h2 className="mt-2 text-2xl font-semibold text-slate-900">F1 News Wall</h2>
-        <p className="mt-2 max-w-3xl text-sm text-slate-600">
+      <div className="rounded-[16px] border border-slate-200/70 bg-white/85 p-6 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/75">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">News</p>
+        <h2 className="mt-2 text-3xl font-bold leading-tight text-slate-900 dark:text-slate-100">F1 News Wall</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
           Up-to-date Formula 1 News and Highlights from the 2026 season, curated for F1 fans. Click on any news item to view details and images.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {displayNewsItems.map((item) => (
-          <article key={item.id} className="overflow-hidden rounded-[16px] border border-slate-200/70 bg-white shadow-sm">
+          <article
+            key={item.id}
+            className="overflow-hidden rounded-[16px] border border-slate-200/70 bg-white shadow-sm transition-colors dark:border-slate-700/70 dark:bg-slate-900"
+          >
             <button
               type="button"
               className="group block w-full text-left"
@@ -42,15 +45,15 @@ export function NewsSection() {
                   alt={item.title}
                   className="h-64 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/75 to-transparent p-4 text-white">
-                  <p className="text-base font-semibold">{item.title}</p>
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-200">Click to expand</p>
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 via-slate-900/40 to-transparent p-4 text-white">
+                  <p className="text-lg font-semibold leading-snug md:text-xl">{item.title}</p>
+                  <p className="mt-1 text-[11px] uppercase tracking-[0.14em] text-slate-200">Click to expand</p>
                 </div>
               </div>
             </button>
 
             <div className="space-y-2 p-5">
-              <p className="text-sm leading-relaxed text-slate-700">
+              <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                 {item.description || "No description added yet."}
               </p>
             </div>
@@ -60,14 +63,16 @@ export function NewsSection() {
 
       <Dialog open={selectedItem !== null} onOpenChange={(open) => !open && setSelectedItem(null)}>
         {selectedItem && (
-          <DialogContent className="max-w-5xl bg-white p-5 sm:p-7">
+          <DialogContent className="max-w-5xl border-slate-200 bg-white p-5 sm:p-7 dark:border-slate-700 dark:bg-slate-900">
             <DialogHeader>
-              <DialogTitle className="text-xl text-slate-900">{selectedItem.title}</DialogTitle>
-              <DialogDescription className="text-slate-600">
+              <DialogTitle className="text-xl font-bold leading-snug text-slate-900 dark:text-slate-100">
+                {selectedItem.title}
+              </DialogTitle>
+              <DialogDescription className="text-slate-600 dark:text-slate-300">
                 {selectedItem.description || "No description added yet."}
               </DialogDescription>
             </DialogHeader>
-            <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-950">
               <img
                 src={selectedItem.imageSrc}
                 alt={selectedItem.title}

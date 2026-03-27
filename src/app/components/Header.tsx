@@ -1,4 +1,4 @@
-import { Flag, TrendingUp, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useMemeify } from "../contexts/MemeifyContext";
 import { useFilters } from "../contexts/FilterContext";
@@ -107,12 +107,19 @@ export function Header() {
   };
 
   return (
-    <header className="border-b border-red-900/30 bg-gradient-to-r from-red-700 via-red-700 to-red-800 text-white">
+    <header
+      className="border-b border-slate-700/40 text-white"
+      style={{
+        backgroundImage: 'url("/Media/Background.jpg")',
+        backgroundSize: "100% auto",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <Flag className="size-8" />
               <div>
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl font-bold">Apex Stats</h1>
@@ -140,13 +147,20 @@ export function Header() {
             >
               {darkMode ? <Sun className="size-5" /> : <Moon className="size-5" />}
             </button>
-            <TrendingUp className="size-4" />
             <span>2026 Season</span>
           </div>
         </div>
 
         {upcomingRace ? (
-          <div className="mt-4 rounded-2xl border border-white/25 bg-black/15 px-5 py-4 backdrop-blur-sm">
+          <div
+            className="mt-4 rounded-2xl border border-white/25 px-5 py-4 backdrop-blur-sm"
+            style={{
+              backgroundImage:
+                'linear-gradient(90deg, rgba(15, 23, 42, 0.68) 0%, rgba(15, 23, 42, 0.4) 52%, rgba(15, 23, 42, 0.28) 100%), url("/News/Cherry.jpg")',
+              backgroundSize: "cover",
+              backgroundPosition: "center 75%",
+            }}
+          >
             <div className="flex items-center gap-2">
               {raceFlag ? (
                 <img

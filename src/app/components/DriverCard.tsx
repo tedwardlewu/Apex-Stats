@@ -2,25 +2,31 @@ import { Driver } from "../data/mockData";
 import { Trophy, Award, TrendingUp, CheckCircle2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemeify } from "../contexts/MemeifyContext";
-import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getDriverDisplayName, getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getTeamDisplayName } from "../utils/teamImages";
 
 interface DriverCardProps {
   driver: Driver;
   rank: number;
   isSelected?: boolean;
   onSelect?: (driver: Driver) => void;
+  showImage?: boolean;
+  showTeam?: boolean;
 }
 
-export function DriverCard({ driver, rank, isSelected, onSelect }: DriverCardProps) {
+export function DriverCard({ driver, rank, isSelected, onSelect, showImage = true, showTeam = true }: DriverCardProps) {
   const { memeify } = useMemeify();
+  const displayName = getDriverDisplayName(driver.name, memeify);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: rank * 0.05 }}
-      className={`relative bg-white rounded-lg border-2 shadow-sm p-6 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1 ${
-        isSelected ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200'
+      className={`relative cursor-pointer rounded-lg border-2 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg dark:bg-slate-900 ${
+        isSelected
+          ? 'border-blue-500 ring-2 ring-blue-200 dark:ring-blue-900/70'
+          : 'border-gray-200 dark:border-slate-700'
       }`}
       onClick={() => onSelect?.(driver)}
     >
@@ -31,22 +37,28 @@ export function DriverCard({ driver, rank, isSelected, onSelect }: DriverCardPro
       )}
       
       <div className="flex items-start gap-4">
-        <div className="relative">
-          <img
-            src={getDriverImage(driver.name, driver.image, memeify)}
-            alt={driver.name}
-            className="w-16 h-16 rounded-full object-cover object-[center_-10%] border-2 border-gray-200 scale-150"
-            style={getDriverImageStyle(driver.name, memeify)}
-          />
-          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-yellow-500 border-2 border-white flex items-center justify-center text-xs font-bold">
+        {showImage ? (
+          <div className="relative">
+            <img
+              src={getDriverImage(driver.name, driver.image, memeify)}
+              alt={displayName}
+              className="h-16 w-16 scale-150 rounded-full border-2 border-gray-200 object-cover object-[center_-10%] dark:border-slate-700"
+              style={getDriverImageStyle(driver.name, memeify)}
+            />
+            <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-yellow-500 text-xs font-bold dark:border-slate-900">
+              {rank}
+            </div>
+          </div>
+        ) : (
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-500 text-xs font-bold text-slate-950">
             {rank}
           </div>
-        </div>
+        )}
 
-        <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-lg truncate">{driver.name}</h3>
-          <p className="text-sm text-gray-600 truncate">{driver.team}</p>
-          <p className="text-xs text-gray-500 mt-1">{driver.nationality}</p>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate text-lg font-bold text-slate-900 dark:text-slate-100">{displayName}</h3>
+          {showTeam ? <p className="truncate text-sm text-gray-600 dark:text-slate-300">{getTeamDisplayName(driver.team, memeify)}</p> : null}
+          <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">{driver.nationality}</p>
         </div>
       </div>
 
@@ -69,15 +81,16 @@ export function DriverCard({ driver, rank, isSelected, onSelect }: DriverCardPro
       </div>
 
       {driver.championships > 0 && (
-        <div className="mt-4 pt-4 border-t">
+        <div className="mt-4 border-t border-slate-200 pt-4 dark:border-slate-700">
           <div className="flex items-center justify-center gap-2 text-sm">
             <Trophy className="size-4 text-yellow-600" />
-            <span className="font-semibold text-gray-700">
+            <span className="font-semibold text-gray-700 dark:text-slate-200">
               {driver.championships}x World Champion
             </span>
           </div>
         </div>
       )}
+
     </motion.div>
   );
 }

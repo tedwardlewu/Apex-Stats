@@ -15,6 +15,24 @@ const funnyTeamImages: Record<string, string> = {
   "williams": "/Funny Teams/Williams.jpg",
 };
 
+const memeTeamNames: Record<string, string> = {
+  "alpine": "Flavio Briatore's French Racing Team",
+  "aston martin": "Lawrence Stroll's Wallet",
+  "audi": "Four Rings of Power",
+  "cadillac": "Andretti F1",
+  "ferrari": "The Clowns",
+  "haas": "The Better American Team",
+  "haas f1 team": "The Better American Team",
+  "kick sauber": "Trash",
+  "sauber": "Trash",
+  "mclaren": "Papayas",
+  "mercedes": "Silver Arrows",
+  "rb": "Red Bull Junior Team",
+  "racing bulls": "Red Bull Junior Team",
+  "red bull racing": "Max Verstappen Racing",
+  "williams": "Team Broke",
+};
+
 function normalizeTeamName(name: string) {
   return name.toLowerCase().trim();
 }
@@ -52,4 +70,12 @@ export function getTeamImageStyle(name: string, memeify: boolean): CSSProperties
   }
 
   return memeTeamImageStyles[normalizeTeamName(name)];
+}
+
+export function getTeamDisplayName(name: string, memeify: boolean) {
+  if (!memeify) {
+    return name;
+  }
+
+  return memeTeamNames[normalizeTeamName(name)] ?? name;
 }

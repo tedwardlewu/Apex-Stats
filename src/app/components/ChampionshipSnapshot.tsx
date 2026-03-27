@@ -3,8 +3,8 @@ import { Shield, Trophy } from "lucide-react";
 import { useFilters } from "../contexts/FilterContext";
 import { useMemeify } from "../contexts/MemeifyContext";
 import * as api from "../services/api";
-import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
-import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
+import { getDriverDisplayName, getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getTeamDisplayName, getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
 interface DriverSnapshot {
   id: number;
@@ -93,6 +93,7 @@ export function ChampionshipSnapshot() {
   const { memeify } = useMemeify();
   const [drivers, setDrivers] = useState<DriverSnapshot[]>([]);
   const [teams, setTeams] = useState<TeamSnapshot[]>([]);
+  const [allTeams, setAllTeams] = useState<TeamSnapshot[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -116,6 +117,8 @@ export function ChampionshipSnapshot() {
         }
 
         if (teamResponse.success) {
+          setAllTeams(teamResponse.data);
+
           const visibleTeams = teamResponse.data
             .filter((team) => matchesSelectedTeam(team.name, selectedTeam))
             .sort((left, right) => right.points - left.points)
@@ -160,12 +163,23 @@ export function ChampionshipSnapshot() {
               ))
             : drivers.map((driver, index) => (
                 <div key={driver.id} className="flex items-center justify-between gap-4 rounded-[14px] bg-slate-50 px-4 py-4 dark:bg-slate-800/70">
+                  {(() => {
+                    const matchedTeam =
+                      allTeams.find((team) => team.name === driver.team) ??
+                      allTeams.find((team) => {
+                        const driverAliases = teamAliases[driver.team] ?? [driver.team];
+                        const teamAliasesForCandidate = teamAliases[team.name] ?? [team.name];
+
+                        return driverAliases.includes(team.name) || teamAliasesForCandidate.includes(driver.team);
+                      });
+
+                    return (
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-3">
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-slate-200 dark:border-slate-700 dark:bg-slate-800">
                         <img
                           src={getDriverImage(driver.name, driver.image, memeify)}
-                          alt={driver.name}
+                          alt={getDriverDisplayName(driver.name, memeify)}
                           className="h-full w-full object-cover object-[center_-10%]"
                           style={getDriverImageStyle(driver.name, memeify)}
                         />
@@ -175,14 +189,29 @@ export function ChampionshipSnapshot() {
                           <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                             P{index + 1}
                           </span>
-                          <p className="truncate font-semibold text-slate-900 dark:text-slate-100">{driver.name}</p>
+                          <p className="truncate font-semibold text-slate-900 dark:text-slate-100">{getDriverDisplayName(driver.name, memeify)}</p>
                         </div>
-                        <p className="truncate text-sm text-slate-600 dark:text-slate-300">{driver.team}</p>
+                        <div className="flex items-center gap-2">
+                          {matchedTeam?.image ? (
+                            <img
+                              src={getTeamImage(matchedTeam.name, matchedTeam.image, memeify)}
+                              alt={`${getTeamDisplayName(driver.team, memeify)} logo`}
+                              className="h-4 w-4 rounded-full border border-slate-300 object-cover dark:border-slate-600"
+                              style={{
+                                ...getTeamImageStyle(matchedTeam.name, memeify),
+                                backgroundColor: teamLogoBackgrounds[matchedTeam.name] ?? matchedTeam.color ?? "#334155",
+                              }}
+                            />
+                          ) : null}
+                          <p className="truncate text-sm text-slate-600 dark:text-slate-300">{getTeamDisplayName(driver.team, memeify)}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
+                    );
+                  })()}
                   <div className="text-right">
-                    <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{driver.points}</p>
+                    <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{driver.points} pts</p>
                     <p className="text-xs uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">{driver.wins} wins</p>
                   </div>
                 </div>
@@ -207,7 +236,7 @@ export function ChampionshipSnapshot() {
                     >
                       <img
                         src={getTeamImage(team.name, team.image, memeify)}
-                        alt={team.name}
+                        alt={getTeamDisplayName(team.name, memeify)}
                         className="h-full w-full object-cover object-top"
                         style={getTeamImageStyle(team.name, memeify)}
                       />
@@ -218,13 +247,13 @@ export function ChampionshipSnapshot() {
                         <span className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                           P{index + 1}
                         </span>
-                        <p className="truncate font-semibold text-slate-900 dark:text-slate-100">{team.name}</p>
+                        <p className="truncate font-semibold text-slate-900 dark:text-slate-100">{getTeamDisplayName(team.name, memeify)}</p>
                       </div>
                       <p className="text-sm text-slate-600 dark:text-slate-300">Constructor campaign</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{team.points}</p>
+                    <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{team.points} pts</p>
                     <p className="text-xs uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">{team.wins} wins</p>
                   </div>
                 </div>

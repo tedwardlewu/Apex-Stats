@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from "recharts";
-import { Activity } from "lucide-react";
 import * as api from "../services/api";
 import { useFilters } from "../contexts/FilterContext";
 
@@ -26,10 +25,9 @@ interface Team {
   color: string;
 }
 
-type TopView = "top1" | "top5" | "top10" | "all";
+type TopView = "top5" | "top10" | "all";
 
 const topViewOptions: { key: TopView; label: string; limit: number }[] = [
-  { key: "top1", label: "Top 1", limit: 1 },
   { key: "top5", label: "Top 5", limit: 5 },
   { key: "top10", label: "Top 10", limit: 10 },
   { key: "all", label: "All 22", limit: 22 },
@@ -125,7 +123,7 @@ export function LapTimeChart() {
   }, [selectedRaceId, selectedSeason]);
 
   const selectedRace = races.find((race) => race.id === selectedRaceId) ?? null;
-  const selectedViewConfig = topViewOptions.find((option) => option.key === selectedView) ?? topViewOptions[3];
+  const selectedViewConfig = topViewOptions.find((option) => option.key === selectedView) ?? topViewOptions[topViewOptions.length - 1];
   const baselineLap = lapTimeData.length > 0 ? lapTimeData[0].bestLap : null;
   const displayedLapTimes = lapTimeData
     .filter((entry) => Number.isFinite(Number(entry.bestLap)))
@@ -164,12 +162,9 @@ export function LapTimeChart() {
   return (
     <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-sm text-gray-200">
       <div className="border-b p-6">
-        <div className="flex items-center gap-2">
-          <Activity className="size-5 text-green-600" />
-          <h2 className="text-xl font-bold">Lap Time Analysis</h2>
-        </div>
+        <h2 className="text-xl font-bold">Lap Time Analysis</h2>
         <p className="mt-1 text-sm text-gray-600">
-          Select a race and compare best laps across the full field. Choose one view at a time: Top 1, Top 5, Top 10, or All 22.
+          Select a race and compare best laps across the full field. Choose one view at a time: Top 5, Top 10, or All 22.
         </p>
       </div>
       <div className="p-6">

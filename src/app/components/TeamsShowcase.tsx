@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import * as api from "../services/api";
 import { useMemeify } from "../contexts/MemeifyContext";
 import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
-import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
+import { getTeamDisplayName, getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
 const teamCarImage: Record<string, string> = {
   Mercedes: "Mercedes.avif",
@@ -88,12 +88,12 @@ export function TeamsShowcase() {
           >
             <img
               src={getTeamImage(team.name, team.image, memeify)}
-              alt={team.name + " logo"}
+              alt={getTeamDisplayName(team.name, memeify) + " logo"}
               className="w-32 h-32 object-contain drop-shadow-xl"
               style={getTeamImageStyle(team.name, memeify)}
             />
             <div className="flex-1">
-              <h3 className="text-xl font-semibold mb-2 text-white drop-shadow-md">{team.name}</h3>
+              <h3 className="text-xl font-semibold mb-2 text-white drop-shadow-md">{getTeamDisplayName(team.name, memeify)}</h3>
             </div>
             <div className="w-[500px] h-48 flex items-center justify-center">
               <div className="relative w-full h-full">

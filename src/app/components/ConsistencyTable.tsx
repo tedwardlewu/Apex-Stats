@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Target } from "lucide-react";
 import * as api from "../services/api";
 
 interface Consistency {
@@ -42,10 +41,7 @@ export function ConsistencyTable() {
   return (
     <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-sm text-gray-200">
       <div className="border-b p-6">
-        <div className="flex items-center gap-2">
-          <Target className="size-5 text-indigo-600" />
-          <h2 className="text-xl font-bold">Driver Consistency Score</h2>
-        </div>
+        <h2 className="text-xl font-bold">Driver Consistency Score</h2>
         <p className="text-sm text-gray-600 mt-1">Based on average finish position and performance variance</p>
       </div>
       <div className="p-6">

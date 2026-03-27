@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { Users } from "lucide-react";
 import * as api from "../services/api";
 import { useFilters } from "../contexts/FilterContext";
 import { useMemeify } from "../contexts/MemeifyContext";
-import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
+import { getTeamDisplayName, getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
 interface Team {
   id: number;
@@ -58,10 +57,7 @@ export function TeamStandings({ onViewCars }: TeamStandingsProps) {
     <div className="rounded-lg border border-slate-200 bg-slate-100 text-slate-900 dark:border-border dark:bg-card dark:text-card-foreground">
       <div className="rounded-t-lg border-b border-slate-200 bg-slate-200 p-6 dark:border-border dark:bg-gray-800">
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Users className="size-6 text-green-600" />
-            <h2 className="text-2xl font-extrabold tracking-tight text-slate-800 dark:text-white">Constructor Standings</h2>
-          </div>
+          <h2 className="text-2xl font-extrabold tracking-tight text-slate-800 dark:text-white">Constructor Standings</h2>
           {onViewCars && (
             <button
               className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-slate-700"
@@ -89,13 +85,13 @@ export function TeamStandings({ onViewCars }: TeamStandingsProps) {
               >
                 <img
                   src={getTeamImage(team.name, team.image, memeify)}
-                  alt={team.name}
+                  alt={getTeamDisplayName(team.name, memeify)}
                   className="w-8 h-8 rounded-full object-cover object-top"
                   style={getTeamImageStyle(team.name, memeify)}
                 />
               </div>
               <div className="flex-1">
-                <p className="text-base font-semibold text-slate-900 dark:text-gray-200">{team.name}</p>
+                <p className="text-base font-semibold text-slate-900 dark:text-gray-200">{getTeamDisplayName(team.name, memeify)}</p>
                 <p className="text-xs text-slate-600 dark:text-gray-400">{team.championships} Championships</p>
               </div>
               <div className="text-right">

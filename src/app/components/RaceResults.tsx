@@ -3,8 +3,8 @@ import { Flag, MapPinned, TimerReset, Trophy } from "lucide-react";
 import * as api from "../services/api";
 import { useFilters } from "../contexts/FilterContext";
 import { useMemeify } from "../contexts/MemeifyContext";
-import { getDriverImage, getDriverImageStyle } from "../utils/driverImages";
-import { getTeamImage, getTeamImageStyle } from "../utils/teamImages";
+import { getDriverDisplayName, getDriverImage, getDriverImageStyle } from "../utils/driverImages";
+import { getTeamDisplayName, getTeamImage, getTeamImageStyle } from "../utils/teamImages";
 
 interface Race {
   id: number;
@@ -169,9 +169,7 @@ export function RaceResults() {
     () => results.find((entry) => entry.positionLabel !== "NC") ?? null,
     [results],
   );
-  const winnerBackgroundImage = winner
-    ? getDriverImage(winner.driverName, driverImages[winner.driverName] ?? "/Driver Images/Max.avif", memeify)
-    : "";
+  const winnerBackgroundImage = winner ? "/News/Kimi Background.jpg" : "";
 
   if (loading) {
     return (
@@ -257,18 +255,18 @@ export function RaceResults() {
                     >
                       <img
                         src={getDriverImage(winner.driverName, driverImages[winner.driverName] ?? "/Driver Images/Max.avif", memeify)}
-                        alt={winner.driverName}
+                        alt={getDriverDisplayName(winner.driverName, memeify)}
                         className="h-14 w-14 rounded-full object-cover object-[center_-10%]"
                         style={getDriverImageStyle(winner.driverName, memeify)}
                       />
                     </div>
                     <div>
-                      <p className="text-lg font-semibold text-white">{winner.driverName}</p>
+                      <p className="text-lg font-semibold text-white">{getDriverDisplayName(winner.driverName, memeify)}</p>
                       <div className="mt-2 flex items-center gap-2 text-sm text-slate-300">
                         {teamImages[winner.team] ? (
                           <img
                             src={getTeamImage(winner.team, teamImages[winner.team], memeify)}
-                            alt={winner.team}
+                            alt={getTeamDisplayName(winner.team, memeify)}
                             className="h-6 w-6 rounded-full border border-gray-700"
                             style={{
                               ...getTeamImageStyle(winner.team, memeify),
@@ -276,7 +274,7 @@ export function RaceResults() {
                             }}
                           />
                         ) : null}
-                        <span>{winner.team}</span>
+                        <span>{getTeamDisplayName(winner.team, memeify)}</span>
                       </div>
                       <p className="mt-2 text-sm text-amber-200">{winner.result} • {winner.points} pts</p>
                     </div>
@@ -316,13 +314,13 @@ export function RaceResults() {
                           >
                             <img
                               src={getDriverImage(entry.driverName, driverImages[entry.driverName] ?? "/Driver Images/Max.avif", memeify)}
-                              alt={entry.driverName}
+                              alt={getDriverDisplayName(entry.driverName, memeify)}
                               className="h-10 w-10 rounded-full object-cover object-[center_-10%]"
                               style={getDriverImageStyle(entry.driverName, memeify)}
                             />
                           </div>
                           <div>
-                            <p className="font-semibold text-white">{entry.driverName}</p>
+                            <p className="font-semibold text-white">{getDriverDisplayName(entry.driverName, memeify)}</p>
                             <p className="text-xs text-slate-400">#{entry.carNumber}</p>
                           </div>
                         </div>
@@ -332,7 +330,7 @@ export function RaceResults() {
                           {teamImages[entry.team] ? (
                             <img
                               src={getTeamImage(entry.team, teamImages[entry.team], memeify)}
-                              alt={entry.team}
+                              alt={getTeamDisplayName(entry.team, memeify)}
                               className="h-8 w-8 rounded-full border border-gray-700"
                               style={{
                                 ...getTeamImageStyle(entry.team, memeify),
@@ -340,7 +338,7 @@ export function RaceResults() {
                               }}
                             />
                           ) : null}
-                          <span>{entry.team}</span>
+                          <span>{getTeamDisplayName(entry.team, memeify)}</span>
                         </div>
                       </td>
                       <td className="px-4 py-3.5 text-slate-300">{entry.lapsCompleted}</td>

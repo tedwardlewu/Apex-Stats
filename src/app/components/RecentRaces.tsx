@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Flag, Trophy } from "lucide-react";
 import * as api from "../services/api";
 
 interface Race {
@@ -45,10 +44,7 @@ export function RecentRaces() {
   return (
     <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-sm text-gray-200">
       <div className="border-b p-6">
-        <div className="flex items-center gap-2">
-          <Flag className="size-5 text-red-600" />
-          <h2 className="text-xl font-bold">Recent Races</h2>
-        </div>
+        <h2 className="text-xl font-bold">Recent Races</h2>
       </div>
       <div className="p-6">
         <div className="space-y-4">
@@ -62,14 +58,8 @@ export function RecentRaces() {
                   <h3 className="font-semibold text-lg">{race.name}</h3>
                   <p className="text-sm text-gray-600 mt-1">{race.circuit}</p>
                   <div className="flex items-center gap-4 mt-3 text-sm">
-                    <div className="flex items-center gap-1 text-gray-600">
-                      <Flag className="size-4" />
-                      <span>{race.country}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-gray-600">
-                      <Trophy className="size-4" />
-                      <span>{new Date(race.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-                    </div>
+                    <div className="text-gray-600">{race.country}</div>
+                    <div className="text-gray-600">{new Date(race.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
                   </div>
                 </div>
               </div>
@@ -83,10 +73,7 @@ export function RecentRaces() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-600 mb-1">Fastest Lap</p>
-                  <div className="flex items-center gap-2">
-                    <Trophy className="size-4 text-purple-600" />
-                    <p className="font-semibold">{race.fastestLap}</p>
-                  </div>
+                  <p className="font-semibold">{race.fastestLap}</p>
                 </div>
               </div>
             </div>

@@ -1,4 +1,3 @@
-import { CalendarDays, MapPin, AlertTriangle, Info } from "lucide-react";
 import { raceCalendar2026, CalendarRace } from "../data/raceCalendarData";
 
 const COUNTRY_FLAG: Record<string, string> = {
@@ -55,18 +54,13 @@ export function RacingCalendar() {
 		<div className="space-y-4">
 			{/* Header */}
 			<div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-				<div className="bg-gradient-to-r from-red-600 via-red-500 to-orange-500 px-6 py-4">
-					<div className="flex items-center gap-3">
-						<div className="p-2 bg-white/20 rounded-lg">
-							<CalendarDays className="size-5 text-white" />
-						</div>
-						<div>
+				<div className="bg-gradient-to-r from-slate-800 to-slate-700 dark:from-slate-700 dark:to-slate-600 px-6 py-4">
+					<div>
 							<h2 className="text-lg font-bold text-white">2026 Formula 1 Calendar</h2>
-							<p className="text-red-100 text-xs mt-0.5">
+							<p className="text-slate-200 text-xs mt-0.5">
 								{raceCalendar2026.filter(r => !r.cancelled).length} races &bull;{" "}
 								{raceCalendar2026.filter(r => r.sprintWeekend && !r.cancelled).length} sprint weekends
 							</p>
-						</div>
 					</div>
 				</div>
 
@@ -148,10 +142,7 @@ export function RacingCalendar() {
 													<p className={`font-semibold leading-tight truncate ${race.cancelled ? "line-through text-gray-400 dark:text-gray-500" : "text-gray-900 dark:text-white"}`}>
 														{race.name}
 													</p>
-													<p className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1 mt-0.5">
-														<MapPin className="size-3 flex-shrink-0" />
-														{race.location}
-													</p>
+													<p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{race.location}</p>
 												</div>
 											</div>
 										</td>
@@ -167,10 +158,7 @@ export function RacingCalendar() {
 												{formatDateRange(race.startDate, race.endDate)}
 											</span>
 											{race.note && (
-												<div className="flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">
-													<Info className="size-3" />
-													{race.note}
-												</div>
+												<div className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">{race.note}</div>
 											)}
 										</td>
 
@@ -178,7 +166,6 @@ export function RacingCalendar() {
 										<td className="px-4 py-3 whitespace-nowrap">
 											{race.cancelled ? (
 												<span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-700">
-													<AlertTriangle className="size-3" />
 													Cancelled
 												</span>
 											) : live ? (

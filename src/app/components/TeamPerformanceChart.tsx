@@ -1,8 +1,9 @@
 import { useMemo, useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
-import { BarChart3 } from "lucide-react";
 import * as api from "../services/api";
 import { useFilters } from "../contexts/FilterContext";
+import { useMemeify } from "../contexts/MemeifyContext";
+import { getTeamDisplayName } from "../utils/teamImages";
 
 interface TeamStat {
   name: string;
@@ -89,6 +90,7 @@ function buildSeasonRows(teamsBySeason: Record<string, TeamStat[]>, teamSeries: 
 
 export function TeamPerformanceChart() {
   const { selectedSeason, selectedTeam } = useFilters();
+  const { memeify } = useMemeify();
   const [teamsBySeason, setTeamsBySeason] = useState<Record<string, TeamStat[]>>({});
   const [loading, setLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains("dark"));
@@ -152,12 +154,9 @@ export function TeamPerformanceChart() {
   return (
     <div className="rounded-md border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
       <div className="border-b border-slate-200 p-6 dark:border-slate-700">
-        <div className="flex items-center gap-2">
-          <BarChart3 className="size-5 text-purple-600" />
-          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Team Performance Trends</h2>
-        </div>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Team Performance Trends</h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-slate-300">
-          Points scored by season{selectedTeam !== "all" ? ` for ${selectedTeam}` : " for top teams"}
+          Points scored by season{selectedTeam !== "all" ? ` for ${getTeamDisplayName(selectedTeam, memeify)}` : " for top teams"}
         </p>
       </div>
       <div className="p-6">

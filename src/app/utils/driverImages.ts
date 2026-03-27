@@ -26,6 +26,32 @@ const funnyDriverImages: Record<string, string> = {
   "lance stroll": "/Funny Drivers/Stroll.webp",
 };
 
+const memeDriverNames: Record<string, string> = {
+  "alexander albon": "Albono",
+  "fernando alonso": "The Rookie",
+  "arvid lindblad": "Arvid Lindblud",
+  "oliver bearman": "Ollie",
+  "valtteri bottas": "Battery Voltas",
+  "carlos sainz": "Smooth Operator",
+  "carlos sainz jr": "Smooth Operator",
+  "charles leclerc": "Charles LeChair",
+  "franco colapinto": "The Argentinian",
+  "gabriel bortoleto": "Gabi Bortoletgo",
+  "pierre gasly": "Mr.Monza",
+  "george russell": "Mr Saturday",
+  "isack hadjar": "Complainer",
+  "kimi antonelli": "Kimi Räikkönen",
+  "lando norris": "Bottle Norris",
+  "liam lawson": "Kiwi",
+  "lewis hamilton": "Sir Lewis",
+  "max verstappen": "The Flying Dutchman",
+  "nico hulkenberg": "Hulk Smash",
+  "esteban ocon": "10 second penalty for Ocon",
+  "oscar piastri": "Oscar Pastri",
+  "sergio perez": "Mexican Minister of Defense",
+  "lance stroll": "Goat Stroll",
+};
+
 function normalizeDriverName(name: string) {
   return name
     .toLowerCase()
@@ -83,4 +109,12 @@ export function getDriverImageStyle(name: string, memeify: boolean): CSSProperti
   }
 
   return memeDriverImageStyles[normalizeDriverName(name)];
+}
+
+export function getDriverDisplayName(name: string, memeify: boolean) {
+  if (!memeify) {
+    return name;
+  }
+
+  return memeDriverNames[normalizeDriverName(name)] ?? name;
 }
