@@ -234,6 +234,8 @@ export function LapTimeChart() {
                   formatter={(value: number | string) => [`${Number(value).toFixed(3)}s`, "Best Lap"]}
                   labelFormatter={(label) => `Driver: ${label}`}
                   contentStyle={{ background: "#0f172a", border: "1px solid #334155", color: "#e2e8f0" }}
+                  itemStyle={{ color: "#f8fafc" }}
+                  labelStyle={{ color: "#f8fafc" }}
                 />
                 <Bar dataKey="bestLap" radius={[0, 8, 8, 0]}>
                   {displayedLapTimes.map((entry) => {
