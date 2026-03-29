@@ -117,9 +117,6 @@ export function NewsSection() {
         <h2 className="relative mt-3 text-3xl font-bold leading-tight text-slate-900 dark:text-slate-100 md:text-4xl">
           F1 Weekend Briefing
         </h2>
-        <p className="relative mt-3 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-          A cleaner newsroom layout with one lead story, fast headline scanning, and grouped coverage.
-        </p>
       </div>
 
       <div className="rounded-[18px] border border-slate-200/70 bg-white/80 p-4 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/70">
