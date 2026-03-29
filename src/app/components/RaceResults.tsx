@@ -172,6 +172,8 @@ export function RaceResults() {
   const winnerBackgroundImage = winner
     ? race?.name === "Australian Grand Prix"
       ? "/News/Russell Background.jpg"
+      : race?.name === "Japanese Grand Prix"
+        ? "/News/Kimi Japan Win.jpg"
       : "/News/Kimi Background.jpg"
     : "";
 
@@ -240,7 +242,7 @@ export function RaceResults() {
                     className="pointer-events-none absolute inset-0 scale-[1.03] bg-cover bg-no-repeat opacity-95 transition-transform duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-1 group-hover:scale-[1.08]"
                     style={{
                       backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.72) 0%, rgba(15,23,42,0.52) 44%, rgba(15,23,42,0.16) 100%), url("${encodeURI(winnerBackgroundImage)}")`,
-                      backgroundPosition: "center 52%",
+                      backgroundPosition: race?.name === "Japanese Grand Prix" ? "center top" : "center 52%",
                     }}
                   />
                 ) : null}

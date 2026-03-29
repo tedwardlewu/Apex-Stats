@@ -25,7 +25,7 @@ function getCategory(title: string, description: string) {
   const match = categoryKeywords.find((entry) =>
     entry.keywords.some((keyword) => text.includes(keyword))
   );
-  return match?.label ?? "Weekend";
+  return match?.label ?? "Outside the Track";
 }
 
 function getReadTime(description: string) {
@@ -147,6 +147,7 @@ export function NewsSection() {
                   src={featuredStory.imageSrc}
                   alt={featuredStory.title}
                   className="h-[24rem] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                  style={{ objectPosition: featuredStory.objectPosition, objectFit: featuredStory.objectFit as React.CSSProperties["objectFit"] }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-6 text-white">
@@ -185,7 +186,7 @@ export function NewsSection() {
                   onClick={() => openStory(item)}
                   className="group flex w-full items-start gap-3 rounded-xl border border-slate-200/80 p-2.5 text-left transition hover:border-sky-300 hover:bg-sky-50/70 dark:border-slate-700/70 dark:hover:border-sky-500/50 dark:hover:bg-slate-800"
                 >
-                  <img src={item.imageSrc} alt={item.title} className="h-16 w-20 flex-none rounded-md object-cover" />
+                  <img src={item.imageSrc} alt={item.title} className="h-16 w-20 flex-none rounded-md object-cover" style={{ objectPosition: item.objectPosition, objectFit: item.objectFit as React.CSSProperties["objectFit"] }} />
                   <div className="min-w-0">
                     <p className="line-clamp-2 text-sm font-semibold leading-snug text-slate-900 group-hover:text-sky-700 dark:text-slate-100 dark:group-hover:text-sky-300">
                       {item.title}
@@ -225,7 +226,7 @@ export function NewsSection() {
                 className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900"
               >
                 <button type="button" className="block w-full text-left" onClick={() => openStory(item)}>
-                  <img src={item.imageSrc} alt={item.title} className="h-44 w-full object-cover" />
+                  <img src={item.imageSrc} alt={item.title} className="h-44 w-full object-cover" style={{ objectPosition: item.objectPosition, objectFit: item.objectFit as React.CSSProperties["objectFit"] }} />
                   <div className="space-y-3 p-4">
                     <div className="flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.1em]">
                       <span className="rounded-full bg-slate-100 px-2 py-1 text-slate-700 dark:bg-slate-800 dark:text-slate-300">

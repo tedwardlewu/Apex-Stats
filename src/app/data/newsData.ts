@@ -4,9 +4,44 @@ export interface NewsItem {
   fileNames?: string[];
   title: string;
   description: string;
+  objectPosition?: string;
+  objectFit?: string;
 }
 
 export const newsItems: NewsItem[] = [
+  {
+    id: "japan-kimi-2026",
+    fileName: "Kimi Japan Win.jpg",
+    fileNames: ["Kimi Japan Win.jpg", "Kimi Wins.png"],
+    objectPosition: "center 0%",
+    title: "Kimi Antonelli wins the Japanese Grand Prix 2026",
+    description: "KIMIT WINS AGAIN! Kimi Antonelli secured another victory at the Japanese Grand Prix, securing his second win of the season at Suzuka Circuit. The young Mercedes driver showcased his talent and consistency, now leading the drivers championship with 72 points, 9 points ahead of his teammate George Russell. This victory solidifies Antonelli's position as a strong contender for the championship title this season.",
+  },
+  {
+    id: "japan-results-2026",
+    fileName: "Japan Results.png",
+    title: "Japanese Grand Prix 2026 - Full Results",
+    description: "The Japanese Grand Prix 2026 concluded with a thrilling race at Suzuka Circuit. Kimi Antonelli secured his second victory, with Oscar Piastri finishing in second place and Charles Leclerc in third.",
+  },
+  {
+    id: "japan-max-out-2026",
+    fileName: "Max Japan.avif",
+    title: "Max Verstappen Q2 exit in Japan",
+    description: "Max Verstappen disappointed after a Q2 exit in Japan, the Red Bull driver expressed his frustration with the car that has been present ever since the start of the season. If things keep going like this he might considering an exist out of F1."
+  },
+  {
+    id: "japan-qualifying-kimi-2026",
+    fileName: "Japan Qualifying.avif",
+    fileNames: ["Japan Qualifying.avif", "Japan Start.webp", "Kimi Japan.avif"],
+    title: "Kimi Antonelli shines through dramatic Japanese Grand Prix qualifying",
+    description: "A tense Suzuka qualifying session set the grid for the Japanese Grand Prix, with Kimi Antonelli emerging as one of the standout names of the weekend. From the opening laps to the final moments on Saturday, the young Mercedes driver looked sharp as the field battled changing grip and razor-thin margins. This is his second consective pole position after China. ",
+  },
+  {
+    id: "fp3-japan-2026",
+    fileName: "FP3 Japan.jpg",
+    title: "Free Practice 3 - Japanese Grand Prix 2026",
+    description: "Free Practice 3 session underway at Suzuka Circuit for the 2026 Japanese Grand Prix. Teams and drivers are making final adjustments to their setups ahead of qualifying.",
+  },
   {
     id: "fp2-japan-2026",
     fileName: "Fp2 Japan.webp",
