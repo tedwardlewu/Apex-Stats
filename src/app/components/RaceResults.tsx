@@ -12,6 +12,7 @@ interface Race {
   country: string;
   date: string;
   circuit: string;
+  winner?: string;
 }
 
 interface Driver {
@@ -88,8 +89,19 @@ export function RaceResults() {
         }
 
         if (racesResponse.success) {
-          setRaces(racesResponse.data);
-          setSelectedRaceId((currentRaceId) => currentRaceId ?? racesResponse.data[racesResponse.data.length - 1]?.id ?? null);
+          const completedRaces = racesResponse.data.filter((race) => race.winner && race.winner !== "TBD");
+          setRaces(completedRaces);
+          setSelectedRaceId((currentRaceId) => {
+            if (!completedRaces.length) {
+              return null;
+            }
+
+            if (currentRaceId && completedRaces.some((race) => race.id === currentRaceId)) {
+              return currentRaceId;
+            }
+
+            return completedRaces[completedRaces.length - 1].id;
+          });
         }
 
         if (driversResponse.success) {
