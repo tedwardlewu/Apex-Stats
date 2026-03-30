@@ -25,7 +25,14 @@ const driverBackgroundImages: Record<string, string> = {
 };
 
 const driverBackgroundPositions: Record<string, string> = {
+  "charles leclerc": "15% 16%",
   "lance stroll": "right 22%",
+  "pierre gasly": "40% 100%",
+};
+
+const driverBackgroundSizes: Record<string, string> = {
+  "pierre gasly": "220%",
+  "max verstappen": "150%",
 };
 
 function normalizeDriverName(name: string) {
@@ -42,4 +49,8 @@ export function getDriverBackgroundImage(name: string, fallback: string) {
 
 export function getDriverBackgroundPosition(name: string) {
   return driverBackgroundPositions[normalizeDriverName(name)] ?? "center 16%";
+}
+
+export function getDriverBackgroundSize(name: string) {
+  return driverBackgroundSizes[normalizeDriverName(name)] ?? "cover";
 }

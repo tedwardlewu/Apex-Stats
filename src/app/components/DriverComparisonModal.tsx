@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Driver } from "../data/mockData";
 import { Trophy, Award, Target, TrendingUp, Crown } from "lucide-react";
 import { useMemeify } from "../contexts/MemeifyContext";
-import { getDriverBackgroundImage } from "../utils/driverBackgrounds";
+import { getDriverBackgroundImage, getDriverBackgroundPosition, getDriverBackgroundSize } from "../utils/driverBackgrounds";
 import { getTeamDisplayName } from "../utils/teamImages";
 
 const TEAM_COLORS: Record<string, string> = {
@@ -49,6 +49,10 @@ export function DriverComparisonModal({
   const rightColor = TEAM_COLORS[driver2.team] ?? "#ef4444";
   const leftBackground = encodeURI(getDriverBackgroundImage(driver1.name, driver1.image));
   const rightBackground = encodeURI(getDriverBackgroundImage(driver2.name, driver2.image));
+  const leftBgPosition = getDriverBackgroundPosition(driver1.name);
+  const rightBgPosition = getDriverBackgroundPosition(driver2.name);
+  const leftBgSize = getDriverBackgroundSize(driver1.name);
+  const rightBgSize = getDriverBackgroundSize(driver2.name);
 
   const leftLeads = stats.filter((stat) => driver1[stat.key] > driver2[stat.key]).length;
   const rightLeads = stats.filter((stat) => driver2[stat.key] > driver1[stat.key]).length;
@@ -76,8 +80,8 @@ export function DriverComparisonModal({
                 className="pointer-events-none absolute inset-0"
                 style={{
                   backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.65) 100%), url("${leftBackground}")`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center 20%",
+                  backgroundSize: leftBgSize,
+                  backgroundPosition: leftBgPosition,
                   backgroundRepeat: "no-repeat",
                 }}
               />
@@ -109,8 +113,8 @@ export function DriverComparisonModal({
                 className="pointer-events-none absolute inset-0"
                 style={{
                   backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.65) 100%), url("${rightBackground}")`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center 20%",
+                  backgroundSize: rightBgSize,
+                  backgroundPosition: rightBgPosition,
                   backgroundRepeat: "no-repeat",
                 }}
               />

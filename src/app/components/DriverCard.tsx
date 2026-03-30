@@ -3,7 +3,7 @@ import { Trophy, Award, TrendingUp, CheckCircle2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemeify } from "../contexts/MemeifyContext";
 import { getDriverDisplayName, getDriverImage, getDriverImageStyle } from "../utils/driverImages";
-import { getDriverBackgroundImage, getDriverBackgroundPosition } from "../utils/driverBackgrounds";
+import { getDriverBackgroundImage, getDriverBackgroundPosition, getDriverBackgroundSize } from "../utils/driverBackgrounds";
 import { getTeamDisplayName } from "../utils/teamImages";
 
 const TEAM_COLORS: Record<string, string> = {
@@ -52,6 +52,7 @@ export function DriverCard({ driver, rank, isSelected, onSelect, showImage = tru
   const displayName = getDriverDisplayName(driver.name, memeify);
   const backgroundImage = encodeURI(getDriverBackgroundImage(driver.name, driver.image));
   const backgroundPosition = getDriverBackgroundPosition(driver.name);
+  const backgroundSize = getDriverBackgroundSize(driver.name);
   const teamLogo = TEAM_LOGO_IMAGES[driver.team] ?? "";
   const teamColor = TEAM_COLORS[driver.team] ?? "#64748b";
 
@@ -71,7 +72,7 @@ export function DriverCard({ driver, rank, isSelected, onSelect, showImage = tru
         className="pointer-events-none absolute inset-y-0 right-0 w-[66%] transition-opacity duration-500"
         style={{
           backgroundImage: `url("${backgroundImage}")`,
-          backgroundSize: "cover",
+          backgroundSize,
           backgroundPosition,
           backgroundRepeat: "no-repeat",
           filter: "saturate(0.9) contrast(0.9) brightness(0.84)",
