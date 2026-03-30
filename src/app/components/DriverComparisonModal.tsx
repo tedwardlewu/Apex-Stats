@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Driver } from "../data/mockData";
 import { Trophy, Award, Target, TrendingUp, Crown } from "lucide-react";
 import { useMemeify } from "../contexts/MemeifyContext";
+import { getDriverBackgroundImage } from "../utils/driverBackgrounds";
 import { getTeamDisplayName } from "../utils/teamImages";
 
 const TEAM_COLORS: Record<string, string> = {
@@ -46,6 +47,8 @@ export function DriverComparisonModal({
 
   const leftColor = TEAM_COLORS[driver1.team] ?? "#3b82f6";
   const rightColor = TEAM_COLORS[driver2.team] ?? "#ef4444";
+  const leftBackground = encodeURI(getDriverBackgroundImage(driver1.name, driver1.image));
+  const rightBackground = encodeURI(getDriverBackgroundImage(driver2.name, driver2.image));
 
   const leftLeads = stats.filter((stat) => driver1[stat.key] > driver2[stat.key]).length;
   const rightLeads = stats.filter((stat) => driver2[stat.key] > driver1[stat.key]).length;
@@ -68,7 +71,16 @@ export function DriverComparisonModal({
 
         <div className="px-6 pb-6 pt-6">
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-            <div className="text-center">
+            <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-3 text-center dark:border-gray-700 dark:bg-gray-800/70">
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.65) 100%), url("${leftBackground}")`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center 20%",
+                  backgroundRepeat: "no-repeat",
+                }}
+              />
               <div className="relative mx-auto mb-3 h-24 w-24">
                 <img
                   src={driver1.image}
@@ -83,16 +95,25 @@ export function DriverComparisonModal({
                   {driver1.number}
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">{driver1.name}</h3>
+              <h3 className="relative text-xl font-bold text-white">{driver1.name}</h3>
               <p className="text-sm font-semibold" style={{ color: leftColor }}>{getTeamDisplayName(driver1.team, memeify)}</p>
-              <p className="text-xs text-slate-500 dark:text-gray-400">{driver1.nationality}</p>
+              <p className="relative text-xs text-slate-200">{driver1.nationality}</p>
             </div>
 
             <div className="rounded-full bg-slate-900 px-4 py-2 text-xs font-black tracking-wider text-white dark:bg-gray-700">
               VS
             </div>
 
-            <div className="text-center">
+            <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-3 text-center dark:border-gray-700 dark:bg-gray-800/70">
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  backgroundImage: `linear-gradient(180deg, rgba(15,23,42,0.2) 0%, rgba(15,23,42,0.65) 100%), url("${rightBackground}")`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center 20%",
+                  backgroundRepeat: "no-repeat",
+                }}
+              />
               <div className="relative mx-auto mb-3 h-24 w-24">
                 <img
                   src={driver2.image}
@@ -107,9 +128,9 @@ export function DriverComparisonModal({
                   {driver2.number}
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">{driver2.name}</h3>
+              <h3 className="relative text-xl font-bold text-white">{driver2.name}</h3>
               <p className="text-sm font-semibold" style={{ color: rightColor }}>{getTeamDisplayName(driver2.team, memeify)}</p>
-              <p className="text-xs text-slate-500 dark:text-gray-400">{driver2.nationality}</p>
+              <p className="relative text-xs text-slate-200">{driver2.nationality}</p>
             </div>
           </div>
 

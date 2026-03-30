@@ -131,7 +131,7 @@ export function CompareSection() {
             rank={index + 1}
             isSelected={selectedDrivers.some(d => d.id === driver.id)}
             onSelect={handleDriverSelect}
-            showTeam={false}
+            showTeam={true}
           />
         ))}
       </div>
