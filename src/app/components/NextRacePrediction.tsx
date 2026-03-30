@@ -45,6 +45,42 @@ function normalise(value: number, maxValue: number) {
   return value / maxValue;
 }
 
+function roundPercentagesToHundred(values: number[], decimals = 1) {
+  if (values.length === 0) {
+    return [];
+  }
+
+  const factor = 10 ** decimals;
+  const targetUnits = 100 * factor;
+  const scaled = values.map((value) => Math.max(0, value) * factor);
+  const floored = scaled.map((value) => Math.floor(value));
+  let unitsToDistribute = targetUnits - floored.reduce((sum, value) => sum + value, 0);
+
+  const fractionalOrder = scaled
+    .map((value, index) => ({ index, fraction: value - Math.floor(value) }))
+    .sort((left, right) => right.fraction - left.fraction);
+
+  let cursor = 0;
+  while (unitsToDistribute > 0 && fractionalOrder.length > 0) {
+    const targetIndex = fractionalOrder[cursor % fractionalOrder.length].index;
+    floored[targetIndex] += 1;
+    unitsToDistribute -= 1;
+    cursor += 1;
+  }
+
+  while (unitsToDistribute < 0) {
+    const removableIndex = floored.findIndex((value) => value > 0);
+    if (removableIndex === -1) {
+      break;
+    }
+
+    floored[removableIndex] -= 1;
+    unitsToDistribute += 1;
+  }
+
+  return floored.map((value) => value / factor);
+}
+
 function buildRecentPaceScores(season: string) {
   const latestRace = [...raceCatalog]
     .filter((race) => race.season === season)
@@ -160,7 +196,13 @@ function buildPredictions(drivers: DriverStats[], teams: TeamStats[], season: st
     }))
     .sort((left, right) => right.probability - left.probability);
 
-  return { rows, upcomingRace, latestRace };
+  const roundedProbabilities = roundPercentagesToHundred(rows.map((row) => row.probability), 1);
+  const normalizedRows = rows.map((row, index) => ({
+    ...row,
+    probability: roundedProbabilities[index] ?? 0,
+  }));
+
+  return { rows: normalizedRows, upcomingRace, latestRace };
 }
 
 function formatRaceDate(date: string) {

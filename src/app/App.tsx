@@ -18,6 +18,7 @@ import { RaceResults } from "./components/RaceResults";
 import { TeamsShowcase } from "./components/TeamsShowcase";
 import { NewsSection } from "./components/NewsSection";
 import RacingCalendar from "./components/RacingCalendar";
+import { TeammateIndex } from "./components/TeammateIndex";
 import { useFilters } from "./contexts/FilterContext";
 import { useMemeify } from "./contexts/MemeifyContext";
 import * as api from "./services/api";
@@ -201,6 +202,9 @@ export default function App() {
                 <ConsistencyTable />
                 <div className="mt-8">
                   <GraphsSection />
+                </div>
+                <div className="mt-8">
+                  <TeammateIndex />
                 </div>
               </>
             ),

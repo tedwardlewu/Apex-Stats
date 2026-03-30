@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Clock3, Newspaper, TrendingUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, Newspaper, TrendingUp } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 import { NewsItem, newsItems } from "../data/newsData";
 
@@ -7,7 +7,6 @@ interface DisplayNewsItem extends NewsItem {
   imageSrc: string;
   imageSrcs: string[];
   category: string;
-  readTimeMinutes: number;
 }
 
 const categoryKeywords: Array<{ label: string; keywords: string[] }> = [
@@ -26,11 +25,6 @@ function getCategory(title: string, description: string) {
     entry.keywords.some((keyword) => text.includes(keyword))
   );
   return match?.label ?? "Outside the Track";
-}
-
-function getReadTime(description: string) {
-  const words = description.trim().split(/\s+/).filter(Boolean).length;
-  return Math.max(1, Math.round(words / 180));
 }
 
 export function NewsSection() {
@@ -79,7 +73,6 @@ export function NewsSection() {
           imageSrc: imageSrcs[0],
           imageSrcs,
           category: getCategory(item.title, item.description),
-          readTimeMinutes: getReadTime(item.description),
         };
       }),
     []
@@ -154,10 +147,6 @@ export function NewsSection() {
                   <div className="mb-3 flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em]">
                     <span className="rounded-full bg-red-500/90 px-2.5 py-1">Lead Story</span>
                     <span className="rounded-full bg-white/20 px-2.5 py-1">{featuredStory.category}</span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1">
-                      <Clock3 size={12} />
-                      {featuredStory.readTimeMinutes} min
-                    </span>
                   </div>
                   <p className="text-2xl font-bold leading-tight md:text-3xl">{featuredStory.title}</p>
                   <p className="mt-2 line-clamp-3 max-w-3xl text-sm text-slate-100/90">
@@ -195,9 +184,6 @@ export function NewsSection() {
                       <span className="rounded-full bg-slate-100 px-2 py-1 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                         {item.category}
                       </span>
-                      <span className="rounded-full bg-sky-100 px-2 py-1 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300">
-                        {item.readTimeMinutes} min
-                      </span>
                     </div>
                   </div>
                 </button>
@@ -231,9 +217,6 @@ export function NewsSection() {
                     <div className="flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-[0.1em]">
                       <span className="rounded-full bg-slate-100 px-2 py-1 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                         {item.category}
-                      </span>
-                      <span className="rounded-full bg-emerald-100 px-2 py-1 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-                        {item.readTimeMinutes} min
                       </span>
                     </div>
                     <p className="line-clamp-2 text-base font-semibold leading-snug text-slate-900 dark:text-slate-100">
