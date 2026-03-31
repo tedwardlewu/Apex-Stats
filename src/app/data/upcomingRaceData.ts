@@ -33,12 +33,12 @@ export const upcomingRaceBySeason: Record<string, UpcomingRaceContext> = {
   },
   "2026": {
     season: "2026",
-    name: "Japanese Grand Prix",
-    country: "Suzuka, Japan",
-    circuit: "Suzuka Circuit",
-    date: "2026-03-29",
-    summary: "Suzuka rewards aero stability, confidence through fast direction changes, and drivers already carrying clean single-lap momentum.",
-    modelFocus: "Latest lap pace and constructor strength carry extra weight here, with a small bonus for proven race winners.",
+    name: "Miami Grand Prix",
+    country: "Miami, USA",
+    circuit: "Miami International Autodrome",
+    date: "2026-05-01",
+    summary: "A fast, technical street circuit with a mix of long straights and tight corners, rewarding top speed and traction.",
+    modelFocus: "Recent qualifying pace and tire management are weighted above outright championship form.",
     teamBiases: {
       Mercedes: 1.06,
       Ferrari: 1.04,

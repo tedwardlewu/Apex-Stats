@@ -1,5 +1,5 @@
 
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, MapPin } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState, useRef } from "react";
 
@@ -17,6 +17,11 @@ interface AnimatedStatsCardProps {
   delay?: number;
   backgroundImage?: string;
   backgroundImages?: string[];
+  /**
+   * Optional: Provide location info for each background image (same order as backgroundImages)
+   * Example: [ { circuit: "Miami International Autodrome", country: "USA" }, ... ]
+   */
+  backgroundImageLocations?: { circuit: string; country: string }[];
   backgroundVariant?: "driver" | "team";
   backgroundAccentColor?: string;
 }
@@ -31,15 +36,10 @@ export function AnimatedStatsCard({
   backgroundImages,
   backgroundVariant,
   backgroundAccentColor,
-}: AnimatedStatsCardProps) {
+  backgroundImageLocations = [],
+}: AnimatedStatsCardProps & { backgroundImageLocations?: { circuit: string; country: string }[] }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [count, setCount] = useState(0);
-    useEffect(() => {
-      // Mark as loaded after a short delay or when value is present
-      if (value !== undefined && value !== null && value !== "") {
-        setIsLoaded(true);
-      }
-    }, [value]);
   const [isHovered, setIsHovered] = useState(false);
   const numericValue = typeof value === 'number' ? value : 0;
   const isNumeric = typeof value === 'number';
@@ -48,6 +48,20 @@ export function AnimatedStatsCard({
   const fadeTimeout = useRef<number | null>(null);
   const showImageBackdrop = Boolean(backgroundImage) || (backgroundImages && backgroundImages.length > 0);
   const imageVariant = backgroundVariant ?? (title === "Leading Team" ? "team" : "driver");
+  const currentLocation = backgroundImageLocations && backgroundImageLocations.length > 0 && backgroundImages && backgroundImages.length > 0
+    ? backgroundImageLocations[bgIndex % backgroundImageLocations.length]
+    : null;
+
+  // Fix: Always set loaded if backgroundImages or backgroundImage is present
+  useEffect(() => {
+    if (
+      (backgroundImages && backgroundImages.length > 0) ||
+      backgroundImage ||
+      (value !== undefined && value !== null && value !== "")
+    ) {
+      setIsLoaded(true);
+    }
+  }, [backgroundImages, backgroundImage, value]);
   const currentBg = backgroundImages && backgroundImages.length > 0 ? backgroundImages[bgIndex % backgroundImages.length] : backgroundImage;
   const encodedBackgroundImage = currentBg ? encodeURI(currentBg) : "";
 
@@ -116,22 +130,37 @@ export function AnimatedStatsCard({
         </div>
       )}
       {showImageBackdrop && imageVariant === "driver" ? (
-        <motion.div
-          className={`pointer-events-none absolute inset-0 ${isHovered ? "z-20" : "z-0"}`}
-          style={{
-            backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.34) 0%, rgba(15,23,42,0.18) 46%, rgba(15,23,42,0.02) 100%), url("${encodedBackgroundImage}")`,
-            backgroundPosition: (backgroundImages && backgroundImages.length > 0 && encodedBackgroundImage.includes('/Race%20Backgrounds/')) ? "center 100%" : "center 2%",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "96% auto",
-            backgroundColor: backgroundAccentColor ?? "#334155",
-            opacity: fade ? 1 : 0,
-            transition: 'opacity 400ms cubic-bezier(0.4,0,0.2,1)',
-          }}
-          initial={{ scale: 1.04, x: 0, y: 0 }}
-          animate={isHovered ? { scale: 1.08, x: 6, y: -3 } : { scale: 1.04, x: 0, y: 0 }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
-        />
+        <>
+          <motion.div
+            className={`pointer-events-none absolute inset-0 z-0`}
+            style={{
+              backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.34) 0%, rgba(15,23,42,0.18) 46%, rgba(15,23,42,0.02) 100%), url("${encodedBackgroundImage}")`,
+              backgroundPosition: (backgroundImages && backgroundImages.length > 0 && encodedBackgroundImage.includes('/Race%20Backgrounds/')) ? "center 100%" : "center 2%",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "96% auto",
+              backgroundColor: backgroundAccentColor ?? "#334155",
+              opacity: fade ? 1 : 0,
+              transition: 'opacity 400ms cubic-bezier(0.4,0,0.2,1)',
+            }}
+            initial={{ scale: 1.04, x: 0, y: 0 }}
+            animate={isHovered ? { scale: 1.08, x: 6, y: -3 } : { scale: 1.04, x: 0, y: 0 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+          />
+        </>
       ) : null}
+
+      {/* Location Pin Overlay: always on top of rotating image */}
+      {showImageBackdrop && imageVariant === "driver" && currentLocation && (
+        <div
+          className="absolute left-0 right-0 flex items-center gap-1 bottom-0 bg-black/60 rounded-b-2xl px-4 py-1 z-40"
+          style={{ pointerEvents: "none", minWidth: 0 }}
+        >
+          <MapPin size={16} className="text-gray-300 shrink-0" />
+          <span className="text-xs text-white font-semibold truncate">
+            {currentLocation.circuit} — {currentLocation.country}
+          </span>
+        </div>
+      )}
 
       {showImageBackdrop && imageVariant === "team" ? (
         <>

@@ -156,9 +156,9 @@ export function Header() {
             className="mt-4 rounded-2xl border border-white/25 px-5 py-4 backdrop-blur-sm"
             style={{
               backgroundImage:
-                'linear-gradient(90deg, rgba(15, 23, 42, 0.68) 0%, rgba(15, 23, 42, 0.4) 52%, rgba(15, 23, 42, 0.28) 100%), url("/News/Cherry.jpg")',
+                'linear-gradient(90deg, rgba(15, 23, 42, 0.68) 0%, rgba(15, 23, 42, 0.4) 52%, rgba(15, 23, 42, 0.28) 100%), url("/Race Backgrounds/Miami.avif")',
               backgroundSize: "cover",
-              backgroundPosition: "center 75%",
+              backgroundPosition: "center 65%",
             }}
           >
             <div className="flex items-center gap-2">

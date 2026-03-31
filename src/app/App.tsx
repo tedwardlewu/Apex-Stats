@@ -167,6 +167,31 @@ export default function App() {
               "/Race Backgrounds/US.jpg",
               "/Race Backgrounds/Vegas.webp",
             ]}
+            backgroundImageLocations={[
+              { circuit: "Yas Marina Circuit", country: "UAE" },
+              { circuit: "Albert Park", country: "Australia" },
+              { circuit: "Red Bull Ring", country: "Austria" },
+              { circuit: "Baku City Circuit", country: "Azerbaijan" },
+              { circuit: "Bahrain International Circuit", country: "Bahrain" },
+              { circuit: "Circuit de Spa-Francorchamps", country: "Belgium" },
+              { circuit: "Interlagos", country: "Brazil" },
+              { circuit: "Silverstone", country: "UK" },
+              { circuit: "Circuit Gilles Villeneuve", country: "Canada" },
+              { circuit: "Shanghai International Circuit", country: "China" },
+              { circuit: "Circuit Zandvoort", country: "Netherlands" },
+              { circuit: "Hungaroring", country: "Hungary" },
+              { circuit: "Monza", country: "Italy" },
+              { circuit: "Suzuka", country: "Japan" },
+              { circuit: "Autódromo Hermanos Rodríguez", country: "Mexico" },
+              { circuit: "Miami International Autodrome", country: "USA" },
+              { circuit: "Circuit de Monaco", country: "Monaco" },
+              { circuit: "Lusail International Circuit", country: "Qatar" },
+              { circuit: "Jeddah Corniche Circuit", country: "Saudi Arabia" },
+              { circuit: "Marina Bay Street Circuit", country: "Singapore" },
+              { circuit: "Circuit de Barcelona-Catalunya", country: "Spain" },
+              { circuit: "Circuit of the Americas", country: "USA" },
+              { circuit: "Las Vegas Street Circuit", country: "USA" },
+            ]}
           />
           <AnimatedStatsCard
             title="Leading Driver"
