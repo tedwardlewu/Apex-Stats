@@ -1,6 +1,13 @@
+
 import { LucideIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState, useRef } from "react";
+
+function Skeleton({ className = "" }) {
+  return (
+    <div className={`animate-pulse bg-slate-300 dark:bg-slate-700 rounded ${className}`} />
+  );
+}
 
 interface AnimatedStatsCardProps {
   title: string;
@@ -25,7 +32,14 @@ export function AnimatedStatsCard({
   backgroundVariant,
   backgroundAccentColor,
 }: AnimatedStatsCardProps) {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [count, setCount] = useState(0);
+    useEffect(() => {
+      // Mark as loaded after a short delay or when value is present
+      if (value !== undefined && value !== null && value !== "") {
+        setIsLoaded(true);
+      }
+    }, [value]);
   const [isHovered, setIsHovered] = useState(false);
   const numericValue = typeof value === 'number' ? value : 0;
   const isNumeric = typeof value === 'number';
@@ -87,6 +101,13 @@ export function AnimatedStatsCard({
           : "border-slate-200/90 bg-white/95 text-slate-900 dark:border-slate-700 dark:bg-slate-900/75 dark:text-gray-200"
       }`}
     >
+      {!isLoaded && (
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/80 dark:bg-slate-900/80">
+          <Skeleton className="w-2/3 h-6 mb-4" />
+          <Skeleton className="w-1/2 h-10 mb-2" />
+          <Skeleton className="w-10 h-10 rounded-xl" />
+        </div>
+      )}
       {showImageBackdrop && imageVariant === "driver" ? (
         <motion.div
           className={`pointer-events-none absolute inset-0 ${isHovered ? "z-20" : "z-0"}`}
@@ -140,19 +161,23 @@ export function AnimatedStatsCard({
       <div className="relative flex items-start justify-between">
         <div className={`relative flex-1 overflow-hidden ${showImageBackdrop && imageVariant === "driver" && isHovered ? "z-0" : "z-20"}`}>
           <p className={`text-sm ${showImageBackdrop ? "font-semibold text-white/95 drop-shadow-[0_1px_2px_rgba(15,23,42,0.7)]" : "font-medium text-slate-600 dark:text-gray-400"}`}>
-            {title}
+            {isLoaded ? title : <Skeleton className="w-2/3 h-5" />}
           </p>
           <div className="relative mt-2 min-h-[2.35rem]">
-            <motion.p
-              className={`text-3xl font-extrabold ${showImageBackdrop ? "text-white drop-shadow-[0_1px_2px_rgba(15,23,42,0.7)]" : "text-slate-900 dark:text-white"}`}
-              key={count}
-            >
-              {isNumeric ? count.toLocaleString() : value}
-            </motion.p>
+            {isLoaded ? (
+              <motion.p
+                className={`text-3xl font-extrabold ${showImageBackdrop ? "text-white drop-shadow-[0_1px_2px_rgba(15,23,42,0.7)]" : "text-slate-900 dark:text-white"}`}
+                key={count}
+              >
+                {isNumeric ? count.toLocaleString() : value}
+              </motion.p>
+            ) : (
+              <Skeleton className="w-1/2 h-8" />
+            )}
           </div>
         </div>
         <div className={`relative z-30 rounded-xl border p-3 ${showImageBackdrop ? "border-white/40 bg-white/20 backdrop-blur-[2px]" : "border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800"} ${color}`}>
-          <Icon className="size-6" />
+          {isLoaded ? <Icon className="size-6" /> : <Skeleton className="w-8 h-8 rounded-xl" />}
         </div>
       </div>
     </motion.div>
