@@ -45,7 +45,7 @@ export function AnimatedStatsCard({
   const isNumeric = typeof value === 'number';
   const [bgIndex, setBgIndex] = useState(0);
   const [fade, setFade] = useState(true);
-  const fadeTimeout = useRef<NodeJS.Timeout | null>(null);
+  const fadeTimeout = useRef<number | null>(null);
   const showImageBackdrop = Boolean(backgroundImage) || (backgroundImages && backgroundImages.length > 0);
   const imageVariant = backgroundVariant ?? (title === "Leading Team" ? "team" : "driver");
   const currentBg = backgroundImages && backgroundImages.length > 0 ? backgroundImages[bgIndex % backgroundImages.length] : backgroundImage;
@@ -53,15 +53,22 @@ export function AnimatedStatsCard({
 
   useEffect(() => {
     if (!backgroundImages || backgroundImages.length === 0) return;
-    const interval = setInterval(() => {
-      setFade(false);
-      fadeTimeout.current = setTimeout(() => {
-        setBgIndex((i) => (i + 1) % backgroundImages.length);
-        setFade(true);
-      }, 400); // fade out for 400ms, then switch and fade in
-    }, 3000);
+    // Randomize between 5 and 7 seconds for a more natural feel
+    let intervalId: NodeJS.Timeout;
+    function startInterval() {
+      const duration = 5000 + Math.floor(Math.random() * 2000); // 5000-7000ms
+      intervalId = setTimeout(() => {
+        setFade(false);
+        fadeTimeout.current = setTimeout(() => {
+          setBgIndex((i) => (i + 1) % backgroundImages.length);
+          setFade(true);
+          startInterval(); // restart interval after fade
+        }, 400);
+      }, duration);
+    }
+    startInterval();
     return () => {
-      clearInterval(interval);
+      clearTimeout(intervalId);
       if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
     };
   }, [backgroundImages]);

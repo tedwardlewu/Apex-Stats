@@ -39,14 +39,22 @@ const TEAM_COLORS: Record<string, string> = {
   Mercedes: "#06B6D4",
   Ferrari: "#DC2626",
   McLaren: "#F97316",
+  "McLaren-Mercedes": "#F97316",
   "Red Bull Racing": "#1c46ce",
+  "Red Bull Racing-Honda RBPT": "#1c46ce",
   "Haas F1 Team": "#6b7280",
+  "Haas-Ferrari": "#6b7280",
   "Racing Bulls": "#7594c2",
+  "Racing Bulls-Honda RBPT": "#7594c2",
   Audi: "#771716",
   Alpine: "#2871cb",
+  "Alpine-Renault": "#2871cb",
   Williams: "#104fb4",
+  "Williams-Mercedes": "#104fb4",
   Cadillac: "#444749",
+  "Kick Sauber-Ferrari": "#3e3e3e",
   "Aston Martin": "#10853b",
+  "Aston Martin Aramco-Mercedes": "#10853b",
 };
 
 function getClassificationLabel(entry: RaceResultEntry) {
@@ -62,6 +70,11 @@ function getClassificationLabel(entry: RaceResultEntry) {
 }
 
 export function RaceResults() {
+    // Helper to get team color for backgrounds
+    function getWinnerTeamColor(team: string) {
+      if (team === "Ferrari") return "#c92c2c";
+      return TEAM_COLORS[team] || "#222";
+    }
   const { selectedSeason } = useFilters();
   const { memeify } = useMemeify();
   const [races, setRaces] = useState<Race[]>([]);
@@ -181,13 +194,37 @@ export function RaceResults() {
     () => results.find((entry) => entry.positionLabel !== "NC") ?? null,
     [results],
   );
-  const winnerBackgroundImage = winner
-    ? race?.name === "Australian Grand Prix"
-      ? "/News/Russell Background.jpg"
-      : race?.name === "Japanese Grand Prix"
-        ? "/News/Kimi Japan Win.jpg"
-      : "/News/Kimi Background.jpg"
-    : "";
+  // Custom winner background logic for specific races in 2026
+  let winnerBackgroundImage = "";
+  if (winner && race) {
+    // 2025 custom backgrounds
+    if (race.season === "2025" && race.name === "Australian Grand Prix") {
+      // Use Driver Backgrounds/Lando Australia.webp
+      winnerBackgroundImage = "/Driver Backgrounds/Lando Australia.webp";
+    } else if (race.season === "2025" && race.name === "Chinese Grand Prix") {
+      // Use Driver Backgrounds/Oscar China.jpg
+      winnerBackgroundImage = "/Driver Backgrounds/Oscar China.jpg";
+    }
+    // 2026 custom backgrounds
+    else if (race.season === "2026" && race.name === "Chinese Grand Prix") {
+      // Use Driver Backgrounds/Kimi.jpeg
+      winnerBackgroundImage = "/Driver Backgrounds/Kimi.jpeg";
+    } else if (race.season === "2026" && race.name === "Australian Grand Prix") {
+      // Use News/Russell Background.jpg
+      winnerBackgroundImage = "/News/Russell Background.jpg";
+    } else if (race.season === "2026" && race.name === "Japanese Grand Prix") {
+      // Use News/Kimi Japan Win.jpg
+      winnerBackgroundImage = "/News/Kimi Japan Win.jpg";
+    }
+    // 2025 Japan custom background (moved way down)
+    else if (race.season === "2025" && race.name === "Japanese Grand Prix") {
+      // Use Driver Backgrounds/Max Japan.jpg
+      winnerBackgroundImage = "/Driver Backgrounds/Max Japan.jpg";
+    }
+    else {
+      winnerBackgroundImage = `/Driver Backgrounds/${winner.driverName.split(" ")[0]} ${race.country.split(",")[0]}.avif`;
+    }
+  }
 
   if (loading) {
     return (
@@ -248,17 +285,25 @@ export function RaceResults() {
                 </p>
               </div>
 
+
               <div className="group relative overflow-hidden rounded-[20px] border border-amber-500/30 bg-[linear-gradient(135deg,_rgba(120,53,15,0.15),_rgba(15,23,42,0.9))] p-5">
+                {/* Colored overlay for winner's team */}
+                {winner ? (
+                  <div
+                    className="pointer-events-none absolute inset-0 z-0"
+                    style={{ background: `linear-gradient(120deg, ${getWinnerTeamColor(winner.team)}33 0%, transparent 100%)` }}
+                  />
+                ) : null}
                 {winnerBackgroundImage ? (
                   <div
-                    className="pointer-events-none absolute inset-0 scale-[1.03] bg-cover bg-no-repeat opacity-95 transition-transform duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-1 group-hover:scale-[1.08]"
+                    className="pointer-events-none absolute inset-0 scale-[1.03] bg-cover bg-no-repeat opacity-95 transition-transform duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-1 group-hover:scale-[1.08] z-10"
                     style={{
                       backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.72) 0%, rgba(15,23,42,0.52) 44%, rgba(15,23,42,0.16) 100%), url("${encodeURI(winnerBackgroundImage)}")`,
                       backgroundPosition: race?.name === "Japanese Grand Prix" ? "center top" : "center 52%",
                     }}
                   />
                 ) : null}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/8" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/8 z-20" />
 
                 <div className="relative z-10">
                 <div className="flex items-center gap-2 text-amber-300">
