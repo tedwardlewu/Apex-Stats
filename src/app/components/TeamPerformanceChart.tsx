@@ -145,15 +145,15 @@ export function TeamPerformanceChart() {
 
   if (loading) {
     return (
-      <div className="rounded-md border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
+      <div className="rounded-[16px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
         <p className="text-center text-gray-600 dark:text-slate-300">Loading team performance from database...</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-md border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/80">
-      <div className="border-b border-slate-200 p-6 dark:border-slate-700">
+    <div className="rounded-[16px] border border-slate-200/70 bg-white shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
+      <div className="border-b border-slate-200/70 p-6 dark:border-slate-700/70">
         <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Team Performance Trends</h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-slate-300">
           Points scored by season{selectedTeam !== "all" ? ` for ${getTeamDisplayName(selectedTeam, memeify)}` : " for top teams"}

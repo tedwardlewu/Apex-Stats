@@ -25,7 +25,7 @@ const driverBackgroundImages: Record<string, string> = {
 };
 
 const driverBackgroundPositions: Record<string, string> = {
-  "charles leclerc": "15% 16%",
+  "charles leclerc": "15% 30%", // Move down to show more of his face
   "lance stroll": "right 22%",
   "pierre gasly": "40% 100%",
 };

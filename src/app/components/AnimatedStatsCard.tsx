@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface AnimatedStatsCardProps {
   title: string;
@@ -9,6 +9,7 @@ interface AnimatedStatsCardProps {
   color?: string;
   delay?: number;
   backgroundImage?: string;
+  backgroundImages?: string[];
   backgroundVariant?: "driver" | "team";
   backgroundAccentColor?: string;
 }
@@ -20,6 +21,7 @@ export function AnimatedStatsCard({
   color = "text-blue-600",
   delay = 0,
   backgroundImage,
+  backgroundImages,
   backgroundVariant,
   backgroundAccentColor,
 }: AnimatedStatsCardProps) {
@@ -27,9 +29,28 @@ export function AnimatedStatsCard({
   const [isHovered, setIsHovered] = useState(false);
   const numericValue = typeof value === 'number' ? value : 0;
   const isNumeric = typeof value === 'number';
-  const showImageBackdrop = Boolean(backgroundImage);
+  const [bgIndex, setBgIndex] = useState(0);
+  const [fade, setFade] = useState(true);
+  const fadeTimeout = useRef<NodeJS.Timeout | null>(null);
+  const showImageBackdrop = Boolean(backgroundImage) || (backgroundImages && backgroundImages.length > 0);
   const imageVariant = backgroundVariant ?? (title === "Leading Team" ? "team" : "driver");
-  const encodedBackgroundImage = backgroundImage ? encodeURI(backgroundImage) : "";
+  const currentBg = backgroundImages && backgroundImages.length > 0 ? backgroundImages[bgIndex % backgroundImages.length] : backgroundImage;
+  const encodedBackgroundImage = currentBg ? encodeURI(currentBg) : "";
+
+  useEffect(() => {
+    if (!backgroundImages || backgroundImages.length === 0) return;
+    const interval = setInterval(() => {
+      setFade(false);
+      fadeTimeout.current = setTimeout(() => {
+        setBgIndex((i) => (i + 1) % backgroundImages.length);
+        setFade(true);
+      }, 400); // fade out for 400ms, then switch and fade in
+    }, 3000);
+    return () => {
+      clearInterval(interval);
+      if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
+    };
+  }, [backgroundImages]);
 
   useEffect(() => {
     if (!isNumeric) return;
@@ -71,10 +92,12 @@ export function AnimatedStatsCard({
           className={`pointer-events-none absolute inset-0 ${isHovered ? "z-20" : "z-0"}`}
           style={{
             backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.34) 0%, rgba(15,23,42,0.18) 46%, rgba(15,23,42,0.02) 100%), url("${encodedBackgroundImage}")`,
-            backgroundPosition: "center 2%",
+            backgroundPosition: (backgroundImages && backgroundImages.length > 0 && encodedBackgroundImage.includes('/Race%20Backgrounds/')) ? "center 100%" : "center 2%",
             backgroundRepeat: "no-repeat",
             backgroundSize: "96% auto",
             backgroundColor: backgroundAccentColor ?? "#334155",
+            opacity: fade ? 1 : 0,
+            transition: 'opacity 400ms cubic-bezier(0.4,0,0.2,1)',
           }}
           initial={{ scale: 1.04, x: 0, y: 0 }}
           animate={isHovered ? { scale: 1.08, x: 6, y: -3 } : { scale: 1.04, x: 0, y: 0 }}

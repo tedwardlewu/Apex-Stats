@@ -6,13 +6,13 @@ import { DriverStandings } from "./components/DriverStandings";
 import { TeamStandings } from "./components/TeamStandings";
 import { LapTimeChart } from "./components/LapTimeChart";
 import { TeamPerformanceChart } from "./components/TeamPerformanceChart";
+import { GraphsSection } from "./components/GraphsSection";
 import { ConsistencyTable } from "./components/ConsistencyTable";
 import { RecentRaces } from "./components/RecentRaces";
 import { FilterBar } from "./components/FilterBar";
 import { TabNavigation } from "./components/TabNavigation";
 import { CompareSection } from "./components/CompareSection";
 import { ChampionshipSnapshot } from "./components/ChampionshipSnapshot";
-import { GraphsSection } from "./components/GraphsSection";
 import { NextRacePrediction } from "./components/NextRacePrediction";
 import { RaceResults } from "./components/RaceResults";
 import { TeamsShowcase } from "./components/TeamsShowcase";
@@ -103,7 +103,9 @@ export default function App() {
             const leaderTeamColor = teamsResponse.data.find((team) => team.name === leader?.team)?.color ?? "#334155";
             setTopDriverTeamColor(leaderTeamColor);
           }
-        } else {
+        } 
+        
+        else {
           setTopDriverImage("");
           setTopDriverTeamColor("#334155");
         }
@@ -132,14 +134,39 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,_#f8fafc_0%,_#e5e7eb_100%)] text-foreground dark:bg-[linear-gradient(180deg,_#111111_0%,_#1b1b1b_100%)]">
       <Header />
-      <main className="container mx-auto px-6 py-8 lg:py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <main className="container mx-auto px-6 py-1 lg:py-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-1 mt-0">
           <AnimatedStatsCard
             title="Total Races"
             value={stats.totalRaces}
             icon={Flag}
             color="text-red-600"
             delay={0}
+            backgroundImages={[
+              "/Race Backgrounds/Abu Dhabi.jpg",
+              "/Race Backgrounds/Australia.webp",
+              "/Race Backgrounds/Austria.jpg",
+              "/Race Backgrounds/Azerbaijan.jpg",
+              "/Race Backgrounds/Bahrain.avif",
+              "/Race Backgrounds/Belgian.avif",
+              "/Race Backgrounds/Brazil.jpg",
+              "/Race Backgrounds/British.jpg",
+              "/Race Backgrounds/Canada.jpg",
+              "/Race Backgrounds/China.webp",
+              "/Race Backgrounds/Dutch.webp",
+              "/Race Backgrounds/Hungary.jpg",
+              "/Race Backgrounds/Italy.jpg",
+              "/Race Backgrounds/Japan.webp",
+              "/Race Backgrounds/Mexico.jpg",
+              "/Race Backgrounds/Miami.avif",
+              "/Race Backgrounds/Monaco.jpg",
+              "/Race Backgrounds/Qatar.avif",
+              "/Race Backgrounds/Saudi.webp",
+              "/Race Backgrounds/Singapore.webp",
+              "/Race Backgrounds/Spain.jpg",
+              "/Race Backgrounds/US.jpg",
+              "/Race Backgrounds/Vegas.webp",
+            ]}
           />
           <AnimatedStatsCard
             title="Leading Driver"
@@ -180,7 +207,7 @@ export default function App() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <RecentRaces />
-                  <TeamPerformanceChart />
+                  <GraphsSection />
                 </div>
               </>
             ),
