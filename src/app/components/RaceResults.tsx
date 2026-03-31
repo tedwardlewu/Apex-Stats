@@ -61,16 +61,13 @@ function getClassificationLabel(entry: RaceResultEntry) {
   if (entry.positionLabel !== "NC") {
     return `P${entry.positionLabel}`;
   }
-
   if (entry.result === "DNS") {
     return "DNS";
   }
-
   return "DNF";
 }
 
 export function RaceResults() {
-    // Helper to get team color for backgrounds
     function getWinnerTeamColor(team: string) {
       if (team === "Ferrari") return "#c92c2c";
       return TEAM_COLORS[team] || "#222";
@@ -87,7 +84,6 @@ export function RaceResults() {
 
   useEffect(() => {
     let isMounted = true;
-
     async function fetchResultsContext() {
       try {
         setLoading(true);
@@ -96,11 +92,9 @@ export function RaceResults() {
           api.getDrivers({ season: selectedSeason }),
           api.getTeams({ season: selectedSeason }),
         ]);
-
         if (!isMounted) {
           return;
         }
-
         if (racesResponse.success) {
           const completedRaces = racesResponse.data.filter((race) => race.winner && race.winner !== "TBD");
           setRaces(completedRaces);
@@ -108,15 +102,12 @@ export function RaceResults() {
             if (!completedRaces.length) {
               return null;
             }
-
             if (currentRaceId && completedRaces.some((race) => race.id === currentRaceId)) {
               return currentRaceId;
             }
-
             return completedRaces[completedRaces.length - 1].id;
           });
         }
-
         if (driversResponse.success) {
           setDriverImages(
             driversResponse.data.reduce<Record<string, string>>((accumulator: Record<string, string>, driver: Driver) => {
@@ -127,7 +118,6 @@ export function RaceResults() {
             }, {}),
           );
         }
-
         if (teamsResponse.success) {
           setTeamImages(
             teamsResponse.data.reduce<Record<string, string>>((accumulator: Record<string, string>, team: Team) => {
@@ -146,9 +136,7 @@ export function RaceResults() {
         }
       }
     }
-
     fetchResultsContext();
-
     return () => {
       isMounted = false;
     };
@@ -156,22 +144,18 @@ export function RaceResults() {
 
   useEffect(() => {
     let isMounted = true;
-
     async function fetchResultsForRace() {
       if (!selectedRaceId) {
         setRace(null);
         setResults([]);
         return;
       }
-
       try {
         setLoading(true);
         const response = await api.getRaceResults({ season: selectedSeason, raceId: selectedRaceId });
-
         if (!isMounted || !response.success) {
           return;
         }
-
         setRace(response.data.race);
         setResults(response.data.results);
       } catch (error) {
@@ -182,9 +166,7 @@ export function RaceResults() {
         }
       }
     }
-
     fetchResultsForRace();
-
     return () => {
       isMounted = false;
     };
@@ -194,31 +176,21 @@ export function RaceResults() {
     () => results.find((entry) => entry.positionLabel !== "NC") ?? null,
     [results],
   );
-  // Custom winner background logic for specific races in 2026
   let winnerBackgroundImage = "";
   if (winner && race) {
-    // 2025 custom backgrounds
     if (race.season === "2025" && race.name === "Australian Grand Prix") {
-      // Use Driver Backgrounds/Lando Australia.webp
       winnerBackgroundImage = "/Driver Backgrounds/Lando Australia.webp";
     } else if (race.season === "2025" && race.name === "Chinese Grand Prix") {
-      // Use Driver Backgrounds/Oscar China.jpg
       winnerBackgroundImage = "/Driver Backgrounds/Oscar China.jpg";
     }
-    // 2026 custom backgrounds
     else if (race.season === "2026" && race.name === "Chinese Grand Prix") {
-      // Use Driver Backgrounds/Kimi.jpeg
       winnerBackgroundImage = "/Driver Backgrounds/Kimi.jpeg";
     } else if (race.season === "2026" && race.name === "Australian Grand Prix") {
-      // Use News/Russell Background.jpg
       winnerBackgroundImage = "/News/Russell Background.jpg";
     } else if (race.season === "2026" && race.name === "Japanese Grand Prix") {
-      // Use News/Kimi Japan Win.jpg
       winnerBackgroundImage = "/News/Kimi Japan Win.jpg";
     }
-    // 2025 Japan custom background (moved way down)
     else if (race.season === "2025" && race.name === "Japanese Grand Prix") {
-      // Use Driver Backgrounds/Max Japan.jpg
       winnerBackgroundImage = "/Driver Backgrounds/Max Japan.jpg";
     }
     else {
