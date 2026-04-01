@@ -1,4 +1,5 @@
 # Apex Stats
+### Live Demo on Render: https://apex-stats.onrender.com/
 
 Apex Stats is a Formula 1 analytics dashboard built with React, TypeScript, and Vite.
 
@@ -34,9 +35,6 @@ It includes standings, race analytics, comparison views, prediction widgets, and
 npm install
 npm run dev
 ```
-
-Open the local URL printed by Vite (typically `http://localhost:5173`).
-
 ## Scripts
 
 - `npm run dev` - start the local development server
@@ -79,19 +77,6 @@ supabase/
   functions/server/
 ```
 
-## Deployment
-
-`render.yaml` is configured for static hosting on Render:
-
-- Build command: `npm install && npm run build`
-- Publish path: `./dist`
-- Rewrite rule: `/* -> /index.html` (SPA routing support)
-
-## Roadmap Notes
-
-- SQL files in `database/` define schema, views, procedures, triggers, and seed data.
-- News content is currently maintained in `src/app/data/newsData.ts`.
-- Package name in `package.json` (`@figma/my-make-file`) appears to be a placeholder and can be renamed when publishing or standardizing project metadata.
 
 
 
