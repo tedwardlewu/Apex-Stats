@@ -13,6 +13,9 @@ import { FilterBar } from "./components/FilterBar";
 import { TabNavigation } from "./components/TabNavigation";
 import { CompareSection } from "./components/CompareSection";
 import { ChampionshipSnapshot } from "./components/ChampionshipSnapshot";
+import { AnalyticsDriversSection } from "./components/AnalyticsDriversSection";
+import React from "react";
+import { DriverDetailAnalysis } from "./components/DriverDetailAnalysis";
 import { NextRacePrediction } from "./components/NextRacePrediction";
 import { RaceResults } from "./components/RaceResults";
 import { TeamsShowcase } from "./components/TeamsShowcase";
@@ -229,11 +232,8 @@ export default function App() {
             overview: (
               <>
                 <ChampionshipSnapshot />
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <RecentRaces />
-                  <GraphsSection />
-                </div>
+                <RecentRaces />
+                <GraphsSection />
               </>
             ),
             standings: (
@@ -257,6 +257,9 @@ export default function App() {
                 </div>
                 <div className="mt-8">
                   <TeammateIndex />
+                </div>
+                <div className="mt-8">
+                  <AnalyticsDriversSection />
                 </div>
               </>
             ),

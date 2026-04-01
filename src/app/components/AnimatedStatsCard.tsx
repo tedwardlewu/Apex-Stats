@@ -9,6 +9,8 @@ function Skeleton({ className = "" }) {
   );
 }
 
+export default AnimatedStatsCard;
+
 interface AnimatedStatsCardProps {
   title: string;
   value: string | number;
@@ -17,10 +19,7 @@ interface AnimatedStatsCardProps {
   delay?: number;
   backgroundImage?: string;
   backgroundImages?: string[];
-  /**
-   * Optional: Provide location info for each background image (same order as backgroundImages)
-   * Example: [ { circuit: "Miami International Autodrome", country: "USA" }, ... ]
-   */
+  
   backgroundImageLocations?: { circuit: string; country: string }[];
   backgroundVariant?: "driver" | "team";
   backgroundAccentColor?: string;
@@ -52,7 +51,7 @@ export function AnimatedStatsCard({
     ? backgroundImageLocations[bgIndex % backgroundImageLocations.length]
     : null;
 
-  // Fix: Always set loaded if backgroundImages or backgroundImage is present
+  
   useEffect(() => {
     if (
       (backgroundImages && backgroundImages.length > 0) ||
@@ -67,16 +66,16 @@ export function AnimatedStatsCard({
 
   useEffect(() => {
     if (!backgroundImages || backgroundImages.length === 0) return;
-    // Randomize between 5 and 7 seconds for a more natural feel
+    
     let intervalId: NodeJS.Timeout;
     function startInterval() {
-      const duration = 5000 + Math.floor(Math.random() * 2000); // 5000-7000ms
+      const duration = 5000 + Math.floor(Math.random() * 2000); 
       intervalId = setTimeout(() => {
         setFade(false);
         fadeTimeout.current = setTimeout(() => {
           setBgIndex((i) => (i + 1) % backgroundImages.length);
           setFade(true);
-          startInterval(); // restart interval after fade
+          startInterval(); 
         }, 400);
       }, duration);
     }
@@ -149,7 +148,7 @@ export function AnimatedStatsCard({
         </>
       ) : null}
 
-      {/* Location Pin Overlay: always on top of rotating image */}
+      
       {showImageBackdrop && imageVariant === "driver" && currentLocation && (
         <div
           className="absolute left-0 right-0 flex items-center gap-1 bottom-0 bg-black/60 rounded-b-2xl px-4 py-1 z-40"
