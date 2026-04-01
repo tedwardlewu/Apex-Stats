@@ -29,10 +29,9 @@ export function TabNavigation({ children }: TabNavigationProps) {
   return (
     <Tabs defaultValue="overview" className="w-full">
       <div>
-        <div className="flex items-center gap-2 mb-2 px-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-300">Navigation</span>
-          <span className="text-xs text-slate-400 dark:text-slate-500 ml-2">(Use the bar below to switch sections)</span>
+        <div className="flex flex-col gap-1 mb-2 px-2">
+          <span className="text-lg font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-100">Navigation</span>
+          <span className="text-base font-bold text-slate-600 dark:text-slate-300">(Use the bar below to switch sections)</span>
         </div>
         <TabsList className="mb-8 grid w-full grid-cols-2 gap-2 rounded-2xl border border-slate-200/80 bg-white/85 p-2 backdrop-blur dark:border-slate-700 dark:bg-slate-900/80 md:grid-cols-4 xl:grid-cols-8">
           {tabs.map(({ key, label, icon: Icon }) => (
