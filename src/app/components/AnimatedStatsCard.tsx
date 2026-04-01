@@ -64,24 +64,26 @@ export function AnimatedStatsCard({
   const currentBg = backgroundImages && backgroundImages.length > 0 ? backgroundImages[bgIndex % backgroundImages.length] : backgroundImage;
   const encodedBackgroundImage = currentBg ? encodeURI(currentBg) : "";
 
+  // --- Timer logic for image rotation, with reset on click ---
+  const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
+  function startInterval() {
+    if (!backgroundImages || backgroundImages.length === 0) return;
+    if (intervalIdRef.current) clearTimeout(intervalIdRef.current);
+    const duration = 2500 + Math.floor(Math.random() * 800);
+    intervalIdRef.current = setTimeout(() => {
+      setFade(false);
+      fadeTimeout.current = setTimeout(() => {
+        setBgIndex((i) => (i + 1) % backgroundImages.length);
+        setFade(true);
+        startInterval();
+      }, 400);
+    }, duration);
+  }
   useEffect(() => {
     if (!backgroundImages || backgroundImages.length === 0) return;
-    
-    let intervalId: NodeJS.Timeout;
-    function startInterval() {
-      const duration = 5000 + Math.floor(Math.random() * 2000); 
-      intervalId = setTimeout(() => {
-        setFade(false);
-        fadeTimeout.current = setTimeout(() => {
-          setBgIndex((i) => (i + 1) % backgroundImages.length);
-          setFade(true);
-          startInterval(); 
-        }, 400);
-      }, duration);
-    }
     startInterval();
     return () => {
-      clearTimeout(intervalId);
+      if (intervalIdRef.current) clearTimeout(intervalIdRef.current);
       if (fadeTimeout.current) clearTimeout(fadeTimeout.current);
     };
   }, [backgroundImages]);
@@ -107,6 +109,24 @@ export function AnimatedStatsCard({
     return () => clearInterval(timer);
   }, [numericValue, isNumeric]);
 
+  // Manual navigation for rotating images
+  const handlePrev = () => {
+    setFade(false);
+    setTimeout(() => {
+      setBgIndex((i) => (i - 1 + backgroundImages.length) % backgroundImages.length);
+      setFade(true);
+      startInterval();
+    }, 200);
+  };
+  const handleNext = () => {
+    setFade(false);
+    setTimeout(() => {
+      setBgIndex((i) => (i + 1) % backgroundImages.length);
+      setFade(true);
+      startInterval();
+    }, 200);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -130,8 +150,9 @@ export function AnimatedStatsCard({
       )}
       {showImageBackdrop && imageVariant === "driver" ? (
         <>
+          {/* Only the image is clickable for manual navigation */}
           <motion.div
-            className={`pointer-events-none absolute inset-0 z-0`}
+            className={`absolute inset-0 z-0 cursor-pointer`}
             style={{
               backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.34) 0%, rgba(15,23,42,0.18) 46%, rgba(15,23,42,0.02) 100%), url("${encodedBackgroundImage}")`,
               backgroundPosition: (backgroundImages && backgroundImages.length > 0 && encodedBackgroundImage.includes('/Race%20Backgrounds/')) ? "center 100%" : "center 2%",
@@ -144,6 +165,8 @@ export function AnimatedStatsCard({
             initial={{ scale: 1.04, x: 0, y: 0 }}
             animate={isHovered ? { scale: 1.08, x: 6, y: -3 } : { scale: 1.04, x: 0, y: 0 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
+            onClick={handleNext}
+            title="Click to cycle image"
           />
         </>
       ) : null}
@@ -154,9 +177,8 @@ export function AnimatedStatsCard({
           className="absolute left-0 right-0 flex items-center gap-1 bottom-0 bg-black/60 rounded-b-2xl px-4 py-1 z-40"
           style={{ pointerEvents: "none", minWidth: 0 }}
         >
-          <MapPin size={16} className="text-gray-300 shrink-0" />
           <span className="text-xs text-white font-semibold truncate">
-            {currentLocation.circuit} — {currentLocation.country}
+            {currentLocation.circuit} — {currentLocation.country.replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu, "")}
           </span>
         </div>
       )}
@@ -211,9 +233,7 @@ export function AnimatedStatsCard({
             )}
           </div>
         </div>
-        <div className={`relative z-30 rounded-xl border p-3 ${showImageBackdrop ? "border-white/40 bg-white/20 backdrop-blur-[2px]" : "border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800"} ${color}`}>
-          {isLoaded ? <Icon className="size-6" /> : <Skeleton className="w-8 h-8 rounded-xl" />}
-        </div>
+        {/* Removed icon from top container */}
       </div>
     </motion.div>
   );

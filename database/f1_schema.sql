@@ -60,28 +60,28 @@ CREATE TABLE driver_consistency (
 );
 
 INSERT INTO drivers (id, name, number, team, nationality, points, wins, podiums, championships) VALUES
-  (1,  'Max Verstappen', 3, 'Red Bull Racing', 'Netherlands', 8, 0, 0, 3),
+  (1,  'Max Verstappen', 3, 'Red Bull Racing', 'Netherlands', 12, 0, 0, 3),
   (2,  'Sergio Perez', 11, 'Red Bull Racing', 'Mexico', 0, 0, 0, 0),
-  (3,  'Lewis Hamilton', 44, 'Ferrari', 'Great Britain', 33, 0, 0, 7),
-  (4,  'George Russell', 63, 'Mercedes', 'Great Britain', 51, 1, 0, 0),
-  (5,  'Charles Leclerc', 16, 'Ferrari', 'Monaco', 34, 0, 1, 0),
+  (3,  'Lewis Hamilton', 44, 'Ferrari', 'Great Britain', 41, 0, 0, 7),
+  (4,  'George Russell', 63, 'Mercedes', 'Great Britain', 63, 1, 0, 0),
+  (5,  'Charles Leclerc', 16, 'Ferrari', 'Monaco', 49, 0, 1, 0),
   (6,  'Carlos Sainz', 55, 'Williams', 'Spain', 2, 0, 0, 0),
-  (7,  'Lando Norris', 1, 'McLaren', 'Great Britain', 15, 0, 0, 0),
-  (8,  'Oscar Piastri', 81, 'McLaren', 'Australia', 3, 0, 0, 0),
+  (7,  'Lando Norris', 1, 'McLaren', 'Great Britain', 25, 0, 0, 0),
+  (8,  'Oscar Piastri', 81, 'McLaren', 'Australia', 21, 0, 0, 0),
   (9,  'Valtteri Bottas', 77, 'Cadillac', 'Finland', 0, 0, 0, 0),
   (10, 'Fernando Alonso', 14, 'Alpine', 'Spain', 0, 0, 0, 2),
   (11, 'Lance Stroll', 18, 'Aston Martin', 'Canada', 0, 0, 0, 0),
   (12, 'Oliver Bearman', 50, 'Haas', 'Great Britain', 17, 0, 0, 0),
-  (13, 'Pierre Gasly', 10, 'Aline', 'France', 9, 0, 0, 0),
+  (13, 'Pierre Gasly', 10, 'Aline', 'France', 15, 0, 0, 0),
   (14, 'Franco Colapinto', 16, 'Alpine', 'Argentina', 1, 0, 0, 0),
   (15, 'Alex Albon', 23, 'Williams', 'Thailand', 0, 0, 0, 0),
   (16, 'Isack Hadjar', 20, 'Red Bull Racing', 'France', 4, 0, 0, 0),
-  (17, 'Liam Lawson', 40, 'Racing Bulls', 'New Zealand', 8, 0, 0, 0),
+  (17, 'Liam Lawson', 40, 'Racing Bulls', 'New Zealand', 10, 0, 0, 0),
   (18, 'Nico Hulkenberg', 27, 'Audi', 'Germany', 0, 0, 0, 0),
   (19, 'Arvid Lindblad', 46, 'Racing Bulls', 'Great Britain', 4, 0, 0, 0),
-  (20, 'Esteban Ocon', 31, 'Haas', 'France', 0, 0, 0, 0),
+  (20, 'Esteban Ocon', 31, 'Haas', 'France', 1, 0, 0, 0),
   (21, 'Gabriel Bortoleto', 21, 'Audi', 'Brazil', 2, 0, 0, 0),
-  (22, 'Kimi Antonelli', 7, 'Mercedes', 'Italy', 47, 0, 1, 0);
+  (22, 'Kimi Antonelli', 7, 'Mercedes', 'Italy', 72, 0, 1, 0);
 
 INSERT INTO teams (id, name, color, points, wins, podiums, championships) VALUES
   (1, 'Mercedes','#06B6D4', 98, 1, 2, 8),

@@ -26,6 +26,7 @@ import { useFilters } from "./contexts/FilterContext";
 import { useMemeify } from "./contexts/MemeifyContext";
 import * as api from "./services/api";
 import { getDriverImage } from "./utils/driverImages";
+import { PointsProgressionGraph } from "./components/DriverPointsProgression";
 
 const initialStats = {
   totalRaces: 0,
@@ -232,8 +233,17 @@ export default function App() {
             overview: (
               <>
                 <ChampionshipSnapshot />
-                <RecentRaces />
-                <GraphsSection />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                  <div>
+                    <RecentRaces />
+                  </div>
+                  <div>
+                    <GraphsSection />
+                    <div className="mt-6">
+                      <PointsProgressionGraph />
+                    </div>
+                  </div>
+                </div>
               </>
             ),
             standings: (
@@ -254,6 +264,9 @@ export default function App() {
                 <ConsistencyTable />
                 <div className="mt-8">
                   <GraphsSection />
+                </div>
+                <div className="mt-8">
+                  <PointsProgressionGraph />
                 </div>
                 <div className="mt-8">
                   <TeammateIndex />

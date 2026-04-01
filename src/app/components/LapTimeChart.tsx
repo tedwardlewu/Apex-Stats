@@ -44,7 +44,7 @@ export function LapTimeChart() {
   const [races, setRaces] = useState<Race[]>([]);
   const [selectedRaceId, setSelectedRaceId] = useState<number | null>(null);
   const [lapTimeData, setLapTimeData] = useState<DriverBestLap[]>([]);
-  const [selectedView, setSelectedView] = useState<TopView>("all");
+  const [selectedView, setSelectedView] = useState<TopView>("top10");
   const [driverTeams, setDriverTeams] = useState<Record<string, string>>({});
   const [teamColors, setTeamColors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -174,7 +174,7 @@ export function LapTimeChart() {
             <select
               value={selectedRaceId ?? ""}
               onChange={(event) => setSelectedRaceId(Number(event.target.value))}
-              className="w-full rounded-lg border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100"
+              className="w-full rounded-lg border border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-700 bg-white dark:bg-gray-900 px-3 py-2 text-base text-gray-900 dark:text-gray-100 shadow-sm transition"
             >
               {races.map((race) => (
                 <option key={race.id} value={race.id}>
