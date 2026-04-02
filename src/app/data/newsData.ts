@@ -10,6 +10,13 @@ export interface NewsItem {
 
 export const newsItems: NewsItem[] = [
   {
+    id: "stroll-gt3-debut",
+    fileName: "Stroll GT3.jpg",
+    fileNames: ["Stroll GT3 1.webp", "Stroll GT3.jpg"],
+    title: " Lance Stroll makes GT3 debut with Aston Martin",
+    description: "Aston Martin's Lance Stroll to make his first GT3 debut at Paul Ricard for the six-hour night event behind the wheel of one of seven Aston Martin Vantage GT3 cars in the field."
+  },
+  {
     id: "japan-kimi-2026",
     fileName: "Kimi Japan Win.jpg",
     fileNames: ["Kimi Japan Win.jpg", "Kimi Wins.png"],

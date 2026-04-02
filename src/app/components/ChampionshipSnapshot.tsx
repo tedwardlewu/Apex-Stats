@@ -188,11 +188,12 @@ export function ChampionshipSnapshot({ onViewDetails }: { onViewDetails: () => v
                     <div
                       className="absolute inset-0"
                       style={{
-                        backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.82) 0%, rgba(15,23,42,0.55) 48%, rgba(15,23,42,0.08) 100%), url("${bgImage}")`,
+                        backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.88) 0%, rgba(15,23,42,0.68) 48%, rgba(15,23,42,0.24) 100%), url("${bgImage}")`,
                         backgroundPosition: bgPos,
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
                         backgroundColor: accentColor,
+                        filter: "brightness(0.78) saturate(0.92)",
                       }}
                     />
 

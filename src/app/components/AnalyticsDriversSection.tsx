@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { DriverCard } from "./DriverCard";
 import { DriverDetailAnalysis } from "./DriverDetailAnalysis";
+import { DriverQualitiesGrid } from "./DriverQualitiesGrid";
 import * as api from "../services/api";
 import { useFilters } from "../contexts/FilterContext";
 
@@ -27,13 +28,14 @@ export function AnalyticsDriversSection() {
   useEffect(() => {
     async function fetchDrivers() {
       setLoading(true);
-      const response = await api.getDrivers({
+      const driversResponse = await api.getDrivers({
         search: searchQuery,
         team: selectedTeam,
         season: selectedSeason,
       });
-      if (response.success) {
-        setDrivers(response.data);
+
+      if (driversResponse.success) {
+        setDrivers(driversResponse.data);
       }
       setLoading(false);
     }
@@ -61,6 +63,9 @@ export function AnalyticsDriversSection() {
         <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
           Click a driver to view current and past season performance and analysis.
         </p>
+        <div className="mb-5">
+          <DriverQualitiesGrid />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {sortedDrivers.map((driver, index) => (
             <DriverCard

@@ -14,6 +14,7 @@ import { TabNavigation } from "./components/TabNavigation";
 import { CompareSection } from "./components/CompareSection";
 import { ChampionshipSnapshot } from "./components/ChampionshipSnapshot";
 import { AnalyticsDriversSection } from "./components/AnalyticsDriversSection";
+import { DriverQualitiesGrid } from "./components/DriverQualitiesGrid";
 import React from "react";
 import { DriverDetailAnalysis } from "./components/DriverDetailAnalysis";
 import { NextRacePrediction } from "./components/NextRacePrediction";
@@ -135,6 +136,10 @@ export default function App() {
     document.getElementById("teams-showcase-section")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToAnalyticsSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,_#f8fafc_0%,_#e5e7eb_100%)] text-foreground dark:bg-[linear-gradient(180deg,_#111111_0%,_#1b1b1b_100%)]">
       <Header />
@@ -232,6 +237,11 @@ export default function App() {
               <>
                 <FilterBar />
                 <ChampionshipSnapshot onViewDetails={() => setActiveTab("standings")} />
+                <DriverQualitiesGrid
+                  title="Driver qualities"
+                  description="Quick read on the strongest, weakest, most consistent, and most reliable performers in the current filtered view."
+                  compact
+                />
                 <div className="mb-8 mt-4 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
                   <RecentRaces
                     onViewResults={() => setActiveTab("results")}
@@ -247,6 +257,7 @@ export default function App() {
             ),
             standings: (
               <>
+                <FilterBar />
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                   <DriverStandings />
                   <TeamStandings onViewCars={scrollToTeamsShowcase} />
@@ -256,29 +267,108 @@ export default function App() {
             ),
             analytics: (
               <>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                  <LapTimeChart />
-                  <TeamPerformanceChart />
+                <div id="analytics-top" className="scroll-mt-24" />
+                <div className="sticky top-3 z-20 mb-6 rounded-[16px] border border-slate-200/85 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(241,245,249,0.94))] px-4 py-4 shadow-[0_16px_40px_rgba(15,23,42,0.12)] backdrop-blur dark:border-slate-700/75 dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.97),rgba(15,23,42,0.93))]">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Analytics Navigation</p>
+                      <p className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-100">Jump between analysis blocks</p>
+                    </div>
+                    <div className="hidden items-center gap-2 sm:flex">
+                      <div className="rounded-[12px] border border-slate-200/80 bg-white/85 px-3 py-1.5 text-xs font-semibold text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-300">
+                        Quick links
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => scrollToAnalyticsSection("analytics-top")}
+                        className="rounded-full border border-slate-200/80 bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:-translate-y-[1px] hover:bg-slate-800 dark:border-slate-600 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+                      >
+                        Back to top
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => scrollToAnalyticsSection("analytics-pace")}
+                      className="rounded-full border border-sky-200/90 bg-sky-50/95 px-4 py-2 text-sm font-semibold text-sky-800 shadow-sm transition hover:-translate-y-[1px] hover:border-sky-300 hover:bg-sky-100 dark:border-sky-900/70 dark:bg-sky-950/30 dark:text-sky-200 dark:hover:bg-sky-950/45"
+                    >
+                      Pace
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollToAnalyticsSection("analytics-team-performance")}
+                      className="rounded-full border border-emerald-200/90 bg-emerald-50/95 px-4 py-2 text-sm font-semibold text-emerald-800 shadow-sm transition hover:-translate-y-[1px] hover:border-emerald-300 hover:bg-emerald-100 dark:border-emerald-900/70 dark:bg-emerald-950/30 dark:text-emerald-200 dark:hover:bg-emerald-950/45"
+                    >
+                      Team Form
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollToAnalyticsSection("analytics-graphs")}
+                      className="rounded-full border border-violet-200/90 bg-violet-50/95 px-4 py-2 text-sm font-semibold text-violet-800 shadow-sm transition hover:-translate-y-[1px] hover:border-violet-300 hover:bg-violet-100 dark:border-violet-900/70 dark:bg-violet-950/30 dark:text-violet-200 dark:hover:bg-violet-950/45"
+                    >
+                      Graphs
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollToAnalyticsSection("analytics-consistency")}
+                      className="rounded-full border border-amber-200/90 bg-amber-50/95 px-4 py-2 text-sm font-semibold text-amber-800 shadow-sm transition hover:-translate-y-[1px] hover:border-amber-300 hover:bg-amber-100 dark:border-amber-900/70 dark:bg-amber-950/30 dark:text-amber-200 dark:hover:bg-amber-950/45"
+                    >
+                      Consistency
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollToAnalyticsSection("analytics-teammates")}
+                      className="rounded-full border border-rose-200/90 bg-rose-50/95 px-4 py-2 text-sm font-semibold text-rose-800 shadow-sm transition hover:-translate-y-[1px] hover:border-rose-300 hover:bg-rose-100 dark:border-rose-900/70 dark:bg-rose-950/30 dark:text-rose-200 dark:hover:bg-rose-950/45"
+                    >
+                      Teammates
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollToAnalyticsSection("analytics-driver-analysis")}
+                      className="rounded-full border border-cyan-200/90 bg-cyan-50/95 px-4 py-2 text-sm font-semibold text-cyan-800 shadow-sm transition hover:-translate-y-[1px] hover:border-cyan-300 hover:bg-cyan-100 dark:border-cyan-900/70 dark:bg-cyan-950/30 dark:text-cyan-200 dark:hover:bg-cyan-950/45"
+                    >
+                      Driver Analysis
+                    </button>
+                  </div>
                 </div>
-                <div className="mt-8">
+                <div className="grid grid-cols-1 gap-6 mb-8 lg:grid-cols-2">
+                  <div id="analytics-pace" className="scroll-mt-24">
+                    <LapTimeChart />
+                  </div>
+                  <div id="analytics-team-performance" className="scroll-mt-24">
+                    <TeamPerformanceChart />
+                  </div>
+                </div>
+                <div id="analytics-graphs" className="mt-8 scroll-mt-24">
                   <GraphsSection />
                 </div>
-                <div className="mt-8">
+                <div id="analytics-consistency" className="mt-8 scroll-mt-24">
                   <ConsistencyTable />
                 </div>
-                <div className="mt-8">
+                <div id="analytics-teammates" className="mt-8 scroll-mt-24">
                   <TeammateIndex />
                 </div>
-                <div className="mt-8">
+                <div id="analytics-driver-analysis" className="mt-8 scroll-mt-24">
                   <AnalyticsDriversSection />
                 </div>
               </>
             ),
-            results: <RaceResults />,
+            results: (
+              <>
+                <FilterBar />
+                <RaceResults />
+              </>
+            ),
             predictions: <NextRacePrediction />,
             calendar: <RacingCalendar />,
             news: <NewsSection />,
-            compare: <CompareSection />
+            compare: (
+              <>
+                <FilterBar />
+                <CompareSection />
+              </>
+            )
           }}
         </TabNavigation>
       </main>

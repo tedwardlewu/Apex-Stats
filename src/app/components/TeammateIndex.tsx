@@ -3,7 +3,7 @@ import { Users2 } from "lucide-react";
 import * as api from "../services/api";
 import { useFilters } from "../contexts/FilterContext";
 import { useMemeify } from "../contexts/MemeifyContext";
-import { getDriverDisplayName, getDriverImage } from "../utils/driverImages";
+import { getDriverDisplayName, getDriverImage, getDriverImageStyle } from "../utils/driverImages";
 import { getTeamDisplayName, getTeamImage } from "../utils/teamImages";
 
 interface Driver {
@@ -87,6 +87,22 @@ function matchesSelectedTeam(teamName: string, selectedTeam: string) {
   }
 
   return (teamAliases[selectedTeam] ?? [selectedTeam]).includes(teamName);
+}
+
+function InsightDriver({ driver, memeify }: { driver: Driver; memeify: boolean }) {
+  const displayName = getDriverDisplayName(driver.name, memeify);
+
+  return (
+    <div className="mt-1 flex items-center gap-2">
+      <img
+        src={getDriverImage(driver.name, driver.image, memeify)}
+        alt={displayName}
+        className="h-5 w-5 shrink-0 rounded-full border border-slate-200 object-cover dark:border-slate-700"
+        style={getDriverImageStyle(driver.name, memeify)}
+      />
+      <p className="truncate text-[11px] font-semibold text-slate-900 dark:text-slate-100">{displayName}</p>
+    </div>
+  );
 }
 
 export function TeammateIndex() {
@@ -226,24 +242,28 @@ export function TeammateIndex() {
                 <div className="rounded-md border border-slate-200 bg-slate-50 p-2.5 dark:border-slate-700 dark:bg-slate-800/60">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Closest Battle</p>
                   <p className="mt-1 truncate text-xs font-semibold text-slate-900 dark:text-slate-100">{getTeamDisplayName(insights.closestBattle.team, memeify)}</p>
+                  <InsightDriver driver={insights.closestBattle.leader} memeify={memeify} />
                   <p className="text-[11px] text-slate-600 dark:text-slate-300">{insights.closestBattle.pointsGap} pts gap</p>
                 </div>
 
                 <div className="rounded-md border border-slate-200 bg-slate-50 p-2.5 dark:border-slate-700 dark:bg-slate-800/60">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Biggest Gap</p>
                   <p className="mt-1 truncate text-xs font-semibold text-slate-900 dark:text-slate-100">{getTeamDisplayName(insights.biggestGap.team, memeify)}</p>
+                  <InsightDriver driver={insights.biggestGap.teammate} memeify={memeify} />
                   <p className="text-[11px] text-slate-600 dark:text-slate-300">{insights.biggestGap.pointsGap} pts gap</p>
                 </div>
 
                 <div className="rounded-md border border-slate-200 bg-slate-50 p-2.5 dark:border-slate-700 dark:bg-slate-800/60">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Strongest Duo</p>
                   <p className="mt-1 truncate text-xs font-semibold text-slate-900 dark:text-slate-100">{getTeamDisplayName(insights.strongestDuo.team, memeify)}</p>
+                  <InsightDriver driver={insights.strongestDuo.leader} memeify={memeify} />
                   <p className="text-[11px] text-slate-600 dark:text-slate-300">{insights.strongestDuo.combinedPoints} combined pts</p>
                 </div>
 
                 <div className="rounded-md border border-slate-200 bg-slate-50 p-2.5 dark:border-slate-700 dark:bg-slate-800/60">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Most Balanced</p>
                   <p className="mt-1 truncate text-xs font-semibold text-slate-900 dark:text-slate-100">{getTeamDisplayName(insights.mostBalanced.team, memeify)}</p>
+                  <InsightDriver driver={insights.mostBalanced.leader} memeify={memeify} />
                   <p className="text-[11px] text-slate-600 dark:text-slate-300">{insights.mostBalanced.leaderSharePct}-{insights.mostBalanced.teammateSharePct} split</p>
                 </div>
               </div>
