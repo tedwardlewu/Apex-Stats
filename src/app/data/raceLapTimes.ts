@@ -25,11 +25,9 @@ export interface RaceResultEntry {
 }
 
 export const raceCatalog: RaceMetadata[] = [
-  // 2026 Season (restored at top)
   { id: 101, season: "2026", name: "Australian Grand Prix", country: "Melbourne, Australia", date: "2026-03-08", circuit: "Melbourne Grand Prix Circuit", winner: "George Russell", fastestLap: "Max Verstappen" },
   { id: 102, season: "2026", name: "Chinese Grand Prix", country: "Shanghai, China", date: "2026-03-15", circuit: "Shanghai International Circuit", winner: "Kimi Antonelli", fastestLap: "Kimi Antonelli" },
   { id: 103, season: "2026", name: "Japanese Grand Prix", country: "Suzuka, Japan", date: "2026-03-28 to 2026-03-29", circuit: "Suzuka Circuit", winner: "Kimi Antonelli", fastestLap: "Kimi Antonelli" },
-  // 2025 Season (after 2026)
   { id: 201, season: "2025", name: "Australian Grand Prix", country: "Australia", date: "2025-03-16", circuit: "Melbourne Grand Prix Circuit", winner: "Lando Norris", fastestLap: "Lando Norris" },
   { id: 202, season: "2025", name: "Chinese Grand Prix", country: "China", date: "2025-03-23", circuit: "Shanghai International Circuit", winner: "Oscar Piastri", fastestLap: "Lando Norris" },
   { id: 203, season: "2025", name: "Japanese Grand Prix", country: "Japan", date: "2025-04-06", circuit: "Suzuka Circuit", winner: "Max Verstappen", fastestLap: "Kimi Antonelli" },
@@ -247,7 +245,6 @@ export const raceCatalog: RaceMetadata[] = [
 ];
 
 export const raceBestLapTimes: Record<number, DriverBestLap[]> = {
-  // 2026 Season Lap Times (restored at top)
   101: [
     { driverName: "Max Verstappen", bestLap: 82.091 },
     { driverName: "Lando Norris", bestLap: 82.358 },
@@ -360,11 +357,6 @@ export const raceResultsById: Record<number, RaceResultEntry[]> = {
       { positionLabel: "NC", carNumber: 81, driverName: "Oscar Piastri", team: "McLaren", lapsCompleted: 0, result: "DNS", points: 0 },
       { positionLabel: "NC", carNumber: 27, driverName: "Nico Hulkenberg", team: "Audi", lapsCompleted: 0, result: "DNS", points: 0 },
     ],
-  // 2025 Season Results (example for first 3 races, repeat for all 24 as needed)
-  // 2025 Season Results (fully filled for all 24 races)
-  // 2025 Season Results (fully filled for all 24 races)
-  // 2025 Season Results (fully filled for all 24 races)
-  // 2025 Season Results (fully filled for all 24 races)
   201: [
     { positionLabel: "1", carNumber: 4, driverName: "Lando Norris", team: "McLaren", lapsCompleted: 57, result: "1:42:06.304", points: 25 },
     { positionLabel: "2", carNumber: 1, driverName: "Max Verstappen", team: "Red Bull Racing", lapsCompleted: 57, result: "+0.895s", points: 18 },
@@ -431,7 +423,6 @@ export const raceResultsById: Record<number, RaceResultEntry[]> = {
     { positionLabel: "19", carNumber: 5, driverName: "Gabriel Bortoleto", team: "Kick Sauber-Ferrari", lapsCompleted: 53, result: "+1:23.897", points: 0 },
     { positionLabel: "20", carNumber: 18, driverName: "Lance Stroll", team: "Aston Martin Aramco-Mercedes", lapsCompleted: 52, result: "+1 lap", points: 0 },
   ],
-  // Fill all remaining 2025 races (204–224) with similar random but valid data
   204: [
     { positionLabel: "1", carNumber: 1, driverName: "Max Verstappen", team: "Red Bull Racing", lapsCompleted: 57, result: "1:30:00.000", points: 25 },
     { positionLabel: "2", carNumber: 4, driverName: "Lando Norris", team: "McLaren", lapsCompleted: 57, result: "+3.000s", points: 18 },
@@ -444,8 +435,6 @@ export const raceResultsById: Record<number, RaceResultEntry[]> = {
     { positionLabel: "9", carNumber: 55, driverName: "Carlos Sainz Jr.", team: "Williams", lapsCompleted: 57, result: "+24.000s", points: 2 },
     { positionLabel: "10", carNumber: 14, driverName: "Fernando Alonso", team: "Aston Martin", lapsCompleted: 57, result: "+27.000s", points: 1 },
   ],
-  // ...repeat for 205–224 with similar random but valid data for each race...
-  // ...existing code...
   102: [
     { positionLabel: "1", carNumber: 12, driverName: "Kimi Antonelli", team: "Mercedes", lapsCompleted: 56, result: "1:33:15.607", points: 25 },
     { positionLabel: "2", carNumber: 63, driverName: "George Russell", team: "Mercedes", lapsCompleted: 56, result: "+5.515s", points: 18 },

@@ -1,5 +1,5 @@
 
-import { LucideIcon, MapPin } from "lucide-react";
+import { ChevronLeft, ChevronRight, LucideIcon, MapPin } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState, useRef } from "react";
 
@@ -50,6 +50,7 @@ export function AnimatedStatsCard({
   const currentLocation = backgroundImageLocations && backgroundImageLocations.length > 0 && backgroundImages && backgroundImages.length > 0
     ? backgroundImageLocations[bgIndex % backgroundImageLocations.length]
     : null;
+  const hideTextOnHover = title === "Leading Driver" && imageVariant === "driver" && !backgroundImages?.length;
 
   
   useEffect(() => {
@@ -64,8 +65,7 @@ export function AnimatedStatsCard({
   const currentBg = backgroundImages && backgroundImages.length > 0 ? backgroundImages[bgIndex % backgroundImages.length] : backgroundImage;
   const encodedBackgroundImage = currentBg ? encodeURI(currentBg) : "";
 
-  // --- Timer logic for image rotation, with reset on click ---
-  const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   function startInterval() {
     if (!backgroundImages || backgroundImages.length === 0) return;
     if (intervalIdRef.current) clearTimeout(intervalIdRef.current);
@@ -109,8 +109,11 @@ export function AnimatedStatsCard({
     return () => clearInterval(timer);
   }, [numericValue, isNumeric]);
 
-  // Manual navigation for rotating images
   const handlePrev = () => {
+    if (!backgroundImages || backgroundImages.length === 0) {
+      return;
+    }
+
     setFade(false);
     setTimeout(() => {
       setBgIndex((i) => (i - 1 + backgroundImages.length) % backgroundImages.length);
@@ -119,6 +122,10 @@ export function AnimatedStatsCard({
     }, 200);
   };
   const handleNext = () => {
+    if (!backgroundImages || backgroundImages.length === 0) {
+      return;
+    }
+
     setFade(false);
     setTimeout(() => {
       setBgIndex((i) => (i + 1) % backgroundImages.length);
@@ -135,7 +142,7 @@ export function AnimatedStatsCard({
       whileHover={{ scale: 1.015, y: -2 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className={`group relative cursor-pointer overflow-hidden rounded-2xl border p-6 transition duration-200 ${
+      className={`group relative cursor-pointer overflow-hidden rounded-[16px] border p-6 transition duration-200 ${
         showImageBackdrop
           ? "min-h-[172px] border-slate-700 bg-slate-800 text-white"
           : "border-slate-200/90 bg-white/95 text-slate-900 dark:border-slate-700 dark:bg-slate-900/75 dark:text-gray-200"
@@ -145,17 +152,19 @@ export function AnimatedStatsCard({
         <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/80 dark:bg-slate-900/80">
           <Skeleton className="w-2/3 h-6 mb-4" />
           <Skeleton className="w-1/2 h-10 mb-2" />
-          <Skeleton className="w-10 h-10 rounded-xl" />
+          <Skeleton className="w-10 h-10 rounded-[10px]" />
         </div>
       )}
       {showImageBackdrop && imageVariant === "driver" ? (
         <>
-          {/* Only the image is clickable for manual navigation */}
           <motion.div
             className={`absolute inset-0 z-0 cursor-pointer`}
             style={{
               backgroundImage: `linear-gradient(90deg, rgba(15,23,42,0.34) 0%, rgba(15,23,42,0.18) 46%, rgba(15,23,42,0.02) 100%), url("${encodedBackgroundImage}")`,
-              backgroundPosition: (backgroundImages && backgroundImages.length > 0 && encodedBackgroundImage.includes('/Race%20Backgrounds/')) ? "center 100%" : "center 2%",
+              backgroundPosition:
+                backgroundImages && backgroundImages.length > 0 && encodedBackgroundImage.includes('/Race%20Backgrounds/')
+                  ? "center 100%"
+                  : "88% 2%",
               backgroundRepeat: "no-repeat",
               backgroundSize: "96% auto",
               backgroundColor: backgroundAccentColor ?? "#334155",
@@ -168,15 +177,42 @@ export function AnimatedStatsCard({
             onClick={handleNext}
             title="Click to cycle image"
           />
+          {backgroundImages && backgroundImages.length > 1 ? (
+            <>
+              <button
+                type="button"
+                aria-label="Show previous image"
+                className="absolute bottom-10 left-3 z-30 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/20 text-white/70 backdrop-blur-sm transition hover:bg-black/35 hover:text-white/90"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handlePrev();
+                }}
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <button
+                type="button"
+                aria-label="Show next image"
+                className="absolute bottom-10 right-3 z-30 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/20 text-white/70 backdrop-blur-sm transition hover:bg-black/35 hover:text-white/90"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleNext();
+                }}
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </>
+          ) : null}
         </>
       ) : null}
 
       
       {showImageBackdrop && imageVariant === "driver" && currentLocation && (
         <div
-          className="absolute left-0 right-0 flex items-center gap-1 bottom-0 bg-black/60 rounded-b-2xl px-4 py-1 z-40"
+          className="absolute left-0 right-0 bottom-0 z-40 flex items-center gap-2 rounded-b-[16px] bg-black/55 px-4 py-1.5"
           style={{ pointerEvents: "none", minWidth: 0 }}
         >
+          <MapPin className="size-3.5 shrink-0 text-white/75" />
           <span className="text-xs text-white font-semibold truncate">
             {currentLocation.circuit} — {currentLocation.country.replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu, "")}
           </span>
@@ -188,7 +224,7 @@ export function AnimatedStatsCard({
           <div
             className="pointer-events-none absolute inset-0"
             style={{
-              background: `linear-gradient(110deg, ${backgroundAccentColor ?? "#334155"} 0%, rgba(30,41,59,0.88) 56%, rgba(15,23,42,0.96) 100%)`,
+              background: backgroundAccentColor ?? "#334155",
             }}
           />
           {encodedBackgroundImage ? (
@@ -216,10 +252,12 @@ export function AnimatedStatsCard({
       ) : null}
 
       <div className="relative flex items-start justify-between">
-        <div className={`relative flex-1 overflow-hidden ${showImageBackdrop && imageVariant === "driver" && isHovered ? "z-0" : "z-20"}`}>
-          <p className={`text-sm ${showImageBackdrop ? "font-semibold text-white/95 drop-shadow-[0_1px_2px_rgba(15,23,42,0.7)]" : "font-medium text-slate-600 dark:text-gray-400"}`}>
+        <div
+          className={`relative flex-1 overflow-hidden transition-opacity duration-200 ${showImageBackdrop && imageVariant === "driver" && isHovered ? "z-0" : "z-20"} ${hideTextOnHover && isHovered ? "opacity-0" : "opacity-100"}`}
+        >
+          <div className={`text-sm ${showImageBackdrop ? "font-semibold text-white/95 drop-shadow-[0_1px_2px_rgba(15,23,42,0.7)]" : "font-medium text-slate-600 dark:text-gray-400"}`}>
             {isLoaded ? title : <Skeleton className="w-2/3 h-5" />}
-          </p>
+          </div>
           <div className="relative mt-2 min-h-[2.35rem]">
             {isLoaded ? (
               <motion.p
@@ -233,7 +271,6 @@ export function AnimatedStatsCard({
             )}
           </div>
         </div>
-        {/* Removed icon from top container */}
       </div>
     </motion.div>
   );

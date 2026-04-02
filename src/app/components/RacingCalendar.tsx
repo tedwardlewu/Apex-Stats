@@ -52,7 +52,6 @@ export function RacingCalendar() {
 
 	return (
 		<div className="space-y-4">
-			{/* Header */}
 			<div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
 				<div className="bg-gradient-to-r from-slate-800 to-slate-700 dark:from-slate-700 dark:to-slate-600 px-6 py-4">
 					<div>
@@ -64,7 +63,6 @@ export function RacingCalendar() {
 					</div>
 				</div>
 
-				{/* Next race quick info */}
 				{nextRace && (
 					<div className="px-6 py-3 bg-orange-50 dark:bg-orange-900/20 border-b border-orange-100 dark:border-orange-800 flex items-center gap-3">
 						<div className="flex-shrink-0">
@@ -84,7 +82,6 @@ export function RacingCalendar() {
 				)}
 			</div>
 
-			{/* Calendar table */}
 			<div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
 				<div className="overflow-x-auto">
 					<table className="w-full text-sm">
@@ -118,7 +115,6 @@ export function RacingCalendar() {
 												: "hover:bg-gray-50 dark:hover:bg-gray-700/30"
 										}`}
 									>
-										{/* Round */}
 										<td className="px-4 py-3">
 											<span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold ${
 												live ? "bg-green-500 text-white" :
@@ -128,7 +124,6 @@ export function RacingCalendar() {
 											}`}>{race.round}</span>
 										</td>
 
-										{/* Race name + flag */}
 										<td className="px-4 py-3">
 											<div className="flex items-center gap-2.5">
 												{COUNTRY_FLAG[race.country] && (
@@ -147,12 +142,10 @@ export function RacingCalendar() {
 											</div>
 										</td>
 
-										{/* Circuit */}
 										<td className="px-4 py-3 hidden sm:table-cell">
 											<span className="text-gray-600 dark:text-gray-400 text-xs">{race.circuit}</span>
 										</td>
 
-										{/* Dates */}
 										<td className="px-4 py-3 whitespace-nowrap">
 											<span className="text-gray-600 dark:text-gray-300 text-xs font-medium">
 												{formatDateRange(race.startDate, race.endDate)}
@@ -162,7 +155,6 @@ export function RacingCalendar() {
 											)}
 										</td>
 
-										{/* Badge */}
 										<td className="px-4 py-3 whitespace-nowrap">
 											{race.cancelled ? (
 												<span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-700">

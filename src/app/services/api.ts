@@ -243,6 +243,8 @@ export async function getRaceResults(filters?: RaceResultsFilters) {
 
 type StatsFilters = { season?: string };
 
+type ConsistencyFilters = { season?: string };
+
 export async function getStats(filters?: StatsFilters) {
   const season = filters?.season ?? DEFAULT_SEASON;
   const drivers = season === "2025" ? mockDrivers2025 : mockDrivers2026;
@@ -268,4 +270,48 @@ export async function getStats(filters?: StatsFilters) {
       totalPoints,
     },
   };
+}
+
+export async function getConsistency(filters?: ConsistencyFilters) {
+  const season = filters?.season ?? DEFAULT_SEASON;
+  const seasonRaces = raceCatalog
+    .filter((race) => race.season === season)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const positionMap = new Map<string, number[]>();
+
+  seasonRaces.forEach((race) => {
+    const results = raceResultsById[race.id] ?? [];
+
+    results.forEach((entry) => {
+      const parsedPosition = Number.parseInt(entry.positionLabel, 10);
+
+      if (!Number.isFinite(parsedPosition)) {
+        return;
+      }
+
+      const positions = positionMap.get(entry.driverName) ?? [];
+      positions.push(parsedPosition);
+      positionMap.set(entry.driverName, positions);
+    });
+  });
+
+  const consistencyRows = Array.from(positionMap.entries())
+    .map(([driver, positions], index) => {
+      const avgPosition = positions.reduce((sum, position) => sum + position, 0) / positions.length;
+      const variance = positions.reduce((sum, position) => sum + (position - avgPosition) ** 2, 0) / positions.length;
+      const positionSpread = Math.sqrt(variance);
+      const normalizedAverageScore = Math.max(0, 100 - ((avgPosition - 1) / 19) * 65);
+      const normalizedSpreadPenalty = Math.min(28, positionSpread * 9);
+      const score = Math.max(0, Math.min(100, Math.round(normalizedAverageScore - normalizedSpreadPenalty)));
+
+      return {
+        id: index + 1,
+        driver,
+        score,
+        avgPosition: Number(avgPosition.toFixed(1)),
+      };
+    })
+    .sort((left, right) => right.score - left.score || left.avgPosition - right.avgPosition || left.driver.localeCompare(right.driver));
+
+  return { success: true, data: consistencyRows };
 }

@@ -23,6 +23,8 @@ interface DriverPoints {
 interface Driver {
   id: number;
   name: string;
+  team: string;
+  image?: string;
 }
 
 export function PointsProgressionGraph() {
@@ -53,7 +55,6 @@ export function PointsProgressionGraph() {
       setLoading(true);
       const res = await driverPointsApi.getDriverPointsProgression({ season: selectedSeason, driverName: selectedDriver });
       if (res.success) {
-        // Ensure position is a number (not null) and calculate points earned per race
         let prevPoints = 0;
         const safeData = res.data.map((d: any) => {
           const pointsEarned = d.points - prevPoints;
@@ -67,7 +68,6 @@ export function PointsProgressionGraph() {
     fetchProgression();
   }, [selectedSeason, selectedDriver]);
 
-  // Get country flag for each race
   const getFlag = (country: string) => {
     const flagMap: Record<string, string> = {
       "Australia": "/Countries/Australia.webp",
@@ -88,7 +88,6 @@ export function PointsProgressionGraph() {
       "Canada": "/Countries/Canada.svg",
       "Thailand": "/Countries/Thailand.png",
       "Belgium": "/Countries/Belgian.avif",
-      // Add more as needed
     };
     for (const key in flagMap) {
       if (country.includes(key)) return flagMap[key];
@@ -96,7 +95,6 @@ export function PointsProgressionGraph() {
     return "";
   };
 
-  // Compose x axis ticks with flag and race name
   const xTicks = progression.map((p, i) => {
     const race = raceCatalog.find(r => r.name === p.raceName && r.season === selectedSeason);
     const flag = race ? getFlag(race.country) : "";
@@ -108,7 +106,6 @@ export function PointsProgressionGraph() {
     };
   });
 
-  // Custom X axis tick renderer
   const renderCustomXAxisTick = (props: any) => {
     const { x, y, payload } = props;
     const tick = xTicks[payload.index];
@@ -145,15 +142,13 @@ export function PointsProgressionGraph() {
       <div className="mb-2 flex items-center gap-2">
         <span className="text-lg font-bold text-blue-800 dark:text-blue-200">{selectedDriver} Points Progression</span>
       </div>
-      {/* Driver info section */}
       <div className="flex items-center gap-4 mb-4">
-        {/* Driver profile picture */}
         {drivers.length > 0 && (() => {
           const driverObj = drivers.find(d => d.name === selectedDriver);
           if (!driverObj) return null;
           const driverImage = driverObj.image;
           const team = driverObj.team;
-          const teamLogo = getTeamImage(team);
+          const teamLogo = getTeamImage(team, "", false);
           return <>
             <img
               src={driverImage}

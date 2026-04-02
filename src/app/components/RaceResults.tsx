@@ -259,7 +259,6 @@ export function RaceResults() {
 
 
               <div className="group relative overflow-hidden rounded-[20px] border border-amber-500/30 bg-[linear-gradient(135deg,_rgba(120,53,15,0.15),_rgba(15,23,42,0.9))] p-5">
-                {/* Colored overlay for winner's team */}
                 {winner ? (
                   <div
                     className="pointer-events-none absolute inset-0 z-0"

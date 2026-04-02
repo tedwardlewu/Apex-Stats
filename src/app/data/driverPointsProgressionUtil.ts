@@ -1,8 +1,6 @@
-// Utility to compute driver points progression for a given season from raceResultsById
 import { raceCatalog, raceResultsById } from "./raceLapTimes";
 
 export function getDriverPointsProgression(season: string, driverName: string) {
-  // Get all races for the season, sorted by date
   const races = raceCatalog.filter(r => r.season === season).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   let cumulative = 0;
   const progression = [];

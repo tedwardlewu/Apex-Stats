@@ -79,7 +79,7 @@ function SnapshotColumn({
   children: React.ReactNode;
 }) {
   return (
-    <article className="rounded-[16px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
+    <article className="rounded-[12px] border border-slate-200/70 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
       <div className="flex items-center gap-2 border-b border-slate-200/70 pb-4 dark:border-slate-700/70">
         <Icon className="size-5 text-red-600" />
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h2>
@@ -89,7 +89,7 @@ function SnapshotColumn({
   );
 }
 
-export function ChampionshipSnapshot() {
+export function ChampionshipSnapshot({ onViewDetails }: { onViewDetails: () => void }) {
   const { selectedSeason, selectedTeam, searchQuery } = useFilters();
   const { memeify } = useMemeify();
   const [drivers, setDrivers] = useState<DriverSnapshot[]>([]);
@@ -144,12 +144,20 @@ export function ChampionshipSnapshot() {
   }, [searchQuery, selectedSeason, selectedTeam]);
 
   return (
-    <section className="mb-8 rounded-[18px] border border-slate-200/70 bg-white/75 p-6 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/60">
+    <section className="mb-8 rounded-[14px] border border-slate-200/70 bg-white/75 p-6 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/60">
+
       <div className="mb-6 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Overview</p>
           <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Championship snapshot</h2>
         </div>
+        <button
+          type="button"
+          className="mt-4 rounded-[10px] border border-sky-300/90 bg-white px-4 py-2 text-sm font-semibold tracking-[0.01em] text-sky-700 shadow-sm transition hover:-translate-y-[1px] hover:border-sky-400 hover:text-sky-800 hover:shadow dark:border-sky-800/80 dark:bg-slate-900 dark:text-sky-300 dark:hover:border-sky-700 dark:hover:text-sky-200 lg:mt-0"
+          onClick={onViewDetails}
+        >
+          <span>View in details</span>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
@@ -160,7 +168,7 @@ export function ChampionshipSnapshot() {
         >
           {loading
             ? Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="h-20 animate-pulse rounded-[14px] bg-slate-100 dark:bg-slate-800" />
+                <div key={index} className="h-20 animate-pulse rounded-[10px] bg-slate-100 dark:bg-slate-800" />
               ))
             : drivers.map((driver, index) => {
                 const matchedTeam =
@@ -176,7 +184,7 @@ export function ChampionshipSnapshot() {
                 const bgPos = getDriverBackgroundPosition(driver.name);
 
                 return (
-                  <div key={driver.id} className="relative overflow-hidden rounded-[14px] transition-transform duration-200 hover:scale-[1.015]">
+                  <div key={driver.id} className="relative overflow-hidden rounded-[10px] transition-transform duration-200 hover:scale-[1.015]">
                     <div
                       className="absolute inset-0"
                       style={{
@@ -241,10 +249,10 @@ export function ChampionshipSnapshot() {
         >
           {loading
             ? Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="h-20 animate-pulse rounded-[14px] bg-slate-100 dark:bg-slate-800" />
+                <div key={index} className="h-20 animate-pulse rounded-[10px] bg-slate-100 dark:bg-slate-800" />
               ))
             : teams.map((team, index) => (
-                <div key={team.id} className="flex items-center justify-between gap-4 rounded-[14px] bg-slate-50 px-4 py-4 transition-colors hover:bg-slate-100 dark:bg-slate-800/70 dark:hover:bg-slate-700/60">
+                <div key={team.id} className="flex items-center justify-between gap-4 rounded-[10px] bg-slate-50 px-4 py-4 transition-colors hover:bg-slate-100 dark:bg-slate-800/70 dark:hover:bg-slate-700/60">
                   <div className="flex min-w-0 flex-1 items-center gap-3">
                     <div
                       className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-200 dark:border-slate-700"

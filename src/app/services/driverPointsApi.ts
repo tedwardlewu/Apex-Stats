@@ -1,7 +1,6 @@
 import { raceCatalog, raceResultsById } from "../data/raceLapTimes";
 
 export async function getDriverPointsProgression({ season, driverName }: { season: string, driverName: string }) {
-  // Get all races for the season, sorted by date
   const races = raceCatalog.filter(r => r.season === season).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   let cumulative = 0;
   const progression = [];
