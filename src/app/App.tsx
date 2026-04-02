@@ -26,7 +26,6 @@ import { useFilters } from "./contexts/FilterContext";
 import { useMemeify } from "./contexts/MemeifyContext";
 import * as api from "./services/api";
 import { getDriverImage } from "./utils/driverImages";
-import { PointsProgressionGraph } from "./components/DriverPointsProgression";
 
 const initialStats = {
   totalRaces: 0,
@@ -81,6 +80,7 @@ export default function App() {
   const [topDriverTeamColor, setTopDriverTeamColor] = useState("#334155");
   const [topTeamImage, setTopTeamImage] = useState("");
   const [topTeamColor, setTopTeamColor] = useState("#334155");
+  const [activeTab, setActiveTab] = useState("overview");
   const { selectedSeason } = useFilters();
   const { memeify } = useMemeify();
 
@@ -139,7 +139,7 @@ export default function App() {
     <div className="min-h-screen bg-[linear-gradient(180deg,_#f8fafc_0%,_#e5e7eb_100%)] text-foreground dark:bg-[linear-gradient(180deg,_#111111_0%,_#1b1b1b_100%)]">
       <Header />
       <main className="container mx-auto px-6 py-1 lg:py-2">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-1 mt-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 mt-0">
           <AnimatedStatsCard
             title="Total Races"
             value={stats.totalRaces}
@@ -226,22 +226,21 @@ export default function App() {
           />
         </div>
 
-        <FilterBar />
-
-        <TabNavigation>
+        <TabNavigation value={activeTab} onValueChange={setActiveTab}>
           {{
             overview: (
               <>
-                <ChampionshipSnapshot />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                  <div>
-                    <RecentRaces />
-                  </div>
-                  <div>
-                    <GraphsSection />
-                    <div className="mt-6">
-                      <PointsProgressionGraph />
-                    </div>
+                <FilterBar />
+                <ChampionshipSnapshot onViewDetails={() => setActiveTab("standings")} />
+                <div className="mb-8 mt-4 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+                  <RecentRaces
+                    onViewResults={() => setActiveTab("results")}
+                    onViewCalendar={() => setActiveTab("calendar")}
+                  />
+                  <div className="space-y-6">
+                    <GraphsSection showHeader={false} overviewMode onViewDetailedAnalysis={() => setActiveTab("analytics")} />
+                    <TeammateIndex />
+                    <ConsistencyTable compact />
                   </div>
                 </div>
               </>
@@ -261,12 +260,11 @@ export default function App() {
                   <LapTimeChart />
                   <TeamPerformanceChart />
                 </div>
-                <ConsistencyTable />
                 <div className="mt-8">
                   <GraphsSection />
                 </div>
                 <div className="mt-8">
-                  <PointsProgressionGraph />
+                  <ConsistencyTable />
                 </div>
                 <div className="mt-8">
                   <TeammateIndex />
