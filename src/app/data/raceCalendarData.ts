@@ -1,17 +1,8 @@
-export interface CalendarRace {
-	round: number;
-	name: string;
-	circuit: string;
-	location: string;
-	country: string;
-	startDate: string;
-	endDate: string;
-	sprintWeekend?: boolean;
-	cancelled?: boolean;
-	note?: string;
-}
+import { calendarRaceArraySchema, type CalendarRace } from "./schemas";
 
-export const raceCalendar2026: CalendarRace[] = [
+export type { CalendarRace } from "./schemas";
+
+export const raceCalendar2026: CalendarRace[] = calendarRaceArraySchema.parse([
 	{ round: 1,  name: "Australian Grand Prix",     circuit: "Albert Park Circuit",            location: "Melbourne",      country: "Australia",     startDate: "2026-03-08", endDate: "2026-03-08", sprintWeekend: true },
 	{ round: 2,  name: "Chinese Grand Prix",         circuit: "Shanghai International Circuit", location: "Shanghai",       country: "China",         startDate: "2026-03-15", endDate: "2026-03-15", sprintWeekend: true },
 	{ round: 3,  name: "Japanese Grand Prix",        circuit: "Suzuka Circuit",                 location: "Suzuka",         country: "Japan",         startDate: "2026-03-28", endDate: "2026-03-29" },
@@ -36,4 +27,4 @@ export const raceCalendar2026: CalendarRace[] = [
 	{ round: 22, name: "Las Vegas Grand Prix",       circuit: "Las Vegas Street Circuit",       location: "Las Vegas",      country: "USA",           startDate: "2026-11-21", endDate: "2026-11-21" },
 	{ round: 23, name: "Qatar Grand Prix",           circuit: "Lusail International Circuit",   location: "Lusail",         country: "Qatar",         startDate: "2026-11-29", endDate: "2026-11-29", sprintWeekend: true },
 	{ round: 24, name: "Abu Dhabi Grand Prix",       circuit: "Yas Marina Circuit",             location: "Abu Dhabi",      country: "UAE",           startDate: "2026-12-06", endDate: "2026-12-06" },
-];
+]);

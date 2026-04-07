@@ -1,44 +1,18 @@
-export interface Driver {
-  id: number;
-  name: string;
-  number: number;
-  team: string;
-  nationality: string;
-  points: number;
-  wins: number;
-  podiums: number;
-  championships: number;
-  image: string;
-}
+import {
+  driverArraySchema,
+  driverSeasonStatsArraySchema,
+  parseNumericRecord,
+  raceArraySchema,
+  teamArraySchema,
+  type Driver,
+  type DriverSeasonStats,
+  type Race,
+  type Team,
+} from "./schemas";
 
-export interface Team {
-  id: number;
-  name: string;
-  color: string;
-  points: number;
-  wins: number;
-  podiums: number;
-  championships: number;
-}
+export type { Driver, DriverSeasonStats, Race, Team } from "./schemas";
 
-export interface Race {
-  id: number;
-  name: string;
-  country: string;
-  date: string;
-  circuit: string;
-  winner: string;
-  fastestLap: string;
-}
-
-export interface DriverSeasonStats {
-  season: number;
-  points: number;
-  wins: number;
-  podiums: number;
-}
-
-export const drivers: Driver[] = [
+export const drivers: Driver[] = driverArraySchema.parse([
   {
     id: 1,
     name: "Max Verstappen",
@@ -135,9 +109,9 @@ export const drivers: Driver[] = [
     championships: 0,
     image: "https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?w=400&h=400&fit=crop"
   }
-];
+]);
 
-export const teams: Team[] = [
+export const teams: Team[] = teamArraySchema.parse([
   {
     id: 1,
     name: "Ferrari",
@@ -174,9 +148,9 @@ export const teams: Team[] = [
     podiums: 7,
     championships: 8
   }
-];
+]);
 
-export const races: Race[] = [
+export const races: Race[] = raceArraySchema.parse([
   {
     id: 1,
     name: "Bahrain Grand Prix",
@@ -222,9 +196,9 @@ export const races: Race[] = [
     winner: "Lewis Hamilton",
     fastestLap: "Charles Leclerc"
   }
-];
+]);
 
-export const driverSeasonHistory: Record<number, DriverSeasonStats[]> = {
+export const driverSeasonHistory: Record<number, DriverSeasonStats[]> = parseNumericRecord(driverSeasonStatsArraySchema, {
   1: [
     { season: 2023, points: 575, wins: 19, podiums: 21 },
     { season: 2024, points: 437, wins: 11, podiums: 17 },
@@ -243,7 +217,7 @@ export const driverSeasonHistory: Record<number, DriverSeasonStats[]> = {
     { season: 2025, points: 289, wins: 4, podiums: 10 },
     { season: 2026, points: 312, wins: 5, podiums: 12 }
   ]
-};
+}, "driverSeasonHistory");
 
 export const lapTimeData = [
   { lap: 1, leclerc: 91.8, hamilton: 92.2, norris: 92.5, verstappen: 92.8 },

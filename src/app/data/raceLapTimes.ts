@@ -1,30 +1,16 @@
-export interface RaceMetadata {
-  id: number;
-  season: string;
-  name: string;
-  country: string;
-  date: string;
-  circuit: string;
-  winner: string;
-  fastestLap: string;
-}
+import {
+  driverBestLapArraySchema,
+  parseNumericRecord,
+  raceMetadataArraySchema,
+  raceResultEntryArraySchema,
+  type DriverBestLap,
+  type RaceMetadata,
+  type RaceResultEntry,
+} from "./schemas";
 
-export interface DriverBestLap {
-  driverName: string;
-  bestLap: number;
-}
+export type { DriverBestLap, RaceMetadata, RaceResultEntry } from "./schemas";
 
-export interface RaceResultEntry {
-  positionLabel: string;
-  carNumber: number;
-  driverName: string;
-  team: string;
-  points: number;
-  lapsCompleted: number;
-  result: string;
-}
-
-export const raceCatalog: RaceMetadata[] = [
+export const raceCatalog: RaceMetadata[] = raceMetadataArraySchema.parse([
   { id: 101, season: "2026", name: "Australian Grand Prix", country: "Melbourne, Australia", date: "2026-03-08", circuit: "Melbourne Grand Prix Circuit", winner: "George Russell", fastestLap: "Max Verstappen" },
   { id: 102, season: "2026", name: "Chinese Grand Prix", country: "Shanghai, China", date: "2026-03-15", circuit: "Shanghai International Circuit", winner: "Kimi Antonelli", fastestLap: "Kimi Antonelli" },
   { id: 103, season: "2026", name: "Japanese Grand Prix", country: "Suzuka, Japan", date: "2026-03-28 to 2026-03-29", circuit: "Suzuka Circuit", winner: "Kimi Antonelli", fastestLap: "Kimi Antonelli" },
@@ -242,9 +228,9 @@ export const raceCatalog: RaceMetadata[] = [
     winner: "TBD",
     fastestLap: "TBD",
   },
-];
+]);
 
-export const raceBestLapTimes: Record<number, DriverBestLap[]> = {
+export const raceBestLapTimes: Record<number, DriverBestLap[]> = parseNumericRecord(driverBestLapArraySchema, {
   101: [
     { driverName: "Max Verstappen", bestLap: 82.091 },
     { driverName: "Lando Norris", bestLap: 82.358 },
@@ -330,9 +316,9 @@ export const raceBestLapTimes: Record<number, DriverBestLap[]> = {
   120: [],
   121: [],
   122: [],
-};
+}, "raceBestLapTimes");
 
-export const raceResultsById: Record<number, RaceResultEntry[]> = {
+export const raceResultsById: Record<number, RaceResultEntry[]> = parseNumericRecord(raceResultEntryArraySchema, {
     101: [
       { positionLabel: "1", carNumber: 63, driverName: "George Russell", team: "Mercedes", lapsCompleted: 58, result: "1:23:06.801", points: 25 },
       { positionLabel: "2", carNumber: 12, driverName: "Kimi Antonelli", team: "Mercedes", lapsCompleted: 58, result: "+2.974s", points: 18 },
@@ -502,4 +488,4 @@ export const raceResultsById: Record<number, RaceResultEntry[]> = {
   120: [],
   121: [],
   122: [],
-};
+}, "raceResultsById");

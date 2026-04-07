@@ -1,4 +1,7 @@
 import { raceCatalog, raceResultsById } from "../data/raceLapTimes";
+import { createSuccessResponseSchema, driverPointsProgressionArraySchema } from "../data/schemas";
+
+const driverPointsProgressionResponseSchema = createSuccessResponseSchema(driverPointsProgressionArraySchema);
 
 export async function getDriverPointsProgression({ season, driverName }: { season: string, driverName: string }) {
   const races = raceCatalog.filter(r => r.season === season).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -19,5 +22,5 @@ export async function getDriverPointsProgression({ season, driverName }: { seaso
       });
     }
   }
-  return { success: true, data: progression };
+  return driverPointsProgressionResponseSchema.parse({ success: true, data: progression });
 }

@@ -1,15 +1,9 @@
-export interface UpcomingRaceContext {
-  season: string;
-  name: string;
-  country: string;
-  circuit: string;
-  date: string;
-  summary: string;
-  modelFocus: string;
-  teamBiases: Record<string, number>;
-}
+import { upcomingRaceContextSchema, type UpcomingRaceContext } from "./schemas";
+import { z } from "zod";
 
-export const upcomingRaceBySeason: Record<string, UpcomingRaceContext> = {
+export type { UpcomingRaceContext } from "./schemas";
+
+export const upcomingRaceBySeason: Record<string, UpcomingRaceContext> = z.record(z.string(), upcomingRaceContextSchema).parse({
   "2025": {
     season: "2025",
     name: "Abu Dhabi Grand Prix",
@@ -53,4 +47,4 @@ export const upcomingRaceBySeason: Record<string, UpcomingRaceContext> = {
       "Aston Martin": 0.93,
     },
   },
-};
+});

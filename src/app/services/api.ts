@@ -1,8 +1,38 @@
+import { z } from "zod";
 import { raceBestLapTimes, raceCatalog, raceResultsById } from "../data/raceLapTimes";
+import {
+  consistencyRowArraySchema,
+  createSuccessResponseSchema,
+  driverArraySchema,
+  driverBestLapArraySchema,
+  driverSchema,
+  raceMetadataArraySchema,
+  raceMetadataSchema,
+  raceResultEntryArraySchema,
+  statsSummarySchema,
+  teamArraySchema,
+  type Driver,
+  type Team,
+} from "../data/schemas";
 
 type DriverFilters = { team?: string; search?: string; season?: string };
 
 const DEFAULT_SEASON = "2026";
+const DEFAULT_DEBUT_SEASON = 2026;
+
+const driverResponseSchema = createSuccessResponseSchema(driverArraySchema);
+const driverDetailResponseSchema = createSuccessResponseSchema(driverSchema);
+const teamResponseSchema = createSuccessResponseSchema(teamArraySchema);
+const raceResponseSchema = createSuccessResponseSchema(raceMetadataArraySchema);
+const bestLapResponseSchema = createSuccessResponseSchema(driverBestLapArraySchema);
+const raceResultsResponseSchema = createSuccessResponseSchema(
+  z.object({
+    race: raceMetadataSchema.nullable(),
+    results: raceResultEntryArraySchema,
+  })
+);
+const statsResponseSchema = createSuccessResponseSchema(statsSummarySchema);
+const consistencyResponseSchema = createSuccessResponseSchema(consistencyRowArraySchema);
 
 const DRIVER_DEBUT_SEASONS: Record<string, number> = {
   "Max Verstappen": 2015,
@@ -33,13 +63,13 @@ const DRIVER_DEBUT_SEASONS: Record<string, number> = {
 };
 
 function withDriverExperience<T extends { name: string }>(drivers: T[]) {
-  return drivers.map((driver) => ({
+  return driverArraySchema.parse(drivers.map((driver) => ({
     ...driver,
-    debutSeason: DRIVER_DEBUT_SEASONS[driver.name] ?? DEFAULT_SEASON,
-  }));
+    debutSeason: DRIVER_DEBUT_SEASONS[driver.name] ?? DEFAULT_DEBUT_SEASON,
+  })));
 }
 
-const mockDrivers2026 = [
+const mockDrivers2026 = driverArraySchema.parse([
     { id: 1, name: "Max Verstappen", number: 3, team: "Red Bull Racing", nationality: "Netherlands", age: 28, points: 12, wins: 0, podiums: 0, championships: 3, image: "/Driver Images/Max.avif" },
     { id: 2, name: "Isack Hadjar", number: 20, team: "Red Bull Racing", nationality: "France", age: 21, points: 4, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Isack.avif" },
     { id: 3, name: "Charles Leclerc", number: 16, team: "Ferrari", nationality: "Monaco", age: 28, points: 49, wins: 0, podiums: 2, championships: 0, image: "/Driver Images/Charles.avif" },
@@ -62,9 +92,9 @@ const mockDrivers2026 = [
     { id: 20, name: "Oliver Bearman", number: 50, team: "Haas F1 Team", nationality: "United Kingdom", age: 20, points: 17, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Bearman.avif" },
     { id: 21, name: "Sergio Perez", number: 11, team: "Cadillac", nationality: "Mexico", age: 36, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Perez.avif" },
     { id: 22, name: "Valtteri Bottas", number: 77, team: "Cadillac", nationality: "Finland", age: 36, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Driver Images/Bottas.avif" },
-];
+]);
 
-const mockDrivers2025 = [
+const mockDrivers2025 = driverArraySchema.parse([
   { id: 101, name: "Lando Norris", number: 4, team: "McLaren", nationality: "United Kingdom", age: 26, points: 423, wins: 7, podiums: 16, championships: 0, image: "/Drivers 2025/Lando.avif" },
   { id: 102, name: "Max Verstappen", number: 1, team: "Red Bull Racing", nationality: "Netherlands", age: 28, points: 421, wins: 8, podiums: 14, championships: 4, image: "/Drivers 2025/Max.avif" },
   { id: 103, name: "Oscar Piastri", number: 81, team: "McLaren", nationality: "Australia", age: 25, points: 410, wins: 7, podiums: 13, championships: 0, image: "/Drivers 2025/Oscar.avif" },
@@ -86,9 +116,9 @@ const mockDrivers2025 = [
   { id: 119, name: "Gabriel Bortoleto", number: 5, team: "Sauber", nationality: "Brazil", age: 22, points: 19, wins: 0, podiums: 0, championships: 0, image: "/Drivers 2025/Gabriel.avif" },
   { id: 120, name: "Franco Colapinto", number: 43, team: "Alpine", nationality: "Argentina", age: 23, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Drivers 2025/Colapinto.avif" },
   { id: 121, name: "Jack Doohan", number: 7, team: "Alpine", nationality: "Australia", age: 22, points: 0, wins: 0, podiums: 0, championships: 0, image: "/Drivers 2025/Jack.avif" },
-];
+]);
 
-const mockTeams2026 = [
+const mockTeams2026 = teamArraySchema.parse([
   { id: 1, name: "Mercedes", color: "#06B6D4", points: 135, wins: 3, podiums: 5, championships: 8, image: "/Team Images/Mercedes.avif" },
   { id: 2, name: "Ferrari", color: "#DC2626", points: 90, wins: 0, podiums: 3, championships: 16, image: "/Team Images/Ferrari.avif" },
   { id: 3, name: "McLaren", color: "#F97316", points: 46, wins: 0, podiums: 1, championships: 10, image: "/Team Images/McLaren.avif" },
@@ -100,9 +130,9 @@ const mockTeams2026 = [
   { id: 9, name: "Williams", color: "#104fb4", points: 2, wins: 0, podiums: 0, championships: 16, image: "/Team Images/Williams.avif" },
   { id: 10, name: "Cadillac", color: "#444749", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Cadillac.avif" },
   { id: 11, name: "Aston Martin", color: "#10853b", points: 0, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Aston.avif" },
-];
+]);
 
-const mockTeams2025 = [
+const mockTeams2025 = teamArraySchema.parse([
   { id: 101, name: "McLaren", color: "#F97316", points: 833, wins: 10, podiums: 29, championships: 8, image: "/Team Images/McLaren.avif" },
   { id: 102, name: "Mercedes", color: "#06B6D4", points: 469, wins: 2, podiums: 10, championships: 8, image: "/Team Images/Mercedes.avif" },
   { id: 103, name: "Red Bull Racing", color: "#1c46ce", points: 451, wins: 8, podiums: 14, championships: 6, image: "/Team Images/Redbull.avif" },
@@ -113,7 +143,7 @@ const mockTeams2025 = [
   { id: 108, name: "Haas F1 Team", color: "#f7f5f5", points: 79, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Haas.avif" },
   { id: 109, name: "Sauber", color: "#39FF14", points: 70, wins: 0, podiums: 0, championships: 0, image: "/Team Images/Sauber.avif" },
   { id: 110, name: "Alpine", color: "#2871cb", points: 22, wins: 0, podiums: 0, championships: 2, image: "/Team Images/Alpine.avif" },
-];
+]);
 
 const legacyTotalPointsBySeason: Record<string, number> = {
   "2025": 1673,
@@ -157,11 +187,11 @@ export async function getDrivers(filters?: DriverFilters) {
 
   filteredDrivers.sort((a, b) => b.points - a.points);
 
-  return { success: true, data: filteredDrivers };
+  return driverResponseSchema.parse({ success: true, data: filteredDrivers });
 }
 
 export async function getDriverById(id: number) {
-  const mockDrivers = [
+  const mockDrivers = driverArraySchema.parse([
     { id: 1, name: "Max Verstappen", number: 1, team: "Red Bull Racing", nationality: "Netherlands", points: 198, wins: 2, podiums: 8, championships: 3 },
     { id: 2, name: "Sergio Perez", number: 11, team: "Red Bull Racing", nationality: "Mexico", points: 142, wins: 0, podiums: 4, championships: 0 },
     { id: 3, name: "Lewis Hamilton", number: 44, team: "Ferrari", nationality: "Great Britain", points: 276, wins: 4, podiums: 10, championships: 7 },
@@ -170,14 +200,14 @@ export async function getDriverById(id: number) {
     { id: 6, name: "Carlos Sainz", number: 55, team: "Williams", nationality: "Spain", points: 156, wins: 1, podiums: 5, championships: 0 },
     { id: 7, name: "Lando Norris", number: 4, team: "McLaren", nationality: "Great Britain", points: 224, wins: 3, podiums: 9, championships: 0 },
     { id: 8, name: "Oscar Piastri", number: 81, team: "McLaren", nationality: "Australia", points: 178, wins: 2, podiums: 6, championships: 0 },
-  ];
+  ]);
 
-  const driver = mockDrivers.find(d => d.id === id);
+  const driver = mockDrivers.find((entry: Driver) => entry.id === id);
   if (!driver) {
     return { success: false, error: "Driver not found" };
   }
 
-  return { success: true, data: driver };
+  return driverDetailResponseSchema.parse({ success: true, data: driver });
 }
 
 type TeamFilters = { season?: string };
@@ -185,18 +215,18 @@ type TeamFilters = { season?: string };
 export async function getTeams(filters?: TeamFilters) {
   const season = filters?.season ?? DEFAULT_SEASON;
 
-  return { success: true, data: season === "2025" ? mockTeams2025 : mockTeams2026 };
+  return teamResponseSchema.parse({ success: true, data: season === "2025" ? mockTeams2025 : mockTeams2026 });
 }
 
 type RaceFilters = { season?: string };
 
 export async function getRaces(filters?: RaceFilters) {
   const season = filters?.season ?? DEFAULT_SEASON;
-  const races = raceCatalog
+  const races = raceMetadataArraySchema.parse(raceCatalog
     .filter((race) => race.season === season)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
 
-  return { success: true, data: races };
+  return raceResponseSchema.parse({ success: true, data: races });
 }
 
 type LapTimeFilters = { season?: string; raceId?: number };
@@ -211,12 +241,12 @@ export async function getLapTimes(filters?: LapTimeFilters) {
   const selectedRaceId = filters?.raceId ?? seasonRaces[0]?.id;
 
   if (!selectedRaceId) {
-    return { success: true, data: [] };
+    return bestLapResponseSchema.parse({ success: true, data: [] });
   }
 
   const raceLapTimes = [...(raceBestLapTimes[selectedRaceId] ?? [])].sort((a, b) => a.bestLap - b.bestLap);
 
-  return { success: true, data: raceLapTimes };
+  return bestLapResponseSchema.parse({ success: true, data: raceLapTimes });
 }
 
 export async function getRaceResults(filters?: RaceResultsFilters) {
@@ -229,16 +259,16 @@ export async function getRaceResults(filters?: RaceResultsFilters) {
     : seasonRaces.find((race) => race.id === filters?.raceId) ?? seasonRaces[seasonRaces.length - 1];
 
   if (!selectedRace) {
-    return { success: true, data: { race: null, results: [] } };
+    return raceResultsResponseSchema.parse({ success: true, data: { race: null, results: [] } });
   }
 
-  return {
+  return raceResultsResponseSchema.parse({
     success: true,
     data: {
       race: selectedRace,
       results: raceResultsById[selectedRace.id] ?? [],
     },
-  };
+  });
 }
 
 type StatsFilters = { season?: string };
@@ -249,19 +279,19 @@ export async function getStats(filters?: StatsFilters) {
   const season = filters?.season ?? DEFAULT_SEASON;
   const drivers = season === "2025" ? mockDrivers2025 : mockDrivers2026;
   const teams = season === "2025" ? mockTeams2025 : mockTeams2026;
-  const topDriver = drivers.reduce((leader, driver) =>
+  const topDriver = drivers.reduce((leader: Driver, driver: Driver) =>
     driver.points > leader.points ? driver : leader
   );
-  const topTeam = teams.reduce((leader, team) =>
+  const topTeam = teams.reduce((leader: Team, team: Team) =>
     team.points > leader.points ? team : leader
   );
   const totalPoints = season === "2026"
-    ? drivers.reduce((sum, driver) => sum + driver.points, 0)
-    : legacyTotalPointsBySeason[season] ?? drivers.reduce((sum, driver) => sum + driver.points, 0);
+    ? drivers.reduce((sum: number, driver: Driver) => sum + driver.points, 0)
+    : legacyTotalPointsBySeason[season] ?? drivers.reduce((sum: number, driver: Driver) => sum + driver.points, 0);
 
   const totalRaces = raceCatalog.filter((race) => race.season === season).length;
 
-  return {
+  return statsResponseSchema.parse({
     success: true,
     data: {
       totalRaces,
@@ -269,7 +299,7 @@ export async function getStats(filters?: StatsFilters) {
       topTeam: topTeam.name,
       totalPoints,
     },
-  };
+  });
 }
 
 export async function getConsistency(filters?: ConsistencyFilters) {
@@ -313,5 +343,5 @@ export async function getConsistency(filters?: ConsistencyFilters) {
     })
     .sort((left, right) => right.score - left.score || left.avgPosition - right.avgPosition || left.driver.localeCompare(right.driver));
 
-  return { success: true, data: consistencyRows };
+  return consistencyResponseSchema.parse({ success: true, data: consistencyRows });
 }

@@ -1,14 +1,8 @@
-export interface NewsItem {
-  id: string;
-  fileName: string;
-  fileNames?: string[];
-  title: string;
-  description: string;
-  objectPosition?: string;
-  objectFit?: string;
-}
+import { newsItemArraySchema, type NewsItem } from "./schemas";
 
-export const newsItems: NewsItem[] = [
+export type { NewsItem } from "./schemas";
+
+export const newsItems: NewsItem[] = newsItemArraySchema.parse([
   {
     id: "stroll-gt3-debut",
     fileName: "Stroll GT3.jpg",
@@ -140,4 +134,4 @@ export const newsItems: NewsItem[] = [
     title: "Podium at the Chinese GP",
     description: "Three Mercedes drivers on the podium at the Chinese GP, Toto must be very happy.",
   },
-]; 
+]);
